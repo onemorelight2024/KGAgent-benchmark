@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hyper-Relations",
+  "description": "Hyper-relation knowledge graph with structured attributes using KGFlow HRKG format",
+  "type": "object",
+  "required": ["hyper_relations"],
+  "properties": {
+    "hyper_relations": {
+      "type": "array",
+      "description": "List of hyper-relations in tagged format",
+      "items": {
+        "type": "string",
+        "pattern": "^<subj>.*<obj>.*<rel>.*$",
+        "description": "Format: <subj> subject <obj> object <rel> relation [<attr_name> attr_value ...]"
+      }
+    }
+  }
+}

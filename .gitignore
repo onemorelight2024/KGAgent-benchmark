@@ -1,0 +1,26 @@
+.DS_Store
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+*.log
+
+# Local configuration
+config.local.py
+config_local.py
+
+# Output directories
+kg_outputs/
+kg_runs/
+outputs/
+uploads/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

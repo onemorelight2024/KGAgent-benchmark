@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "data": "Alice works at Acme Corporation. She is a software engineer.",
+      "extraction_type": "triples"
+    },
+    {
+      "data": "Bob met Carol on January 15, 2024 in New York.",
+      "extraction_type": "temporal"
+    },
+    {
+      "data": "The meeting was held on March 10, 2024 at the headquarters with 20 participants.",
+      "extraction_type": "hyper"
+    }
+  ]
+}

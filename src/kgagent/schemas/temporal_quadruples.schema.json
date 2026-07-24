@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Temporal Quadruples",
+  "description": "Temporal knowledge graph quadruples with time annotations using KGFlow TKG format",
+  "type": "object",
+  "required": ["quadruples"],
+  "properties": {
+    "quadruples": {
+      "type": "array",
+      "description": "List of temporal quadruples in tagged format",
+      "items": {
+        "type": "string",
+        "pattern": "^<subj>.*<obj>.*<rel>.*<time>.*$",
+        "description": "Format: <subj> subject <obj> object <rel> relation <time> time_value"
+      }
+    }
+  }
+}
