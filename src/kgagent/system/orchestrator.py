@@ -11,6 +11,7 @@ from kgagent.extraction.kg_entry import ExtractionEntry
 from kgagent.extraction.tools.loaders import load_json_file, save_json_file
 from kgagent.extraction.tools.validation import validate_result
 from kgagent.system.registry import ExtractionRegistry
+from kgagent.core.language import detect_language
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,23 @@ async def run_extraction(
     )
     entry = ExtractionEntry(config)
 
+    # Detect language from input data
+    if isinstance(processed_data, str):
+        language = detect_language(processed_data)
+    elif isinstance(processed_data, dict):
+        # Try to extract text from dict
+        text = (
+            processed_data.get("text") or
+            processed_data.get("content") or
+            processed_data.get("description") or
+            str(processed_data)
+        )
+        language = detect_language(text)
+    else:
+        language = "en"
+
+    logger.info(f"Detected language: {language}")
+
     # Route based on extraction type
     if extraction_type == "event":
         # Use AutoSchemaKG event extraction
@@ -81,7 +99,7 @@ async def run_extraction(
 
         logger.info(f"Running {extraction_type} extraction (AutoSchemaKG)")
         event_entry = EventExtractionEntry(config)
-        result = await event_entry.extract_async(processed_data, language="en")
+        result = await event_entry.extract_async(processed_data, language=language)
     else:
         # Normal extraction (triples/temporal/hyper)
         logger.info(f"Running {extraction_type} extraction")

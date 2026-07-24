@@ -8,7 +8,9 @@ from pathlib import Path
 
 from kgagent.system import KGAgentSystem
 from kgagent.extraction.tools.loaders import load_json_file
-from kgagent.extraction.record import record_result, record_batch_results
+from kgagent.output_process import record_result, record_batch_results
+from kgagent.extraction.config import ExtractionConfig
+from kgagent.intent import IntentEntry
 
 try:
     from prompt_toolkit import PromptSession
@@ -49,6 +51,15 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
         model_name=model,
         work_dir=workspace or "./tmp_sdk",
     )
+
+    # Create intent agent
+    intent_config = ExtractionConfig(
+        model_name=model,
+        work_dir=workspace or "./tmp_sdk",
+        permission_mode="auto",
+        max_turns=1,
+    )
+    intent_agent = IntentEntry(intent_config)
 
     # Setup prompt session if available
     if PROMPT_TOOLKIT_AVAILABLE:
@@ -115,34 +126,132 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             print("  - Results from files are auto-saved to same directory\n")
             continue
 
-        # Parse input
-        extraction_type = "auto"
-        data = user_input
-        is_file_input = False
+        # === Step 1: Parse intent with Intent Agent ===
+        try:
+            intent_result = await intent_agent.parse_intent_async(user_input)
+        except Exception as e:
+            print(f"⚠️  Intent 解析失败: {e}")
+            print("回退到传统模式...\n")
+            intent_result = None
 
-        # Check if input contains --type flag
-        if "--type" in user_input:
-            parts = user_input.split("--type")
-            data = parts[0].strip()
-            type_part = parts[1].strip().split()[0]
-            extraction_type = type_part
+        # === Step 2: Handle different intents ===
+
+        # Handle chat intent
+        if intent_result and intent_result.get("intent") == "chat":
+            print(f"\nAssistant> {intent_result.get('response', '你好！')}\n")
+            continue
+
+        # Handle help intent
+        if intent_result and intent_result.get("intent") == "help":
+            print("\nHelp:")
+            print("  - 直接输入文本让我抽取知识图谱")
+            print("  - 或者输入文件路径，例如: examples/data.json")
+            print("  - 支持的抽取类型: triples(三元组), temporal(时序), hyper(超关系), event(事件)")
+            print("  - 使用 --type 指定类型，例如: data.json --type event")
+            print("  - 输入 :quit 退出\n")
+            continue
+
+        # Handle command intent (already handled above, but for completeness)
+        if intent_result and intent_result.get("intent") == "command":
+            command = intent_result.get("command", "")
+            if command in ("quit", "exit"):
+                print("Goodbye!")
+                break
+            elif command == "help":
+                continue  # Already handled above
+
+        # === Step 3: Handle extract intent ===
+
+        # If intent agent identified extract intent, show confirmation
+        if intent_result and intent_result.get("intent") == "extract":
+            params = intent_result.get("parameters", {})
+
+            print(f"\n✓ 意图: {intent_result.get('explanation', '知识图谱抽取')}")
+            print(f"✓ 抽取类型: {params.get('extraction_type', 'auto')}")
+
+            if params.get("file_path"):
+                print(f"✓ 文件: {params['file_path']}")
+            else:
+                data_preview = params.get('data', '')[:80]
+                if len(params.get('data', '')) > 80:
+                    data_preview += "..."
+                print(f"✓ 数据: {data_preview}")
+
+            # Ask for confirmation
+            confirm = (await get_input("\n确认执行? [Y/n/edit]: ")).strip().lower()
+
+            if confirm == 'n':
+                print("已取消\n")
+                continue
+            elif confirm == 'edit':
+                # Let user manually choose type
+                print("\n请选择抽取类型：")
+                print("  1. triples - 关系三元组")
+                print("  2. temporal - 时序四元组")
+                print("  3. hyper - 超关系")
+                print("  4. event - 事件图谱")
+                choice = (await get_input("请输入选项 (1/2/3/4): ")).strip()
+                type_map = {"1": "triples", "2": "temporal", "3": "hyper", "4": "event"}
+                extraction_type = type_map.get(choice, params.get('extraction_type', 'auto'))
+            else:
+                # User confirmed, use detected type
+                extraction_type = params.get('extraction_type', 'auto')
+
+            # Prepare data
+            if params.get("file_path"):
+                user_input = params['file_path']
+                if extraction_type != 'auto':
+                    user_input += f" --type {extraction_type}"
+            else:
+                data = params.get('data', user_input)
+                # Continue with normal extraction flow below
+                user_input = data
+
+        # If intent agent failed or returned None, fall back to original logic
+        if not intent_result or intent_result.get("intent") not in ("extract", "chat", "help", "command"):
+            print("⚠️  无法确定意图，使用传统解析模式\n")
+
+        # === Original extraction logic (for fallback or after intent confirmation) ===
+
+        # Parse input for extraction type and file path
+        if not intent_result or intent_result.get("intent") == "extract":
+            # If we came from intent agent with extract intent, extraction_type is already set
+            # Otherwise, parse it from user_input
+            if not intent_result or intent_result.get("intent") != "extract":
+                extraction_type = "auto"
+                data = user_input
+                is_file_input = False
+
+                # Check if input contains --type flag
+                if "--type" in user_input:
+                    parts = user_input.split("--type")
+                    data = parts[0].strip()
+                    type_part = parts[1].strip().split()[0]
+                    extraction_type = type_part
+                else:
+                    # Try to detect extraction type from user input (before file loading)
+                    from kgagent.system.registry import ExtractionRegistry
+                    registry = ExtractionRegistry()
+                    detected_type = registry.detect_type(user_input)
+
+                    # Check if detection found a keyword match
+                    has_keyword = False
+                    user_input_lower = user_input.lower()
+                    for type_info in registry.types.values():
+                        for keyword in type_info.keywords:
+                            if keyword in user_input_lower:
+                                has_keyword = True
+                                extraction_type = detected_type
+                                break
+                        if has_keyword:
+                            break
+            else:
+                # extraction_type was already set during intent handling
+                data = user_input
+                is_file_input = False
         else:
-            # Try to detect extraction type from user input (before file loading)
-            from kgagent.system.registry import ExtractionRegistry
-            registry = ExtractionRegistry()
-            detected_type = registry.detect_type(user_input)
-
-            # Check if detection found a keyword match
-            has_keyword = False
-            user_input_lower = user_input.lower()
-            for type_info in registry.types.values():
-                for keyword in type_info.keywords:
-                    if keyword in user_input_lower:
-                        has_keyword = True
-                        extraction_type = detected_type
-                        break
-                if has_keyword:
-                    break
+            # Not an extract intent, skip extraction logic
+            continue
 
         # Try to extract file path from input (handle cases like "extract from /path/to/file")
         # Look for absolute paths or relative paths
