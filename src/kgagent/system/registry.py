@@ -35,6 +35,11 @@ class ExtractionRegistry:
                 keywords=["hyper", "hyper-relation", "context", "attributes", "attribute"],
                 description="Hyper-relations (relation with structured attributes)",
             ),
+            "event": ExtractionTypeInfo(
+                name="event",
+                keywords=["event", "events", "happening", "occurrence", "autoschema", "event graph"],
+                description="Event knowledge graph using AutoSchemaKG (3-stage: entity-relation, event-entity, event-relation)",
+            ),
         }
 
     def detect_type(self, query: str) -> str:

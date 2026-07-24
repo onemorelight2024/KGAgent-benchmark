@@ -182,3 +182,82 @@ def validate_hyper_relations(result: Any) -> dict[str, Any]:
         "errors": errors,
         "hyper_relation_count": len(hyper_relations),
     }
+
+
+def validate_event_graph(result: Any) -> dict[str, Any]:
+    """Validate AutoSchemaKG event graph structure.
+
+    Expected format:
+    {
+        "entity_relation_dict": [
+            {"Head": "...", "Relation": "...", "Tail": "..."}
+        ],
+        "event_entity_relation_dict": [
+            {"Event": "...", "Entity": ["..."]}
+        ],
+        "event_relation_dict": [
+            {"Head": "...", "Relation": "...", "Tail": "..."}
+        ]
+    }
+    """
+    errors = []
+
+    if not isinstance(result, dict):
+        return {"valid": False, "errors": ["Result must be a dictionary"]}
+
+    # Try JSON Schema validation first (if available)
+    if JSONSCHEMA_AVAILABLE:
+        try:
+            schema = _load_schema("autoschema_kg")
+            validate(instance=result, schema=schema)
+        except ValidationError as e:
+            errors.append(f"Schema validation failed: {e.message}")
+        except FileNotFoundError:
+            pass
+
+    # Manual validation
+    # Check entity_relation_dict
+    entity_relations = result.get("entity_relation_dict")
+    if not isinstance(entity_relations, list):
+        errors.append("'entity_relation_dict' field must be a list")
+    else:
+        for i, rel in enumerate(entity_relations):
+            if not isinstance(rel, dict):
+                errors.append(f"Entity relation {i} must be a dict")
+                continue
+            if "Head" not in rel or "Relation" not in rel or "Tail" not in rel:
+                errors.append(f"Entity relation {i} missing required fields (Head, Relation, Tail)")
+
+    # Check event_entity_relation_dict
+    event_entities = result.get("event_entity_relation_dict")
+    if not isinstance(event_entities, list):
+        errors.append("'event_entity_relation_dict' field must be a list")
+    else:
+        for i, ev in enumerate(event_entities):
+            if not isinstance(ev, dict):
+                errors.append(f"Event-entity {i} must be a dict")
+                continue
+            if "Event" not in ev or "Entity" not in ev:
+                errors.append(f"Event-entity {i} missing required fields (Event, Entity)")
+            elif not isinstance(ev.get("Entity"), list):
+                errors.append(f"Event-entity {i} 'Entity' field must be a list")
+
+    # Check event_relation_dict
+    event_relations = result.get("event_relation_dict")
+    if not isinstance(event_relations, list):
+        errors.append("'event_relation_dict' field must be a list")
+    else:
+        for i, rel in enumerate(event_relations):
+            if not isinstance(rel, dict):
+                errors.append(f"Event relation {i} must be a dict")
+                continue
+            if "Head" not in rel or "Relation" not in rel or "Tail" not in rel:
+                errors.append(f"Event relation {i} missing required fields (Head, Relation, Tail)")
+
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors,
+        "entity_relation_count": len(entity_relations) if isinstance(entity_relations, list) else 0,
+        "event_entity_count": len(event_entities) if isinstance(event_entities, list) else 0,
+        "event_relation_count": len(event_relations) if isinstance(event_relations, list) else 0,
+    }

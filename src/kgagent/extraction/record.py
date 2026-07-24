@@ -58,7 +58,7 @@ def record_batch_results(
     input_source: str | Path,
     input_data: list[dict[str, Any]] | None = None,
     output_dir: str | Path | None = None,
-    suffix: str = "_batch_extracted",
+    extraction_type: str = "kg",
 ) -> Path:
     """Record batch extraction results to a JSON file.
 
@@ -67,14 +67,16 @@ def record_batch_results(
         input_source: Original input file path
         input_data: Original input data (to include text field)
         output_dir: Output directory (default: same as input file)
-        suffix: Suffix to add to output filename (default: "_batch_extracted")
+        extraction_type: Extraction type for filename (default: "kg")
 
     Returns:
         Path to the saved file
 
     Examples:
-        >>> record_batch_results(results, "data/batch.json")
-        # Saves to: data/batch_batch_extracted.json
+        >>> record_batch_results(results, "data/batch.json", extraction_type="event")
+        # Saves to: data/batch_event_kg.json
+        >>> record_batch_results(results, "data/batch.json", extraction_type="triples")
+        # Saves to: data/batch_triples_kg.json
     """
     input_path = Path(input_source)
 
@@ -85,9 +87,9 @@ def record_batch_results(
         out_dir = Path(output_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Build output filename
+    # Build output filename: original_name_type_kg.json
     stem = input_path.stem
-    output_path = out_dir / f"{stem}{suffix}.json"
+    output_path = out_dir / f"{stem}_{extraction_type}_kg.json"
 
     # Build formatted results
     formatted_results = []
@@ -112,7 +114,10 @@ def record_batch_results(
 
         # Format KG based on result type
         kg = []
-        if "error" not in result:
+        if "error" in result:
+            # Record error information instead of silently leaving kg empty
+            item["error"] = result["error"]
+        else:
             # Extract triples/relations - convert to tagged format
             if "relations" in result:
                 kg = [
@@ -135,6 +140,13 @@ def record_batch_results(
             # For hyper-relations - keep as strings
             elif "hyper_relations" in result:
                 kg = result["hyper_relations"]
+            # For AutoSchemaKG events - keep full structure
+            elif "entity_relation_dict" in result or "event_entity_relation_dict" in result:
+                kg = {
+                    "entity_relations": result.get("entity_relation_dict", []),
+                    "event_entities": result.get("event_entity_relation_dict", []),
+                    "event_relations": result.get("event_relation_dict", []),
+                }
 
         item["kg"] = kg
         formatted_results.append(item)

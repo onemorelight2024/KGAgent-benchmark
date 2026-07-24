@@ -24,7 +24,7 @@ def main():
         "--workspace",
         "-w",
         default=None,
-        help="Working directory (default: ./kg_outputs)",
+        help="Working directory (default: ./tmp_sdk)",
     )
     chat_parser.add_argument(
         "--model",
@@ -106,7 +106,7 @@ def main():
     elif args.command == "extract":
         system = KGAgentSystem(
             model_name=args.model,
-            work_dir=args.workspace or "./kg_outputs",
+            work_dir=args.workspace or "./tmp_sdk",
         )
 
         result = system.extract(
@@ -133,7 +133,7 @@ def main():
 
         system = KGAgentSystem(
             model_name=args.model,
-            work_dir=args.workspace or "./kg_outputs",
+            work_dir=args.workspace or "./tmp_sdk",
         )
 
         results = asyncio.run(

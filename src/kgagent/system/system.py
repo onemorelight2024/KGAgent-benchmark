@@ -35,7 +35,7 @@ class KGAgentSystem:
     def __init__(
         self,
         model_name: str | None = None,
-        work_dir: str | Path = "./kg_outputs",
+        work_dir: str | Path = "./tmp_sdk",
         permission_mode: str = "bypassPermissions",
         max_turns: int = 20,
     ):

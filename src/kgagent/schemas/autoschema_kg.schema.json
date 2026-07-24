@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kgagent.local/schemas/autoschema_kg.schema.json",
+  "title": "AutoSchemaKG Event KG Extraction Result",
+  "description": "Three-stage event knowledge graph extraction following AutoSchemaKG format",
+  "type": "object",
+  "required": ["entity_relation_dict", "event_entity_relation_dict", "event_relation_dict"],
+  "additionalProperties": true,
+  "properties": {
+    "entity_relation_dict": {
+      "type": "array",
+      "description": "Stage 1: Entity-entity relations",
+      "items": {
+        "$ref": "#/$defs/entity_relation"
+      }
+    },
+    "event_entity_relation_dict": {
+      "type": "array",
+      "description": "Stage 2: Event-entity participation relations",
+      "items": {
+        "$ref": "#/$defs/event_entity"
+      }
+    },
+    "event_relation_dict": {
+      "type": "array",
+      "description": "Stage 3: Event-event temporal/causal relations",
+      "items": {
+        "$ref": "#/$defs/event_relation"
+      }
+    }
+  },
+  "$defs": {
+    "entity_relation": {
+      "type": "object",
+      "description": "Entity-entity relation triple",
+      "required": ["Head", "Relation", "Tail"],
+      "additionalProperties": false,
+      "properties": {
+        "Head": {
+          "type": "string",
+          "description": "Head entity (noun)",
+          "minLength": 1
+        },
+        "Relation": {
+          "type": "string",
+          "description": "Relation between entities (verb or relation phrase)",
+          "minLength": 1
+        },
+        "Tail": {
+          "type": "string",
+          "description": "Tail entity (noun)",
+          "minLength": 1
+        }
+      }
+    },
+    "event_entity": {
+      "type": "object",
+      "description": "Event-entity participation relation",
+      "required": ["Event", "Entity"],
+      "additionalProperties": false,
+      "properties": {
+        "Event": {
+          "type": "string",
+          "description": "A simple sentence describing an event",
+          "minLength": 1
+        },
+        "Entity": {
+          "type": "array",
+          "description": "List of entities that participated in the event",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "event_relation": {
+      "type": "object",
+      "description": "Event-event temporal or causal relation",
+      "required": ["Head", "Relation", "Tail"],
+      "additionalProperties": false,
+      "properties": {
+        "Head": {
+          "type": "string",
+          "description": "First event (simple sentence)",
+          "minLength": 1
+        },
+        "Relation": {
+          "type": "string",
+          "description": "Temporal or causal relation (before, after, at the same time, because, as a result)",
+          "minLength": 1
+        },
+        "Tail": {
+          "type": "string",
+          "description": "Second event (simple sentence)",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

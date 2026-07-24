@@ -15,7 +15,8 @@ authors = [
 dependencies = [
   "claude-agent-sdk>=0.2.0",
   "anyio>=4.0.0",
-  "jsonschema>=4.0.0"
+  "jsonschema>=4.0.0",
+  "prompt_toolkit>=3.0.0"
 ]
 
 [project.optional-dependencies]

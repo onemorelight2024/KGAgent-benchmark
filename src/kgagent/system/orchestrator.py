@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from kgagent.extraction.config import ExtractionConfig
-from kgagent.extraction.entry import ExtractionEntry
+from kgagent.extraction.kg_entry import ExtractionEntry
 from kgagent.extraction.tools.loaders import load_json_file, save_json_file
 from kgagent.extraction.tools.validation import validate_result
 from kgagent.system.registry import ExtractionRegistry
@@ -74,9 +74,18 @@ async def run_extraction(
     )
     entry = ExtractionEntry(config)
 
-    # Run extraction
-    logger.info(f"Running {extraction_type} extraction")
-    result = await entry.extract_async(processed_data, extraction_type)
+    # Route based on extraction type
+    if extraction_type == "event":
+        # Use AutoSchemaKG event extraction
+        from kgagent.extraction.event_entry import EventExtractionEntry
+
+        logger.info(f"Running {extraction_type} extraction (AutoSchemaKG)")
+        event_entry = EventExtractionEntry(config)
+        result = await event_entry.extract_async(processed_data, language="en")
+    else:
+        # Normal extraction (triples/temporal/hyper)
+        logger.info(f"Running {extraction_type} extraction")
+        result = await entry.extract_async(processed_data, extraction_type)
 
     # Validate if requested
     if validate:
