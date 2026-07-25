@@ -17,6 +17,7 @@ from claude_agent_sdk import (
 
 from kgagent.extraction.agents.extractor import build_extraction_agent
 from kgagent.extraction.config import ExtractionConfig
+from kgagent.extraction.three_stage import ThreeStageExtractor
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,12 @@ class ExtractionEntry:
     def __init__(self, config: ExtractionConfig):
         self.config = config
         self.agent = build_extraction_agent()
+
+        # Initialize three-stage extractor
+        self.three_stage_extractor = ThreeStageExtractor(config)
+
+        # Enable three-stage mode by default for triples, temporal, and hyper
+        self.use_three_stage = True
 
     def extract(
         self,
@@ -55,6 +62,29 @@ class ExtractionEntry:
             f"data_type={type(data).__name__}"
         )
 
+        # Use three-stage extraction for triples, temporal, and hyper
+        if self.use_three_stage and extraction_type in ("triples", "temporal", "hyper"):
+            logger.info("Using three-stage extraction pipeline")
+            return await self.three_stage_extractor.extract_async(data, extraction_type)
+
+        # Fall back to original single-stage extraction
+        logger.info("Using single-stage extraction")
+        return await self._single_stage_extract(data, extraction_type)
+
+    async def _single_stage_extract(
+        self,
+        data: str | dict | list,
+        extraction_type: str,
+    ) -> dict[str, Any]:
+        """Original single-stage extraction method.
+
+        Args:
+            data: Input data
+            extraction_type: Type of extraction
+
+        Returns:
+            Extraction result
+        """
         # Build prompt
         prompt = self._build_prompt(data, extraction_type)
 

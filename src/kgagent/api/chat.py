@@ -9,7 +9,7 @@ from pathlib import Path
 from kgagent.system import KGAgentSystem
 from kgagent.extraction.tools.loaders import load_json_file, save_json_file
 from kgagent.output_process import record_result, record_batch_results, format_for_display
-from kgagent.output_process.record import format_single_result, clean_value
+from kgagent.output_process.record import format_single_result, clean_value, is_valid_triple_value
 from kgagent.extraction.config import ExtractionConfig
 from kgagent.intent import IntentEntry
 from kgagent.core.session import ChatSession
@@ -371,6 +371,9 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                                     try:
                                         if isinstance(rel, (list, tuple)) and len(rel) == 3:
                                             s, r, o = rel
+                                            # Validate triple values
+                                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                                continue
                                             # Clean values
                                             s = clean_value(s)
                                             r = clean_value(r)
@@ -383,6 +386,9 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                                     try:
                                         if isinstance(rel, (list, tuple)) and len(rel) == 3:
                                             s, r, o = rel
+                                            # Validate triple values
+                                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                                continue
                                             # Clean values
                                             s = clean_value(s)
                                             r = clean_value(r)
@@ -395,6 +401,9 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                                     try:
                                         if isinstance(rel, (list, tuple)) and len(rel) == 3:
                                             s, r, o = rel
+                                            # Validate triple values
+                                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                                continue
                                             # Clean values
                                             s = clean_value(s)
                                             r = clean_value(r)
