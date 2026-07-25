@@ -31,18 +31,23 @@ class IntentEntry:
         """Synchronous intent parsing."""
         return asyncio.run(self.parse_intent_async(user_input))
 
-    async def parse_intent_async(self, user_input: str) -> dict[str, Any]:
+    async def parse_intent_async(
+        self,
+        user_input: str,
+        context: str | None = None,
+    ) -> dict[str, Any]:
         """Parse user intent from natural language input.
 
         Args:
             user_input: User's natural language input
+            context: Optional conversation context (e.g., recent extraction history)
 
         Returns:
             Intent classification result with format:
             {
-                "intent": "chat" | "extract" | "help" | "command",
+                "intent": "chat" | "extract" | "help" | "command" | "save",
                 "confidence": float,
-                "parameters": {...} or None,  # for extract intent
+                "parameters": {...} or None,  # for extract/save intent
                 "explanation": str,
                 "response": str  # for chat intent
             }
@@ -61,6 +66,10 @@ class IntentEntry:
 
         # Build prompt
         prompt = f"Classify the intent of this user input:\n\n{user_input}"
+
+        # Add context if available
+        if context:
+            prompt = f"{context}\n\n---\n\n{prompt}"
 
         # Build options
         options = ClaudeAgentOptions(

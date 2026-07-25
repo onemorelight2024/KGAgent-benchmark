@@ -8,6 +8,139 @@ from pathlib import Path
 from typing import Any
 
 
+def clean_value(value: str | Any) -> str:
+    """Clean extracted value by removing extra quotes, brackets, etc.
+
+    Args:
+        value: Raw value from extraction
+
+    Returns:
+        Cleaned string value
+    """
+    if not isinstance(value, str):
+        value = str(value)
+
+    # Remove leading/trailing whitespace
+    value = value.strip()
+
+    # Remove leading brackets and quotes (handle combinations like ["text")
+    while value and value[0] in ('"', "'", '[', '{', '('):
+        value = value[1:].strip()
+
+    # Remove trailing brackets and quotes
+    while value and value[-1] in ('"', "'", ']', '}', ')'):
+        value = value[:-1].strip()
+
+    # Remove escaped quotes and backslashes
+    value = value.replace('\\"', '"').replace("\\'", "'").replace('\\\\', '')
+
+    return value
+
+
+def is_valid_triple_value(value: str) -> bool:
+    """Check if a triple value is valid (not malformed).
+
+    Args:
+        value: Value to check
+
+    Returns:
+        True if valid, False if malformed
+    """
+    if not isinstance(value, str):
+        return False
+
+    # Check for excessive length (likely a concatenated list)
+    if len(value) > 500:
+        return False
+
+    # Check for multiple quoted strings separated by commas (sign of malformed data)
+    # Pattern: "text1","text2","text3"
+    quote_comma_count = value.count('","')
+    if quote_comma_count > 3:
+        return False
+
+    return True
+
+
+def format_single_result(
+    result: dict[str, Any],
+    input_data: str | dict | None = None,
+    extraction_type: str = "triples",
+) -> dict[str, Any]:
+    """Format a single extraction result with tagged format.
+
+    Args:
+        result: Raw extraction result
+        input_data: Original input data (text or dict)
+        extraction_type: Type of extraction
+
+    Returns:
+        Formatted result dict with "text" and "kg" fields
+    """
+    item = {}
+
+    # Add text field
+    if input_data:
+        if isinstance(input_data, dict):
+            text = (
+                input_data.get("text") or
+                input_data.get("content") or
+                input_data.get("description") or
+                str(input_data)
+            )
+            item["text"] = text
+        elif isinstance(input_data, str):
+            item["text"] = input_data
+
+    # Format KG based on result type
+    kg = []
+    if "error" in result:
+        item["error"] = result["error"]
+    else:
+        # Extract triples/relations - convert to tagged format
+        if "relations" in result:
+            for rel in result["relations"]:
+                try:
+                    if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                        s, r, o = rel
+                        kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                except (ValueError, TypeError) as e:
+                    # Skip malformed triples
+                    continue
+        elif "triples" in result:
+            for rel in result["triples"]:
+                try:
+                    if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                        s, r, o = rel
+                        kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                except (ValueError, TypeError) as e:
+                    continue
+        elif "relation_triples" in result:
+            for rel in result["relation_triples"]:
+                try:
+                    if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                        s, r, o = rel
+                        kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                except (ValueError, TypeError) as e:
+                    continue
+        # For temporal quadruples - keep as strings
+        elif "quadruples" in result:
+            kg = result["quadruples"]
+        # For hyper-relations - keep as strings
+        elif "hyper_relations" in result:
+            kg = result["hyper_relations"]
+        # For AutoSchemaKG events - keep full structure
+        elif "entity_relation_dict" in result or "event_entity_relation_dict" in result:
+            kg = {
+                "entity_relations": result.get("entity_relation_dict", []),
+                "event_entities": result.get("event_entity_relation_dict", []),
+                "event_relations": result.get("event_relation_dict", []),
+            }
+
+    item["kg"] = kg
+    return item
+
+
 def record_result(
     result: dict[str, Any],
     input_source: str | Path,
@@ -120,20 +253,51 @@ def record_batch_results(
         else:
             # Extract triples/relations - convert to tagged format
             if "relations" in result:
-                kg = [
-                    f"<subj> {s} <obj> {o} <rel> {r}"
-                    for s, r, o in result["relations"]
-                ]
+                for rel in result["relations"]:
+                    try:
+                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                            s, r, o = rel
+                            # Validate triple values
+                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                continue
+                            # Clean values
+                            s = clean_value(s)
+                            r = clean_value(r)
+                            o = clean_value(o)
+                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                    except (ValueError, TypeError) as e:
+                        # Skip malformed triples
+                        continue
             elif "triples" in result:
-                kg = [
-                    f"<subj> {s} <obj> {o} <rel> {r}"
-                    for s, r, o in result["triples"]
-                ]
+                for rel in result["triples"]:
+                    try:
+                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                            s, r, o = rel
+                            # Validate triple values
+                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                continue
+                            # Clean values
+                            s = clean_value(s)
+                            r = clean_value(r)
+                            o = clean_value(o)
+                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                    except (ValueError, TypeError) as e:
+                        continue
             elif "relation_triples" in result:
-                kg = [
-                    f"<subj> {s} <obj> {o} <rel> {r}"
-                    for s, r, o in result["relation_triples"]
-                ]
+                for rel in result["relation_triples"]:
+                    try:
+                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                            s, r, o = rel
+                            # Validate triple values
+                            if not (is_valid_triple_value(s) and is_valid_triple_value(r) and is_valid_triple_value(o)):
+                                continue
+                            # Clean values
+                            s = clean_value(s)
+                            r = clean_value(r)
+                            o = clean_value(o)
+                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                    except (ValueError, TypeError) as e:
+                        continue
             # For temporal quadruples - keep as strings
             elif "quadruples" in result:
                 kg = result["quadruples"]

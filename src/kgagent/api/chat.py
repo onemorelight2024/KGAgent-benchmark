@@ -7,10 +7,13 @@ import json
 from pathlib import Path
 
 from kgagent.system import KGAgentSystem
-from kgagent.extraction.tools.loaders import load_json_file
-from kgagent.output_process import record_result, record_batch_results
+from kgagent.extraction.tools.loaders import load_json_file, save_json_file
+from kgagent.output_process import record_result, record_batch_results, format_for_display
+from kgagent.output_process.record import format_single_result, clean_value
 from kgagent.extraction.config import ExtractionConfig
 from kgagent.intent import IntentEntry
+from kgagent.core.session import ChatSession
+from kgagent.core.batch import process_batch_with_resume
 
 try:
     from prompt_toolkit import PromptSession
@@ -61,6 +64,10 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
     )
     intent_agent = IntentEntry(intent_config)
 
+    # Create chat session for memory
+    chat_session = ChatSession(max_history=10)
+    print(f"💾 Session memory enabled (keeping last 10 extractions)\n")
+
     # Setup prompt session if available
     if PROMPT_TOOLKIT_AVAILABLE:
         history = InMemoryHistory()
@@ -71,12 +78,12 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             """Handle Ctrl+C - cancel current operation but stay in chat."""
             event.app.exit(exception=KeyboardInterrupt)
 
-        session = PromptSession(history=history, key_bindings=bindings)
+        prompt_session = PromptSession(history=history, key_bindings=bindings)
 
         async def get_input(prompt: str) -> str:
             """Get input with prompt_toolkit support (async)."""
             try:
-                return await session.prompt_async(prompt)
+                return await prompt_session.prompt_async(prompt)
             except KeyboardInterrupt:
                 raise
             except EOFError:
@@ -94,18 +101,18 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             user_input = (await get_input("User> ")).strip()
         except KeyboardInterrupt:
             if current_task and not current_task.done():
-                print("\n⚠️  Task cancelled")
+                print("\n⚠️  Cancelling current task...")
                 current_task.cancel()
                 try:
                     await current_task
                 except asyncio.CancelledError:
-                    pass
+                    print("✓ Task cancelled\n")
                 current_task = None
                 continue
             else:
-                print("\nUse :quit to exit")
+                print("\n💡 Tip: Use :quit to exit\n")
                 continue
-        except (EOFError, KeyboardInterrupt):
+        except EOFError:
             print("\nGoodbye!")
             break
 
@@ -123,12 +130,26 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             print("  - File path can include --type <type>")
             print("  - Supported types: triples, temporal, hyper, event, auto")
             print("  - Multi-item files will be batch processed")
-            print("  - Results from files are auto-saved to same directory\n")
+            print("  - Results from files are auto-saved to same directory")
+            print("  - Say 'save that' or 'save to <file>' to save text extraction results")
+            print("  - :stats - Show session statistics\n")
+            continue
+
+        if user_input == ":stats":
+            stats = chat_session.get_session_stats()
+            print("\n📊 Session Statistics:")
+            print(f"  Duration: {stats['session_duration']:.0f} seconds")
+            print(f"  Total extractions: {stats['total_extractions']}")
+            print(f"  By type: {stats['extraction_types']}")
+            print(f"  Files processed: {stats['files_processed']}")
+            print(f"  Text extractions: {stats['text_extractions']}\n")
             continue
 
         # === Step 1: Parse intent with Intent Agent ===
         try:
-            intent_result = await intent_agent.parse_intent_async(user_input)
+            # Build context from session history
+            context = chat_session.build_context_summary(max_records=3)
+            intent_result = await intent_agent.parse_intent_async(user_input, context=context)
         except Exception as e:
             print(f"⚠️  Intent 解析失败: {e}")
             print("回退到传统模式...\n")
@@ -159,6 +180,49 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                 break
             elif command == "help":
                 continue  # Already handled above
+
+        # Handle save intent
+        if intent_result and intent_result.get("intent") == "save":
+            params = intent_result.get("parameters", {})
+            target = params.get("target", "last")
+            file_path = params.get("file_path")
+
+            if target == "last":
+                last_record = chat_session.get_last_extraction()
+                if last_record is None:
+                    print("⚠️  没有可保存的抽取结果\n")
+                    continue
+
+                # Generate file path if not provided
+                if not file_path:
+                    import time
+                    timestamp = time.strftime("%Y%m%d_%H%M%S")
+                    file_path = f"kg_result_{timestamp}.json"
+
+                # Format and save the result using record_result
+                # This ensures consistent tagged format
+                try:
+                    # Create a temporary file path for record_result
+                    temp_path = Path(file_path)
+
+                    # Use record_result to format and save
+                    # It expects input_data, so we provide the original input
+                    from kgagent.output_process.record import format_single_result
+
+                    # Format result with proper tagged format
+                    formatted = format_single_result(
+                        last_record.result,
+                        input_data=last_record.input_data,
+                        extraction_type=last_record.extraction_type,
+                    )
+
+                    # Save formatted result
+                    save_json_file(formatted, file_path)
+                    print(f"✓ 结果已保存到: {file_path}\n")
+                except Exception as e:
+                    print(f"⚠️  保存失败: {e}\n")
+
+            continue
 
         # === Step 3: Handle extract intent ===
 
@@ -275,27 +339,119 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                 if isinstance(loaded_data, list):
                     print(f"🔄 Batch processing {len(loaded_data)} items...\n")
 
-                    # Build batch tasks - use the detected/specified extraction_type
-                    tasks = [
-                        {
-                            "data": item,
-                            "extraction_type": extraction_type,
-                        }
-                        for item in loaded_data
-                    ]
+                    # Determine output path
+                    stem = file_path.stem
+                    output_path = file_path.parent / f"{stem}_{extraction_type}_kg.json"
 
-                    # Batch extract
-                    results = await system.extract_batch(tasks, max_concurrency=4)
+                    # Define format function for results
+                    def format_result(result, item, index):
+                        formatted = {"index": index}
 
-                    # Save results to file
-                    output_path = record_batch_results(
-                        results,
-                        file_path,
-                        input_data=loaded_data,
-                        extraction_type=extraction_type
+                        # Add text field from original data
+                        if isinstance(item, dict):
+                            text = (
+                                item.get("text") or
+                                item.get("content") or
+                                item.get("description") or
+                                item.get("body") or
+                                str(item)
+                            )
+                            formatted["text"] = text
+                        elif isinstance(item, str):
+                            formatted["text"] = item
+
+                        # Format KG based on result type
+                        kg = []
+                        if "error" in result:
+                            formatted["error"] = result["error"]
+                        else:
+                            # Extract triples/relations - convert to tagged format
+                            if "relations" in result:
+                                for rel in result["relations"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            # Clean values
+                                            s = clean_value(s)
+                                            r = clean_value(r)
+                                            o = clean_value(o)
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            elif "triples" in result:
+                                for rel in result["triples"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            # Clean values
+                                            s = clean_value(s)
+                                            r = clean_value(r)
+                                            o = clean_value(o)
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            elif "relation_triples" in result:
+                                for rel in result["relation_triples"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            # Clean values
+                                            s = clean_value(s)
+                                            r = clean_value(r)
+                                            o = clean_value(o)
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            # For temporal quadruples
+                            elif "quadruples" in result:
+                                kg = result["quadruples"]
+                            # For hyper-relations
+                            elif "hyper_relations" in result:
+                                kg = result["hyper_relations"]
+                            # For AutoSchemaKG events
+                            elif "entity_relation_dict" in result or "event_entity_relation_dict" in result:
+                                kg = {
+                                    "entity_relations": result.get("entity_relation_dict", []),
+                                    "event_entities": result.get("event_entity_relation_dict", []),
+                                    "event_relations": result.get("event_relation_dict", []),
+                                }
+
+                        formatted["kg"] = kg
+                        return formatted
+
+                    # Define extraction function
+                    async def extract_single(item):
+                        return await system.extract_async(
+                            data=item,
+                            extraction_type=extraction_type,
+                        )
+
+                    # Process with resume support
+                    current_task = asyncio.create_task(
+                        process_batch_with_resume(
+                            items=loaded_data,
+                            process_fn=extract_single,
+                            output_path=output_path,
+                            max_concurrent=4,
+                            format_fn=format_result,
+                        )
                     )
-                    print(f"✓ Processed {len(results)} items")
-                    print(f"📝 Results saved to: {output_path}\n")
+
+                    try:
+                        stats = await current_task
+                    except asyncio.CancelledError:
+                        print("\n⚠️  Batch processing cancelled\n")
+                        current_task = None
+                        continue
+                    finally:
+                        current_task = None
+
+                    print(f"\n✓ Batch processing complete:")
+                    print(f"  Total: {stats['total']}")
+                    print(f"  Completed: {stats['completed']}")
+                    print(f"  Skipped: {stats['skipped']}")
+                    print(f"  Failed: {stats['failed']}")
+                    print(f"📝 Results saved to: {stats['output_path']}\n")
                     continue
 
                 # Check if it's a dict with "tasks" field (batch config format)
@@ -303,30 +459,112 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                     tasks_list = loaded_data["tasks"]
                     print(f"🔄 Batch processing {len(tasks_list)} tasks from config...\n")
 
-                    # Build batch tasks (each task already has extraction_type)
-                    tasks = []
-                    original_data = []
+                    # Determine output path
+                    stem = file_path.stem
+                    output_path = file_path.parent / f"{stem}_{extraction_type}_kg.json"
+
+                    # Build items list with their extraction types
+                    items_with_types = []
                     for task in tasks_list:
                         task_type = task.get("extraction_type", extraction_type)
                         task_data = task.get("data", task)
-                        tasks.append({
-                            "data": task_data,
-                            "extraction_type": task_type,
-                        })
-                        original_data.append(task_data)
+                        items_with_types.append((task_data, task_type))
 
-                    # Batch extract
-                    results = await system.extract_batch(tasks, max_concurrency=4)
+                    # Define format function for results
+                    def format_result(result, item_tuple, index):
+                        item, item_type = item_tuple
+                        formatted = {"index": index}
 
-                    # Save results to file
-                    output_path = record_batch_results(
-                        results,
-                        file_path,
-                        input_data=original_data,
-                        extraction_type=extraction_type
+                        # Add text field from original data
+                        if isinstance(item, dict):
+                            text = (
+                                item.get("text") or
+                                item.get("content") or
+                                item.get("description") or
+                                item.get("body") or
+                                str(item)
+                            )
+                            formatted["text"] = text
+                        elif isinstance(item, str):
+                            formatted["text"] = item
+
+                        # Format KG based on result type
+                        kg = []
+                        if "error" in result:
+                            formatted["error"] = result["error"]
+                        else:
+                            if "relations" in result:
+                                for rel in result["relations"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            elif "triples" in result:
+                                for rel in result["triples"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            elif "relation_triples" in result:
+                                for rel in result["relation_triples"]:
+                                    try:
+                                        if isinstance(rel, (list, tuple)) and len(rel) == 3:
+                                            s, r, o = rel
+                                            kg.append(f"<subj> {s} <obj> {o} <rel> {r}")
+                                    except (ValueError, TypeError):
+                                        continue
+                            elif "quadruples" in result:
+                                kg = result["quadruples"]
+                            elif "hyper_relations" in result:
+                                kg = result["hyper_relations"]
+                            elif "entity_relation_dict" in result or "event_entity_relation_dict" in result:
+                                kg = {
+                                    "entity_relations": result.get("entity_relation_dict", []),
+                                    "event_entities": result.get("event_entity_relation_dict", []),
+                                    "event_relations": result.get("event_relation_dict", []),
+                                }
+
+                        formatted["kg"] = kg
+                        return formatted
+
+                    # Define extraction function
+                    async def extract_single(item_tuple):
+                        item, item_type = item_tuple
+                        return await system.extract_async(
+                            data=item,
+                            extraction_type=item_type,
+                        )
+
+                    # Process with resume support
+                    current_task = asyncio.create_task(
+                        process_batch_with_resume(
+                            items=items_with_types,
+                            process_fn=extract_single,
+                            output_path=output_path,
+                            max_concurrent=4,
+                            format_fn=format_result,
+                        )
                     )
-                    print(f"✓ Processed {len(results)} tasks")
-                    print(f"📝 Results saved to: {output_path}\n")
+
+                    try:
+                        stats = await current_task
+                    except asyncio.CancelledError:
+                        print("\n⚠️  Batch processing cancelled\n")
+                        current_task = None
+                        continue
+                    finally:
+                        current_task = None
+
+                    print(f"\n✓ Batch processing complete:")
+                    print(f"  Total: {stats['total']}")
+                    print(f"  Completed: {stats['completed']}")
+                    print(f"  Skipped: {stats['skipped']}")
+                    print(f"  Failed: {stats['failed']}")
+                    print(f"📝 Results saved to: {stats['output_path']}\n")
                     continue
 
                 else:
@@ -410,10 +648,29 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                 output_path = record_result(result, file_path)
                 print(f"✓ Extraction complete")
                 print(f"📝 Result saved to: {output_path}\n")
+
+                # Record to session history
+                chat_session.add_extraction(
+                    input_type="file",
+                    input_data=str(file_path),
+                    extraction_type=extraction_type,
+                    result=result,
+                    output_path=output_path,
+                )
             else:
                 # Display in terminal (for direct text input)
-                result_str = json.dumps(result, indent=2, ensure_ascii=False)
+                # Use formatted display (same as file output format)
+                result_str = format_for_display(result, extraction_type)
                 print(f"\nAssistant>\n{result_str}\n")
+
+                # Record to session history
+                chat_session.add_extraction(
+                    input_type="text",
+                    input_data=data,
+                    extraction_type=extraction_type,
+                    result=result,
+                    output_path=None,
+                )
 
         except asyncio.CancelledError:
             print(f"\n⚠️  Extraction cancelled\n")
