@@ -23,6 +23,7 @@ from typing import Any
 
 from kgagent.core.config import get_model
 from kgagent.core.logging_setup import setup_logging
+from kgagent.benchmark import BenchmarkEntry
 from kgagent.system.orchestrator import run_extraction
 from kgagent.system.registry import ExtractionRegistry
 
@@ -128,6 +129,72 @@ class KGAgentSystem:
 
         logger.info("Extraction complete")
         return result
+
+    def benchmark(
+        self,
+        data: str,
+        *,
+        graph_type: str = "KG",
+        task: str = "KGQA",
+        method: str = "sgsh_prompt",
+        sample_count: int = 5,
+        model: str | None = None,
+        base_url: str | None = None,
+        api_key: str | None = None,
+        output_path: str | None = None,
+        temperature: float = 0.7,
+        parallelism: int = 4,
+    ) -> dict[str, Any]:
+        """Generate KGQA/KGQG benchmark data synchronously."""
+        return asyncio.run(
+            self.benchmark_async(
+                data=data,
+                graph_type=graph_type,
+                task=task,
+                method=method,
+                sample_count=sample_count,
+                model=model,
+                base_url=base_url,
+                api_key=api_key,
+                output_path=output_path,
+                temperature=temperature,
+                parallelism=parallelism,
+            )
+        )
+
+    async def benchmark_async(
+        self,
+        data: str,
+        *,
+        graph_type: str = "KG",
+        task: str = "KGQA",
+        method: str = "sgsh_prompt",
+        sample_count: int = 5,
+        model: str | None = None,
+        base_url: str | None = None,
+        api_key: str | None = None,
+        output_path: str | None = None,
+        temperature: float = 0.7,
+        parallelism: int = 4,
+    ) -> dict[str, Any]:
+        """Generate KGQA/KGQG benchmark data asynchronously."""
+        entry = BenchmarkEntry(
+            model_name=model or "gpt-4o-mini",
+            work_dir=self.work_dir,
+            output_dir=self.work_dir / "outputs",
+        )
+        return await entry.run_async(
+            data=data,
+            graph_type=graph_type,
+            task=task,
+            method=method,
+            sample_count=sample_count,
+            base_url=base_url,
+            api_key=api_key,
+            output_path=output_path,
+            temperature=temperature,
+            parallelism=parallelism,
+        )
 
     async def extract_batch(
         self,

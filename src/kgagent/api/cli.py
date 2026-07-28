@@ -145,6 +145,39 @@ def main():
         help="Output markdown file path",
     )
 
+    # Benchmark command
+    benchmark_parser = subparsers.add_parser("benchmark", help="Generate KGQA/KGQG benchmark")
+    benchmark_parser.add_argument("data", help="Input KG/TKG JSON path or inline JSON")
+    benchmark_parser.add_argument(
+        "--graph-type",
+        choices=["KG", "TKG"],
+        default="KG",
+        help="Input graph type (default: KG)",
+    )
+    benchmark_parser.add_argument(
+        "--task",
+        choices=["KGQA", "KGQG", "temporal_KGQA", "temporal_KGQG"],
+        default="KGQA",
+        help="Benchmark task (default: KGQA)",
+    )
+    benchmark_parser.add_argument(
+        "--method",
+        default="sgsh_prompt",
+        help="Generation method (default: sgsh_prompt)",
+    )
+    benchmark_parser.add_argument(
+        "--sample-count",
+        "-n",
+        type=int,
+        default=5,
+        help="Number of samples to generate (default: 5)",
+    )
+    benchmark_parser.add_argument("--base-url", default=None, help="OpenAI-compatible base URL")
+    benchmark_parser.add_argument("--api-key", default=None, help="API key")
+    benchmark_parser.add_argument("--output", "-o", default=None, help="Output JSONL path")
+    benchmark_parser.add_argument("--workspace", "-w", default=None, help="Working directory")
+    benchmark_parser.add_argument("--model", "-m", default="gpt-4o-mini", help="Model name")
+
     args = parser.parse_args()
 
     if args.command == "chat":
@@ -281,6 +314,25 @@ def main():
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
+
+    elif args.command == "benchmark":
+        system = KGAgentSystem(
+            model_name=args.model,
+            work_dir=args.workspace or ".",
+        )
+        result = system.benchmark(
+            data=args.data,
+            graph_type=args.graph_type,
+            task=args.task,
+            method=args.method,
+            sample_count=args.sample_count,
+            model=args.model,
+            base_url=args.base_url,
+            api_key=args.api_key,
+            output_path=args.output,
+        )
+        safe_result = dict(result)
+        print(json.dumps(safe_result, indent=2, ensure_ascii=False))
 
     else:
         parser.print_help()

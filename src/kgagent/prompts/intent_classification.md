@@ -36,7 +36,7 @@ Analyze user input and classify their intent into one of these categories:
 {
   "intent": "chat",
   "confidence": 0.95,
-  "response": "你好！我是KGAgent2，专门用于知识图谱相关任务。目前支持知识图谱抽取，包括关系三元组、时序关系、超关系和事件图谱。有什么可以帮你的吗？"
+  "response": "你好！我是KGAgent2，专门用于知识图谱相关任务。目前支持知识图谱抽取和 benchmark 生成，包括关系三元组、时序关系、超关系、事件图谱，以及 KGQA/KGQG benchmark。有什么可以帮你的吗？"
 }
 ```
 
@@ -73,7 +73,31 @@ Analyze user input and classify their intent into one of these categories:
 - Extract to `file_path` field if found
 - If file path is the main content, set `data` to empty string
 
-### 3. **help** - Asking for help
+### 3. **benchmark** - KGQA/KGQG benchmark generation request
+**When to use:**
+- User explicitly mentions benchmark, 基准, 评测数据集, KGQA benchmark, KGQG benchmark
+- User wants to generate question-answer benchmark data from an existing KG/TKG
+- User asks to evaluate or prepare a dataset for KGQA/KGQG
+
+**Output:**
+```json
+{
+  "intent": "benchmark",
+  "confidence": 0.95,
+  "parameters": {
+    "graph_type": "auto",
+    "task": "auto",
+    "file_path": null
+  },
+  "explanation": "用户想要生成 KGQA/KGQG benchmark"
+}
+```
+
+**Important distinction:**
+- `extract` creates a knowledge graph from text.
+- `benchmark` creates QA/QG benchmark samples from an existing knowledge graph.
+
+### 4. **help** - Asking for help
 **When to use:**
 - User asks "how to", "help", "usage", "怎么用", "如何使用"
 - User asks for examples or documentation
@@ -88,7 +112,7 @@ Analyze user input and classify their intent into one of these categories:
 }
 ```
 
-### 4. **command** - System commands
+### 5. **command** - System commands
 **When to use:**
 - Input starts with `:` like `:quit`, `:exit`, `:help`
 
@@ -102,7 +126,7 @@ Analyze user input and classify their intent into one of these categories:
 }
 ```
 
-### 5. **save** - Save previous result to file
+### 6. **save** - Save previous result to file
 **When to use:**
 - User asks to save previous/last result: "save the last result", "保存刚才的结果"
 - User wants to export previous extraction: "save that to file.json", "导出到文件"
@@ -248,7 +272,7 @@ Analyze user input and classify their intent into one of these categories:
 {
   "intent": "chat",
   "confidence": 0.99,
-  "response": "Hello! I'm KGAgent2, a knowledge graph processing platform. I can help you:\n1. Extract relation triples\n2. Extract temporal relations (with time information)\n3. Extract hyper-relations (with contextual attributes)\n4. Extract event graphs\n\nYou can directly input text or file paths, and I'll help you analyze them. Type :help for more information."
+  "response": "Hello! I'm KGAgent2, a knowledge graph processing platform. I can help you:\n1. Extract relation triples\n2. Extract temporal relations (with time information)\n3. Extract hyper-relations (with contextual attributes)\n4. Extract event graphs\n5. Generate KGQA/KGQG benchmark datasets\n\nYou can directly input text, file paths, or benchmark requirements, and I'll help you analyze them. Type :help for more information."
 }
 ```
 
@@ -259,7 +283,7 @@ Analyze user input and classify their intent into one of these categories:
 {
   "intent": "chat",
   "confidence": 0.99,
-  "response": "你好！我是KGAgent2，一个知识图谱处理平台。我可以帮你：\n1. 抽取关系三元组\n2. 抽取时序关系（带时间信息）\n3. 抽取超关系（带上下文属性）\n4. 抽取事件图谱\n\n你可以直接输入文本或文件路径，我会帮你分析。需要帮助可以输入 :help"
+  "response": "你好！我是KGAgent2，一个知识图谱处理平台。我可以帮你：\n1. 抽取关系三元组\n2. 抽取时序关系（带时间信息）\n3. 抽取超关系（带上下文属性）\n4. 抽取事件图谱\n5. 生成 KGQA/KGQG benchmark 数据集\n\n你可以直接输入文本、文件路径或 benchmark 需求，我会帮你分析。需要帮助可以输入 :help"
 }
 ```
 

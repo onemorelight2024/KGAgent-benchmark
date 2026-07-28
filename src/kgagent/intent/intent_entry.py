@@ -45,7 +45,7 @@ class IntentEntry:
         Returns:
             Intent classification result with format:
             {
-                "intent": "chat" | "extract" | "help" | "command" | "save" | "convert",
+                "intent": "chat" | "extract" | "benchmark" | "help" | "command" | "save" | "convert",
                 "confidence": float,
                 "parameters": {...} or None,  # for extract/save/convert intent
                 "explanation": str,
@@ -101,7 +101,7 @@ class IntentEntry:
             return {
                 "intent": "chat",
                 "confidence": 0.5,
-                "response": "抱歉，我没有理解你的意思。你可以：\n1. 直接输入文本让我抽取知识图谱\n2. 输入 :help 查看帮助\n3. 随意和我聊天",
+                "response": "抱歉，我没有理解你的意思。你可以：\n1. 直接输入文本让我抽取知识图谱\n2. 说明你想生成 KGQA/KGQG benchmark\n3. 输入 :help 查看帮助\n4. 随意和我聊天",
             }
 
         logger.info(f"Intent classified: {result['intent']} (confidence: {result.get('confidence', 0)})")

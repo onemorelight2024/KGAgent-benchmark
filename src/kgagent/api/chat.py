@@ -14,6 +14,9 @@ from kgagent.extraction.config import ExtractionConfig
 from kgagent.intent import IntentEntry
 from kgagent.core.session import ChatSession
 from kgagent.core.batch import process_batch_with_resume
+from kgagent.core.config import get_model
+from kgagent.benchmark.chat_flow import looks_like_benchmark_request
+from kgagent.benchmark.conversation import BenchmarkConversation
 
 try:
     from prompt_toolkit import PromptSession
@@ -49,15 +52,17 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
     print("  /path/to/file.json --type event")
     print()
 
+    chat_model = model or get_model()
+
     # Create system
     system = KGAgentSystem(
-        model_name=model,
+        model_name=chat_model,
         work_dir=workspace or "./tmp_sdk",
     )
 
     # Create intent agent
     intent_config = ExtractionConfig(
-        model_name=model,
+        model_name=chat_model,
         work_dir=workspace or "./tmp_sdk",
         permission_mode="auto",
         max_turns=1,
@@ -67,6 +72,11 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
     # Create chat session for memory
     chat_session = ChatSession(max_history=10)
     print(f"💾 Session memory enabled (keeping last 10 extractions)\n")
+    benchmark_conversation = BenchmarkConversation(
+        workspace=Path(workspace or ".").resolve(),
+        sdk_model=chat_model,
+        benchmark_model="gpt-4o-mini",
+    )
 
     # Setup prompt session if available
     if PROMPT_TOOLKIT_AVAILABLE:
@@ -145,6 +155,51 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             print(f"  Text extractions: {stats['text_extractions']}\n")
             continue
 
+        # Benchmark is a multi-turn agent workflow. The benchmark conversation
+        # agent interprets natural replies and updates the workflow state.
+        if benchmark_conversation.active or looks_like_benchmark_request(user_input):
+            if benchmark_conversation.active:
+                message, benchmark_params = await benchmark_conversation.handle(user_input)
+            else:
+                message, benchmark_params = await benchmark_conversation.start(user_input)
+            print(f"\nAssistant> {message}\n")
+
+            if benchmark_params is None:
+                continue
+
+            try:
+                current_task = asyncio.create_task(
+                    system.benchmark_async(**benchmark_params)
+                )
+                result = await current_task
+                current_task = None
+                stats = result.get("stats", {})
+                output_path = result.get("output_path")
+                print("\nAssistant> benchmark 生成完成。\n")
+                print(f"| 项目 | 结果 |")
+                print(f"|---|---|")
+                print(f"| 类型 | {result.get('benchmark_type')} / {result.get('graph_type')} |")
+                print(f"| 方法 | {result.get('method')} |")
+                print(f"| 模型 | {result.get('model')} |")
+                print(f"| 样本数 | {stats.get('valid', 0)} / {stats.get('total', 0)} 有效 |")
+                print(f"| 输出文件 | `{output_path}` |")
+                print()
+
+                chat_session.add_extraction(
+                    input_type="benchmark",
+                    input_data=benchmark_params["data"],
+                    extraction_type=result.get("benchmark_type", "benchmark"),
+                    result=result,
+                    output_path=output_path,
+                )
+            except asyncio.CancelledError:
+                print("\n⚠️  benchmark 生成已取消\n")
+                current_task = None
+            except Exception as e:
+                print(f"\nError: benchmark 生成失败: {e}\n")
+                current_task = None
+            continue
+
         # === Step 1: Parse intent with Intent Agent ===
         try:
             # Build context from session history
@@ -169,6 +224,7 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
             print("  - 或者输入文件路径，例如: examples/data.json")
             print("  - 支持的抽取类型: triples(三元组), temporal(时序), hyper(超关系), event(事件)")
             print("  - 使用 --type 指定类型，例如: data.json --type event")
+            print("  - 生成 benchmark: 例如 '我想做 KGQA benchmark' 或 kgagent benchmark examples/kg_benchmark_input.json")
             print("  - 输入 :quit 退出\n")
             continue
 
