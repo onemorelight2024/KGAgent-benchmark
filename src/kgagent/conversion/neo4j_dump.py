@@ -1,11 +1,13 @@
-"""Convert Neo4j dump to JSON KG format."""
+"""Convert Neo4j dump to JSON KG format using Docker."""
 
 from __future__ import annotations
 
 import json
 import logging
+import shutil
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
@@ -18,12 +20,12 @@ def convert_from_neo4j_dump(
     neo4j_home: str | None = None,
     **kwargs,
 ) -> dict[str, Any]:
-    """Convert Neo4j dump file to JSON KG format.
+    """Convert Neo4j dump file to JSON KG format using Docker.
 
     Args:
         input_path: Input Neo4j dump file path (.dump)
         output_path: Output JSON file path
-        neo4j_home: Neo4j installation directory (optional, will try to detect)
+        neo4j_home: Unused (kept for compatibility)
         **kwargs: Additional options
 
     Returns:
@@ -34,74 +36,125 @@ def convert_from_neo4j_dump(
     if not input_path.exists():
         raise FileNotFoundError(f"Neo4j dump file not found: {input_path}")
 
+    # Check if Docker is available
+    if not _check_docker():
+        raise RuntimeError(
+            "Docker is required to convert Neo4j dump files.\n\n"
+            "Please install Docker:\n"
+            "  macOS: https://docs.docker.com/desktop/install/mac-install/\n"
+            "  Linux: https://docs.docker.com/engine/install/\n"
+            "  Windows: https://docs.docker.com/desktop/install/windows-install/\n\n"
+            "After installation, make sure Docker is running."
+        )
+
     if output_path is None:
         output_path = input_path.with_suffix('.json')
     else:
         output_path = Path(output_path)
 
-    # Create temp directory for extraction
+    logger.info(f"Converting Neo4j dump using Docker: {input_path}")
+
+    # Create temporary directories
     with tempfile.TemporaryDirectory() as temp_dir:
-        temp_db_path = Path(temp_dir) / "temp_db"
+        temp_path = Path(temp_dir)
+        data_dir = temp_path / "data"
+        import_dir = temp_path / "import"
+        plugins_dir = temp_path / "plugins"
+        backups_dir = temp_path / "backups"
 
-        # Step 1: Restore dump to temporary database
-        logger.info(f"Restoring Neo4j dump: {input_path}")
-        _restore_neo4j_dump(input_path, temp_db_path, neo4j_home)
+        data_dir.mkdir()
+        import_dir.mkdir()
+        plugins_dir.mkdir()
+        backups_dir.mkdir()
 
-        # Step 2: Export data using cypher-shell or neo4j-admin
-        logger.info("Exporting data from restored database")
-        kg_data = _export_neo4j_data(temp_db_path, neo4j_home)
+        # Copy dump file to backups directory
+        dump_file = backups_dir / input_path.name
+        shutil.copy(input_path, dump_file)
 
-    # Step 3: Convert to JSON KG format
-    result = _convert_neo4j_to_json(kg_data)
+        # Step 1: Load dump file into database
+        logger.info("Step 1/4: Loading dump file...")
+        _docker_load_dump(dump_file, data_dir, backups_dir)
 
-    # Save to file
+        # Step 2: Start temporary Neo4j container (no port mapping)
+        logger.info("Step 2/4: Starting temporary Neo4j container...")
+        container_name = _docker_start_neo4j(data_dir, import_dir, plugins_dir)
+
+        try:
+            # Step 3: Export data using APOC
+            logger.info("Step 3/4: Exporting data to JSON...")
+            json_file = import_dir / "graph.json"
+            _docker_export_json(container_name, json_file)
+
+            # Step 4: Convert APOC JSON to KG format
+            logger.info("Step 4/4: Converting to KG format...")
+            kg_data = _convert_apoc_json_to_kg(json_file)
+
+        finally:
+            # Always cleanup container
+            logger.info("Cleaning up Docker container...")
+            _docker_cleanup(container_name)
+
+    # Save to output file
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
+        json.dump(kg_data, f, indent=2, ensure_ascii=False)
 
     logger.info(
-        f"Converted from Neo4j dump: {len(result.get('nodes', []))} nodes, "
-        f"{len(result.get('kg', []))} relations"
+        f"Converted from Neo4j dump: {len(kg_data.get('nodes', []))} nodes, "
+        f"{len(kg_data.get('kg', []))} relations"
     )
 
     return {
         "format": "json",
         "output_file": str(output_path),
-        "data": result,
+        "data": kg_data,
         "statistics": {
-            "nodes": len(result.get('nodes', [])),
-            "relations": len(result.get('kg', [])),
+            "nodes": len(kg_data.get('nodes', [])),
+            "relations": len(kg_data.get('kg', [])),
         },
     }
 
 
-def _restore_neo4j_dump(
-    dump_path: Path,
-    db_path: Path,
-    neo4j_home: str | None,
-):
-    """Restore Neo4j dump to temporary database.
+def _check_docker() -> bool:
+    """Check if Docker is available and running.
+
+    Returns:
+        True if Docker is available, False otherwise
+    """
+    try:
+        result = subprocess.run(
+            ["docker", "info"],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return False
+
+
+def _docker_load_dump(
+    dump_file: Path,
+    data_dir: Path,
+    backups_dir: Path,
+) -> None:
+    """Load Neo4j dump file using Docker.
 
     Args:
-        dump_path: Path to .dump file
-        db_path: Target database path
-        neo4j_home: Neo4j home directory
+        dump_file: Path to dump file
+        data_dir: Data directory
+        backups_dir: Backups directory containing dump
     """
-    # Find neo4j-admin command
-    neo4j_admin = _find_neo4j_command("neo4j-admin", neo4j_home)
+    db_name = dump_file.stem  # e.g., "neo4j" from "neo4j.dump"
 
-    if not neo4j_admin:
-        raise RuntimeError(
-            "neo4j-admin not found. Please provide neo4j_home parameter or "
-            "ensure Neo4j is installed and in PATH"
-        )
-
-    # Run neo4j-admin database load
     cmd = [
-        neo4j_admin,
-        "database", "load",
-        "--from-path", str(dump_path.parent),
-        "--database", "temp_db",
-        "--overwrite-destination"
+        "docker", "run", "--rm",
+        "-v", f"{data_dir}:/data",
+        "-v", f"{backups_dir}:/backups",
+        "neo4j:latest",
+        "neo4j-admin", "database", "load",
+        "--from-path=/backups",
+        "--overwrite-destination",
+        db_name
     ]
 
     try:
@@ -109,65 +162,52 @@ def _restore_neo4j_dump(
             cmd,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=300
         )
-        logger.debug(f"neo4j-admin output: {result.stdout}")
+        logger.debug(f"Load dump output: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to restore dump: {e.stderr}")
-        raise RuntimeError(f"Failed to restore Neo4j dump: {e.stderr}")
+        logger.error(f"Failed to load dump: {e.stderr}")
+        raise RuntimeError(f"Failed to load Neo4j dump: {e.stderr}")
+    except subprocess.TimeoutExpired:
+        raise RuntimeError("Neo4j dump loading timed out after 5 minutes")
 
 
-def _export_neo4j_data(
-    db_path: Path,
-    neo4j_home: str | None,
-) -> dict[str, Any]:
-    """Export data from Neo4j database.
-
-    Args:
-        db_path: Database path
-        neo4j_home: Neo4j home directory
-
-    Returns:
-        Dict with nodes and relationships
-    """
-    # Find cypher-shell command
-    cypher_shell = _find_neo4j_command("cypher-shell", neo4j_home)
-
-    if not cypher_shell:
-        raise RuntimeError("cypher-shell not found")
-
-    # Export nodes
-    nodes_query = "MATCH (n) RETURN id(n) as id, labels(n) as labels, properties(n) as props"
-    nodes_result = _run_cypher_query(cypher_shell, nodes_query)
-
-    # Export relationships
-    rels_query = """
-    MATCH (a)-[r]->(b)
-    RETURN id(a) as start_id, id(b) as end_id, type(r) as type, properties(r) as props
-    """
-    rels_result = _run_cypher_query(cypher_shell, rels_query)
-
-    return {
-        "nodes": nodes_result,
-        "relationships": rels_result,
-    }
-
-
-def _run_cypher_query(cypher_shell: str, query: str) -> list[dict]:
-    """Run Cypher query and return results.
+def _docker_start_neo4j(
+    data_dir: Path,
+    import_dir: Path,
+    plugins_dir: Path,
+    container_name: str = "neo4j-converter",
+) -> str:
+    """Start temporary Neo4j container without port mapping.
 
     Args:
-        cypher_shell: Path to cypher-shell command
-        query: Cypher query
+        data_dir: Data directory
+        import_dir: Import directory
+        plugins_dir: Plugins directory
+        container_name: Container name
 
     Returns:
-        List of result records
+        Container name
     """
+    # Remove existing container if exists
+    subprocess.run(
+        ["docker", "rm", "-f", container_name],
+        capture_output=True,
+        timeout=10
+    )
+
     cmd = [
-        cypher_shell,
-        "--format", "json",
-        "--non-interactive",
-        query
+        "docker", "run", "-d",
+        "--name", container_name,
+        "-e", "NEO4J_AUTH=neo4j/TempPassword123",
+        "-e", "NEO4J_PLUGINS=[\"apoc\"]",
+        "-e", "NEO4J_apoc_export_file_enabled=true",
+        "-e", "NEO4J_apoc_import_file_enabled=true",
+        "-v", f"{data_dir}:/data",
+        "-v", f"{import_dir}:/var/lib/neo4j/import",
+        "-v", f"{plugins_dir}:/plugins",
+        "neo4j:latest"
     ]
 
     try:
@@ -175,56 +215,196 @@ def _run_cypher_query(cypher_shell: str, query: str) -> list[dict]:
             cmd,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=30
         )
-        return json.loads(result.stdout)
+        container_id = result.stdout.strip()
+        logger.debug(f"Started container: {container_id}")
+
+        # Wait for Neo4j to be ready
+        _wait_for_neo4j(container_name)
+
+        return container_name
+
     except subprocess.CalledProcessError as e:
-        logger.error(f"Cypher query failed: {e.stderr}")
-        return []
-    except json.JSONDecodeError:
-        logger.error("Failed to parse Cypher query result")
-        return []
+        logger.error(f"Failed to start Neo4j: {e.stderr}")
+        raise RuntimeError(f"Failed to start Neo4j container: {e.stderr}")
 
 
-def _convert_neo4j_to_json(neo4j_data: dict[str, Any]) -> dict[str, Any]:
-    """Convert Neo4j export data to JSON KG format.
+def _wait_for_neo4j(container_name: str, timeout: int = 60) -> None:
+    """Wait for Neo4j to be ready.
 
     Args:
-        neo4j_data: Dict with nodes and relationships
+        container_name: Container name
+        timeout: Timeout in seconds
+    """
+    logger.info("Waiting for Neo4j to start...")
+    start_time = time.time()
+
+    while time.time() - start_time < timeout:
+        try:
+            result = subprocess.run(
+                ["docker", "exec", container_name,
+                 "cypher-shell", "-u", "neo4j", "-p", "TempPassword123",
+                 "RETURN 1"],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+
+            if result.returncode == 0:
+                logger.info("Neo4j is ready")
+                return
+
+        except subprocess.TimeoutExpired:
+            pass
+
+        time.sleep(2)
+
+    raise RuntimeError(f"Neo4j did not start within {timeout} seconds")
+
+
+def _docker_export_json(container_name: str, output_file: Path) -> None:
+    """Export Neo4j data to JSON using APOC.
+
+    Args:
+        container_name: Container name
+        output_file: Output JSON file path (on host)
+    """
+    # APOC exports to /var/lib/neo4j/import directory by default
+    cmd = [
+        "docker", "exec", container_name,
+        "cypher-shell",
+        "-u", "neo4j",
+        "-p", "TempPassword123",
+        'CALL apoc.export.json.all("graph.json", {useTypes: true})'
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=300
+        )
+        logger.debug(f"Export output: {result.stdout}")
+
+        # Wait a moment for file to be written
+        time.sleep(1)
+
+        if not output_file.exists():
+            raise RuntimeError("Export file was not created")
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Failed to export JSON: {e.stderr}")
+        raise RuntimeError(f"Failed to export Neo4j data: {e.stderr}")
+    except subprocess.TimeoutExpired:
+        raise RuntimeError("Neo4j export timed out after 5 minutes")
+
+
+def _docker_cleanup(container_name: str) -> None:
+    """Remove Docker container.
+
+    Args:
+        container_name: Container name
+    """
+    try:
+        subprocess.run(
+            ["docker", "rm", "-f", container_name],
+            capture_output=True,
+            timeout=30
+        )
+        logger.info("Docker container removed")
+    except Exception as e:
+        logger.warning(f"Failed to cleanup container: {e}")
+
+
+def _convert_apoc_json_to_kg(json_file: Path) -> dict[str, Any]:
+    """Convert APOC JSON export to KG format.
+
+    APOC exports JSONL format (one JSON object per line).
+    Each line is either a node or relationship.
+
+    Args:
+        json_file: Path to APOC JSON file
 
     Returns:
-        JSON KG format dict
+        KG format dict
     """
-    nodes = neo4j_data.get("nodes", [])
-    relationships = neo4j_data.get("relationships", [])
+    if not json_file.exists():
+        raise FileNotFoundError(f"JSON file not found: {json_file}")
 
-    # Build node ID to name mapping
-    node_map = {}
-    for node in nodes:
-        node_id = node.get("id")
-        props = node.get("props", {})
-        name = props.get("name") or props.get("entityId") or f"node_{node_id}"
-        node_map[node_id] = name
+    nodes_map = {}  # id -> node data
+    relationships = []
 
-    # Convert relationships to KG format
+    with open(json_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
+            try:
+                obj = json.loads(line)
+
+                # Check if it's a node or relationship
+                if obj.get('type') == 'node':
+                    node_id = obj.get('id')
+                    props = obj.get('properties', {})
+                    labels = obj.get('labels', [])
+
+                    # Get node name from properties
+                    name = (
+                        props.get('name') or
+                        props.get('entityId') or
+                        props.get('id') or
+                        f"node_{node_id}"
+                    )
+
+                    nodes_map[node_id] = {
+                        'id': node_id,
+                        'name': name,
+                        'labels': labels,
+                        'properties': props
+                    }
+
+                elif obj.get('type') == 'relationship':
+                    start_id = obj.get('start', {}).get('id')
+                    end_id = obj.get('end', {}).get('id')
+                    props = obj.get('properties', {})
+
+                    # Try to get relation type from properties.relation first, then label
+                    rel_type = props.get('relation') or obj.get('label', 'RELATED_TO')
+
+                    relationships.append({
+                        'start_id': start_id,
+                        'end_id': end_id,
+                        'type': rel_type,
+                        'properties': props
+                    })
+
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse JSON line: {e}")
+                continue
+
+    # Convert to KG format
     kg_items = []
     for rel in relationships:
-        start_id = rel.get("start_id")
-        end_id = rel.get("end_id")
-        rel_type = rel.get("type", "RELATED_TO")
-        props = rel.get("props", {})
+        start_id = rel['start_id']
+        end_id = rel['end_id']
 
-        if start_id not in node_map or end_id not in node_map:
+        if start_id not in nodes_map or end_id not in nodes_map:
             continue
 
-        start_name = node_map[start_id]
-        end_name = node_map[end_id]
+        start_name = nodes_map[start_id]['name']
+        end_name = nodes_map[end_id]['name']
+        rel_type = rel['type']
 
-        # Build KG string
+        # Build KG string in your format
         kg_string = f"<subj> {start_name} <obj> {end_name} <rel> {rel_type}"
 
         # Add properties as attributes
-        for key, value in props.items():
+        for key, value in rel.get('properties', {}).items():
             if key not in ['relation', 'type']:
                 kg_string += f" <{key}> {value}"
 
@@ -232,50 +412,6 @@ def _convert_neo4j_to_json(neo4j_data: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "index": 0,
-        "nodes": list(node_map.values()),
+        "nodes": [node['name'] for node in nodes_map.values()],
         "kg": kg_items,
     }
-
-
-def _find_neo4j_command(command: str, neo4j_home: str | None) -> str | None:
-    """Find Neo4j command (neo4j-admin or cypher-shell).
-
-    Args:
-        command: Command name
-        neo4j_home: Neo4j home directory
-
-    Returns:
-        Full path to command or None if not found
-    """
-    # Try neo4j_home first
-    if neo4j_home:
-        cmd_path = Path(neo4j_home) / "bin" / command
-        if cmd_path.exists():
-            return str(cmd_path)
-
-    # Try common locations
-    common_paths = [
-        "/usr/local/bin",
-        "/usr/bin",
-        "/opt/neo4j/bin",
-        Path.home() / "neo4j" / "bin",
-    ]
-
-    for path in common_paths:
-        cmd_path = Path(path) / command
-        if cmd_path.exists():
-            return str(cmd_path)
-
-    # Try PATH
-    try:
-        result = subprocess.run(
-            ["which", command],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError:
-        pass
-
-    return None

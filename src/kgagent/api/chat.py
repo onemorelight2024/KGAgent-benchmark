@@ -411,7 +411,6 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                     print(f"🔄 开始预处理和提取...\n")
 
                     from kgagent.extraction import preprocess_document, process_pdf_with_type
-                    from pathlib import Path
 
                     # Define output paths
                     input_file = Path(input_path)
@@ -474,7 +473,6 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
 
                         # Save chunks JSON (only if not cached)
                         chunks_file = output_dir / f"{input_stem}_chunks.json"
-                        import json
                         with open(chunks_file, "w", encoding="utf-8") as f:
                             json.dump(chunks, f, indent=2, ensure_ascii=False)
                         print(f"💾 Chunks 已保存: {chunks_file}")
@@ -510,13 +508,24 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                     print(f"📊 使用批量处理模式（支持断点继续）")
                     print("-" * 50)
 
-                    batch_result = await process_batch_with_resume(
-                        items=chunks,
-                        process_fn=process_chunk,
-                        output_path=kg_output_file,
-                        max_concurrent=3,  # Process 3 chunks at a time
-                        format_fn=format_chunk_result,
+                    current_task = asyncio.create_task(
+                        process_batch_with_resume(
+                            items=chunks,
+                            process_fn=process_chunk,
+                            output_path=kg_output_file,
+                            max_concurrent=3,  # Process 3 chunks at a time
+                            format_fn=format_chunk_result,
+                        )
                     )
+
+                    try:
+                        batch_result = await current_task
+                    except asyncio.CancelledError:
+                        print("\n⚠️  PDF extraction cancelled\n")
+                        current_task = None
+                        continue
+                    finally:
+                        current_task = None
 
                     # Step 4: Display summary
                     print("\n" + "=" * 50)
@@ -785,7 +794,6 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
 
                         # Save results
                         output_file = Path(file_path).parent / f"{Path(file_path).stem}_kg.json"
-                        import json
                         with open(output_file, "w", encoding="utf-8") as f:
                             json.dump(all_results, f, indent=2, ensure_ascii=False)
                         print(f"  - 已保存到: {output_file}")

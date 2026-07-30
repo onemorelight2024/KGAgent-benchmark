@@ -297,7 +297,8 @@ async def process_batch_with_resume(
                 return (index, e)
 
     # Process all remaining items
-    tasks = [process_and_save(index, item) for index, item in items_to_process]
+    # Create tasks
+    tasks = [asyncio.create_task(process_and_save(index, item)) for index, item in items_to_process]
 
     try:
         await asyncio.gather(*tasks)

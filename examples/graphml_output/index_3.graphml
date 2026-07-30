@@ -1,0 +1,276 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="name" for="node" attr.name="name" attr.type="string" />
+  <key id="relation" for="edge" attr.name="relation" attr.type="string" />
+  <key id="index" for="edge" attr.name="index" attr.type="int" />
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="name">Markdown</data>
+    </node>
+    <node id="n1">
+      <data key="name">human inspection</data>
+    </node>
+    <node id="n2">
+      <data key="name">language models</data>
+    </node>
+    <node id="n3">
+      <data key="name">JSON</data>
+    </node>
+    <node id="n4">
+      <data key="name">block types</data>
+    </node>
+    <node id="n5">
+      <data key="name">coordinates</data>
+    </node>
+    <node id="n6">
+      <data key="name">page indices</data>
+    </node>
+    <node id="n7">
+      <data key="name">confidence values</data>
+    </node>
+    <node id="n8">
+      <data key="name">many production pipelines</data>
+    </node>
+    <node id="n9">
+      <data key="name">both representations</data>
+    </node>
+    <node id="n10">
+      <data key="name">Text quality</data>
+    </node>
+    <node id="n11">
+      <data key="name">normal paragraphs</data>
+    </node>
+    <node id="n12">
+      <data key="name">headings</data>
+    </node>
+    <node id="n13">
+      <data key="name">numbered sections</data>
+    </node>
+    <node id="n14">
+      <data key="name">quotations</data>
+    </node>
+    <node id="n15">
+      <data key="name">deliberately varied sentence lengths</data>
+    </node>
+    <node id="n16">
+      <data key="name">The goal</data>
+    </node>
+    <node id="n17">
+      <data key="name">the document visually complex</data>
+    </node>
+    <node id="n18">
+      <data key="name">segmentation and ordering behavior</data>
+    </node>
+    <node id="n19">
+      <data key="name">A ten-page sample</data>
+    </node>
+    <node id="n20">
+      <data key="name">enough repetition</data>
+    </node>
+    <node id="n21">
+      <data key="name">pagination</data>
+    </node>
+    <node id="n22">
+      <data key="name">batching</data>
+    </node>
+    <node id="n23">
+      <data key="name">page references</data>
+    </node>
+    <node id="n24">
+      <data key="name">the document</data>
+    </node>
+    <node id="n25">
+      <data key="name">only embedded text</data>
+    </node>
+    <node id="n26">
+      <data key="name">small</data>
+    </node>
+    <node id="n27">
+      <data key="name">optical character recognition</data>
+    </node>
+    <node id="n28">
+      <data key="name">Document parsing systems</data>
+    </node>
+    <node id="n29">
+      <data key="name">page-based files</data>
+    </node>
+    <node id="n30">
+      <data key="name">representations</data>
+    </node>
+    <node id="n31">
+      <data key="name">searched</data>
+    </node>
+    <node id="n32">
+      <data key="name">summarized</data>
+    </node>
+    <node id="n33">
+      <data key="name">analyzed</data>
+    </node>
+    <node id="n34">
+      <data key="name">A reliable parser</data>
+    </node>
+    <node id="n35">
+      <data key="name">reading order</data>
+    </node>
+    <node id="n36">
+      <data key="name">section hierarchy</data>
+    </node>
+    <node id="n37">
+      <data key="name">paragraph boundaries</data>
+    </node>
+    <node id="n38">
+      <data key="name">accidental introduction of unsupported content</data>
+    </node>
+    <node id="n39">
+      <data key="name">This page</data>
+    </node>
+    <node id="n40">
+      <data key="name">only selectable text</data>
+    </node>
+    <node id="n41">
+      <data key="name">Evaluation</data>
+    </node>
+    <node id="n42">
+      <data key="name">exact character recovery</data>
+    </node>
+    <node id="n43">
+      <data key="name">semantic usability</data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="relation">is_convenient_for</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e1" source="n0" target="n2">
+      <data key="relation">is_convenient_for</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e2" source="n3" target="n4">
+      <data key="relation">is_better_for_preserving</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e3" source="n3" target="n5">
+      <data key="relation">is_better_for_preserving</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e4" source="n3" target="n6">
+      <data key="relation">is_better_for_preserving</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e5" source="n3" target="n7">
+      <data key="relation">is_better_for_preserving</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e6" source="n8" target="n9">
+      <data key="relation">retain</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e7" source="n10" target="n11">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e8" source="n10" target="n12">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e9" source="n10" target="n13">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e10" source="n10" target="n14">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e11" source="n10" target="n15">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e12" source="n16" target="n17">
+      <data key="relation">is_not_to_make</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e13" source="n16" target="n18">
+      <data key="relation">is_to_expose</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e14" source="n19" target="n20">
+      <data key="relation">provides</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e15" source="n20" target="n21">
+      <data key="relation">is_used_to_test</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e16" source="n20" target="n22">
+      <data key="relation">is_used_to_test</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e17" source="n20" target="n23">
+      <data key="relation">is_used_to_test</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e18" source="n24" target="n25">
+      <data key="relation">contains</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e19" source="n24" target="n26">
+      <data key="relation">should_remain</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e20" source="n24" target="n27">
+      <data key="relation">should_not_require</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e21" source="n28" target="n29">
+      <data key="relation">convert</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e22" source="n29" target="n30">
+      <data key="relation">are_converted_into</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e23" source="n30" target="n31">
+      <data key="relation">can_be</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e24" source="n30" target="n32">
+      <data key="relation">can_be</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e25" source="n30" target="n33">
+      <data key="relation">can_be</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e26" source="n34" target="n35">
+      <data key="relation">must_preserve</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e27" source="n34" target="n36">
+      <data key="relation">must_preserve</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e28" source="n34" target="n37">
+      <data key="relation">must_preserve</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e29" source="n34" target="n23">
+      <data key="relation">must_preserve</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e30" source="n34" target="n38">
+      <data key="relation">must_avoid</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e31" source="n39" target="n40">
+      <data key="relation">intentionally_contains</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e32" source="n41" target="n42">
+      <data key="relation">should_distinguish</data>
+      <data key="index">3</data>
+    </edge>
+    <edge id="e33" source="n41" target="n43">
+      <data key="relation">should_distinguish</data>
+      <data key="index">3</data>
+    </edge>
+  </graph>
+</graphml>

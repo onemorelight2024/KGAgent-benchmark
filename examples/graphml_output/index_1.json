@@ -1,0 +1,32 @@
+{
+  "index": 0,
+  "kg": [
+    "<subj> Long documents <obj> repeated headers and footers <rel> often_contain <index> 1",
+    "<subj> repeated headers and footers <obj> readers <rel> are_visually_helpful_to <index> 1",
+    "<subj> repeated headers and footers <obj> machine-readable output <rel> can_become_noise_in <index> 1",
+    "<subj> A robust system <obj> recurring page furniture <rel> should_identify <index> 1",
+    "<subj> A robust system <obj> legitimate content <rel> should_not_remove <index> 1",
+    "<subj> This instance <obj> page 1, paragraph 5 <rel> belongs_to <index> 1",
+    "<subj> This instance <obj> stable pagination and deterministic reading order <rel> is_included_to_verify <index> 1",
+    "<subj> The most useful output format <obj> the application <rel> depends_on <index> 1",
+    "<subj> Markdown <obj> human inspection and language models <rel> is_convenient_for <index> 1",
+    "<subj> JSON <obj> block types, coordinates, page indices, and confidence values <rel> is_better_for_preserving <index> 1",
+    "<subj> Many production pipelines <obj> both representations <rel> retain <index> 1",
+    "<subj> This instance <obj> page 1, paragraph 6 <rel> belongs_to <index> 1",
+    "<subj> Text quality <obj> normal paragraphs, headings, numbered sections, quotations, and deliberately varied sentence lengths <rel> should_be_tested_with <index> 1",
+    "<subj> The goal <obj> the document visually complex <rel> is_not_to_make <index> 1",
+    "<subj> The goal <obj> segmentation and ordering behavior <rel> is_to_expose <index> 1",
+    "<subj> segmentation and ordering behavior <obj> a controlled setting <rel> is_exposed_in <index> 1",
+    "<subj> This instance <obj> page 1, paragraph 7 <rel> belongs_to <index> 1",
+    "<subj> A ten-page sample <obj> enough repetition <rel> provides <index> 1",
+    "<subj> enough repetition <obj> pagination, batching, and page references <rel> is_enough_to_test <index> 1",
+    "<subj> the document <obj> only embedded text <rel> contains <index> 1",
+    "<subj> the document <obj> small <rel> should_remain <index> 1",
+    "<subj> the document <obj> optical character recognition <rel> should_not_require <index> 1",
+    "<subj> This instance <obj> page 1, paragraph 8 <rel> belongs_to <index> 1",
+    "<subj> This page <obj> only selectable text <rel> intentionally_contains <index> 1",
+    "<subj> Plain-text documents <obj> a control case <rel> are_useful_as <index> 1",
+    "<subj> they <obj> textual extraction <rel> isolate <index> 1",
+    "<subj> textual extraction <obj> visual interpretation <rel> is_isolated_from <index> 1"
+  ]
+}

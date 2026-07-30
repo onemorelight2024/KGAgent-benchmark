@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="name" for="node" attr.name="name" attr.type="string" />
+  <key id="relation" for="edge" attr.name="relation" attr.type="string" />
+  <key id="index" for="edge" attr.name="index" attr.type="int" />
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="name">Long documents</data>
+    </node>
+    <node id="n1">
+      <data key="name">repeated headers and footers</data>
+    </node>
+    <node id="n2">
+      <data key="name">readers</data>
+    </node>
+    <node id="n3">
+      <data key="name">machine-readable output</data>
+    </node>
+    <node id="n4">
+      <data key="name">A robust system</data>
+    </node>
+    <node id="n5">
+      <data key="name">recurring page furniture</data>
+    </node>
+    <node id="n6">
+      <data key="name">legitimate content</data>
+    </node>
+    <node id="n7">
+      <data key="name">This instance</data>
+    </node>
+    <node id="n8">
+      <data key="name">page 1, paragraph 5</data>
+    </node>
+    <node id="n9">
+      <data key="name">stable pagination and deterministic reading order</data>
+    </node>
+    <node id="n10">
+      <data key="name">The most useful output format</data>
+    </node>
+    <node id="n11">
+      <data key="name">the application</data>
+    </node>
+    <node id="n12">
+      <data key="name">Markdown</data>
+    </node>
+    <node id="n13">
+      <data key="name">human inspection and language models</data>
+    </node>
+    <node id="n14">
+      <data key="name">JSON</data>
+    </node>
+    <node id="n15">
+      <data key="name">block types, coordinates, page indices, and confidence values</data>
+    </node>
+    <node id="n16">
+      <data key="name">Many production pipelines</data>
+    </node>
+    <node id="n17">
+      <data key="name">both representations</data>
+    </node>
+    <node id="n18">
+      <data key="name">page 1, paragraph 6</data>
+    </node>
+    <node id="n19">
+      <data key="name">Text quality</data>
+    </node>
+    <node id="n20">
+      <data key="name">normal paragraphs, headings, numbered sections, quotations, and deliberately varied sentence lengths</data>
+    </node>
+    <node id="n21">
+      <data key="name">The goal</data>
+    </node>
+    <node id="n22">
+      <data key="name">the document visually complex</data>
+    </node>
+    <node id="n23">
+      <data key="name">segmentation and ordering behavior</data>
+    </node>
+    <node id="n24">
+      <data key="name">a controlled setting</data>
+    </node>
+    <node id="n25">
+      <data key="name">page 1, paragraph 7</data>
+    </node>
+    <node id="n26">
+      <data key="name">A ten-page sample</data>
+    </node>
+    <node id="n27">
+      <data key="name">enough repetition</data>
+    </node>
+    <node id="n28">
+      <data key="name">pagination, batching, and page references</data>
+    </node>
+    <node id="n29">
+      <data key="name">the document</data>
+    </node>
+    <node id="n30">
+      <data key="name">only embedded text</data>
+    </node>
+    <node id="n31">
+      <data key="name">small</data>
+    </node>
+    <node id="n32">
+      <data key="name">optical character recognition</data>
+    </node>
+    <node id="n33">
+      <data key="name">page 1, paragraph 8</data>
+    </node>
+    <node id="n34">
+      <data key="name">This page</data>
+    </node>
+    <node id="n35">
+      <data key="name">only selectable text</data>
+    </node>
+    <node id="n36">
+      <data key="name">Plain-text documents</data>
+    </node>
+    <node id="n37">
+      <data key="name">a control case</data>
+    </node>
+    <node id="n38">
+      <data key="name">they</data>
+    </node>
+    <node id="n39">
+      <data key="name">textual extraction</data>
+    </node>
+    <node id="n40">
+      <data key="name">visual interpretation</data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="relation">often_contain</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e1" source="n1" target="n2">
+      <data key="relation">are_visually_helpful_to</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e2" source="n1" target="n3">
+      <data key="relation">can_become_noise_in</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e3" source="n4" target="n5">
+      <data key="relation">should_identify</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e4" source="n4" target="n6">
+      <data key="relation">should_not_remove</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e5" source="n7" target="n8">
+      <data key="relation">belongs_to</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e6" source="n7" target="n9">
+      <data key="relation">is_included_to_verify</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e7" source="n10" target="n11">
+      <data key="relation">depends_on</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e8" source="n12" target="n13">
+      <data key="relation">is_convenient_for</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e9" source="n14" target="n15">
+      <data key="relation">is_better_for_preserving</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e10" source="n16" target="n17">
+      <data key="relation">retain</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e11" source="n7" target="n18">
+      <data key="relation">belongs_to</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e12" source="n19" target="n20">
+      <data key="relation">should_be_tested_with</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e13" source="n21" target="n22">
+      <data key="relation">is_not_to_make</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e14" source="n21" target="n23">
+      <data key="relation">is_to_expose</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e15" source="n23" target="n24">
+      <data key="relation">is_exposed_in</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e16" source="n7" target="n25">
+      <data key="relation">belongs_to</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e17" source="n26" target="n27">
+      <data key="relation">provides</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e18" source="n27" target="n28">
+      <data key="relation">is_enough_to_test</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e19" source="n29" target="n30">
+      <data key="relation">contains</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e20" source="n29" target="n31">
+      <data key="relation">should_remain</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e21" source="n29" target="n32">
+      <data key="relation">should_not_require</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e22" source="n7" target="n33">
+      <data key="relation">belongs_to</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e23" source="n34" target="n35">
+      <data key="relation">intentionally_contains</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e24" source="n36" target="n37">
+      <data key="relation">are_useful_as</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e25" source="n38" target="n39">
+      <data key="relation">isolate</data>
+      <data key="index">1</data>
+    </edge>
+    <edge id="e26" source="n39" target="n40">
+      <data key="relation">is_isolated_from</data>
+      <data key="index">1</data>
+    </edge>
+  </graph>
+</graphml>
