@@ -183,3 +183,139 @@ class KGAgentSystem:
 
         logger.info(f"Batch extraction complete: {len(processed_results)} results")
         return processed_results
+
+    def convert(
+        self,
+        input_data: str | Path | dict | list,
+        output_format: str,
+        output_path: str | Path | None = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        """Convert KG data to specified format.
+
+        Args:
+            input_data: Input data (file path, dict, or list)
+            output_format: Target format (neo4j_csv, rdf, graphml, etc.)
+            output_path: Output file/directory path
+            **kwargs: Additional format-specific options
+
+        Returns:
+            Conversion result with paths and statistics
+
+        Examples:
+            >>> system = KGAgentSystem()
+            >>> result = system.convert("data.json", "neo4j_csv", "output/")
+            >>> result = system.convert(kg_data, "graphml", "graph.graphml")
+        """
+        from kgagent.conversion.entry import ConversionEntry
+
+        converter = ConversionEntry()
+        return converter.convert(input_data, output_format, output_path, **kwargs)
+
+    def convert_from(
+        self,
+        input_path: str | Path,
+        output_path: str | Path | None = None,
+        **kwargs,
+    ) -> dict[str, Any]:
+        """Convert from external format to JSON KG format.
+
+        Args:
+            input_path: Input file path (.dump, .graphml, etc.)
+            output_path: Output JSON file path
+            **kwargs: Additional format-specific options (e.g., neo4j_home)
+
+        Returns:
+            Conversion result with paths and statistics
+
+        Examples:
+            >>> system = KGAgentSystem()
+            >>> result = system.convert_from("neo4j.dump", "output.json")
+            >>> result = system.convert_from("graph.graphml", "output.json")
+        """
+        from kgagent.conversion.entry import ConversionEntry
+
+        converter = ConversionEntry()
+        return converter.convert_from(input_path, output_path, **kwargs)
+
+    def parse_document(
+        self,
+        input_path: str | Path,
+        output_path: str | Path | None = None,
+    ) -> dict[str, Any]:
+        """Parse document to Markdown using MinerU.
+
+        Args:
+            input_path: Input document path (PDF, DOCX, PPTX, etc.)
+            output_path: Output markdown path (defaults to input path with .md extension)
+
+        Returns:
+            Parse result with keys:
+            - input_file: Input file path
+            - output_file: Output markdown file path
+            - format: Output format (markdown)
+            - pages: Number of pages (if available)
+            - mode: Parsing mode (flash or precision)
+            - success: Whether parsing succeeded
+
+        Examples:
+            >>> system = KGAgentSystem()
+            >>> result = system.parse_document("paper.pdf")
+            >>> # Output: paper.md (same directory)
+            >>> result = system.parse_document("paper.pdf", "parsed/paper.md")
+        """
+        from kgagent.mineru import MinerUParser
+        import asyncio
+
+        parser = MinerUParser(work_dir=self.work_dir)
+
+        # Try to get current event loop
+        try:
+            loop = asyncio.get_running_loop()
+            # We're in an async context, use create_task
+            # But we need to return synchronously, so we'll use run_coroutine_threadsafe
+            import concurrent.futures
+            future = asyncio.run_coroutine_threadsafe(
+                parser.parse_document(input_path, output_path),
+                loop
+            )
+            return future.result()
+        except RuntimeError:
+            # No running loop, use asyncio.run
+            return asyncio.run(parser.parse_document(input_path, output_path))
+
+    async def parse_document_async(
+        self,
+        input_path: str | Path,
+        output_path: str | Path | None = None,
+    ) -> dict[str, Any]:
+        """Parse document to Markdown using MinerU (async version).
+
+        Args:
+            input_path: Input document path (PDF, DOCX, PPTX, etc.)
+            output_path: Output markdown path (defaults to input path with .md extension)
+
+        Returns:
+            Parse result dict with keys:
+            - success: bool
+            - input_file: str
+            - output_file: str
+            - images_dir: str (if images exist)
+            - images_count: int (if images exist)
+        """
+        import os
+        from kgagent.mineru import MinerUParser
+
+        # Get token from environment
+        token = os.getenv("MINERU_API_TOKEN")
+
+        parser = MinerUParser(work_dir=self.work_dir, token=token)
+
+        # Use CLI method (synchronous, but we run it in executor for async compatibility)
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            None,
+            parser.parse_document,
+            input_path,
+            output_path
+        )

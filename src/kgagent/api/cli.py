@@ -96,6 +96,55 @@ def main():
         help="Model name",
     )
 
+    # Convert command
+    convert_parser = subparsers.add_parser("convert", help="Convert KG format")
+    convert_parser.add_argument(
+        "input",
+        help="Input file path (JSON KG data)",
+    )
+    convert_parser.add_argument(
+        "format",
+        choices=["neo4j_csv", "neo4j", "graphml", "rdf", "json"],
+        help="Output format",
+    )
+    convert_parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help="Output path (file or directory)",
+    )
+
+    # Import command (convert from external formats)
+    import_parser = subparsers.add_parser("import", help="Import from external format")
+    import_parser.add_argument(
+        "input",
+        help="Input file path (.dump, .graphml, etc.)",
+    )
+    import_parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help="Output JSON file path",
+    )
+    import_parser.add_argument(
+        "--neo4j-home",
+        default=None,
+        help="Neo4j home directory (for .dump files)",
+    )
+
+    # Parse command (document parsing with MinerU)
+    parse_parser = subparsers.add_parser("parse", help="Parse document to Markdown")
+    parse_parser.add_argument(
+        "input",
+        help="Input document path (PDF, DOCX, PPTX, etc.)",
+    )
+    parse_parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help="Output markdown file path",
+    )
+
     args = parser.parse_args()
 
     if args.command == "chat":
@@ -104,6 +153,18 @@ def main():
         main_chat(workspace=args.workspace, model=args.model)
 
     elif args.command == "extract":
+        from pathlib import Path
+
+        # Generate default output path if not specified
+        output_path = args.output
+        if output_path is None and Path(args.data).exists() and Path(args.data).is_file():
+            # Auto-generate output filename: input_file_{type}_kg.json
+            input_path = Path(args.data)
+            extraction_type = args.type if args.type != "auto" else "triples"
+            output_filename = f"{input_path.stem}_{extraction_type}_kg.json"
+            output_path = str(input_path.parent / output_filename)
+            print(f"No output specified, using: {output_path}")
+
         system = KGAgentSystem(
             model_name=args.model,
             work_dir=args.workspace or "./tmp_sdk",
@@ -113,11 +174,12 @@ def main():
             data=args.data,
             extraction_type=args.type,
             validate=args.validate,
-            save_to=args.output,
+            save_to=output_path,
         )
 
-        # Print result
-        print(json.dumps(result, indent=2, ensure_ascii=False))
+        # Print result only if no output file (inline text input)
+        if output_path is None:
+            print(json.dumps(result, indent=2, ensure_ascii=False))
 
     elif args.command == "batch":
         import asyncio
@@ -142,6 +204,83 @@ def main():
 
         # Print results
         print(json.dumps(results, indent=2, ensure_ascii=False))
+
+    elif args.command == "convert":
+        from pathlib import Path
+
+        system = KGAgentSystem()
+
+        result = system.convert(
+            input_data=args.input,
+            output_format=args.format,
+            output_path=args.output,
+        )
+
+        print(f"Conversion complete:")
+        print(f"  Format: {result.get('format')}")
+        if 'output_file' in result:
+            print(f"  Output: {result['output_file']}")
+        elif 'output_dir' in result:
+            print(f"  Output: {result['output_dir']}")
+
+        if 'statistics' in result:
+            print(f"  Statistics: {result['statistics']}")
+
+    elif args.command == "import":
+        from pathlib import Path
+
+        system = KGAgentSystem()
+
+        result = system.convert_from(
+            input_path=args.input,
+            output_path=args.output,
+            neo4j_home=getattr(args, 'neo4j_home', None),
+        )
+
+        print(f"Import complete:")
+        print(f"  Format: {result.get('format')}")
+        print(f"  Output: {result.get('output_file')}")
+
+        if 'statistics' in result:
+            print(f"  Statistics: {result['statistics']}")
+
+    elif args.command == "parse":
+        from pathlib import Path
+
+        system = KGAgentSystem()
+
+        print(f"Parsing document: {args.input}")
+
+        try:
+            result = system.parse_document(
+                input_path=args.input,
+                output_path=args.output,
+            )
+
+            if result.get('success'):
+                print(f"\n✓ Parsing complete:")
+                print(f"  Input: {result['input_file']}")
+                print(f"  Output: {result['output_file']}")
+                print(f"  Format: {result['format']}")
+                print(f"  Mode: {result['mode']}")
+
+                if 'pages' in result:
+                    print(f"  Pages: {result['pages']}")
+
+                if 'size' in result:
+                    print(f"  Size: {result['size']} bytes")
+            else:
+                print(f"\n✗ Parsing failed:")
+                if 'error' in result:
+                    print(f"  Error: {result['error']}")
+                sys.exit(1)
+
+        except FileNotFoundError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
 
     else:
         parser.print_help()

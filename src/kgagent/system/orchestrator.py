@@ -10,8 +10,10 @@ from kgagent.extraction.config import ExtractionConfig
 from kgagent.extraction.kg_entry import ExtractionEntry
 from kgagent.extraction.tools.loaders import load_json_file, save_json_file
 from kgagent.extraction.tools.validation import validate_result
+from kgagent.extraction.document_processor import preprocess_document
 from kgagent.system.registry import ExtractionRegistry
 from kgagent.core.language import detect_language
+from kgagent.conversion import ConversionEntry
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +28,8 @@ async def run_extraction(
     registry: ExtractionRegistry,
     validate: bool = False,
     save_to: str | None = None,
+    chunk_size: int = 2000,
+    overlap: int = 200,
 ) -> dict[str, Any]:
     """Run extraction task.
 
@@ -39,6 +43,8 @@ async def run_extraction(
         registry: Extraction registry
         validate: Whether to validate result
         save_to: Optional path to save result
+        chunk_size: Maximum characters per chunk (for document preprocessing)
+        overlap: Overlap between chunks (for document preprocessing)
 
     Returns:
         Extraction result
@@ -51,8 +57,10 @@ async def run_extraction(
             extraction_type = "triples"  # Default
         logger.info(f"Auto-detected extraction type: {extraction_type}")
 
-    # Load data if it's a file path
+    # Document preprocessing: check if input is a file that needs preprocessing
     processed_data = data
+    preprocessing_result = None
+
     if isinstance(data, str):
         # Check if it's a file path (with safety check for long strings)
         try:
@@ -60,8 +68,35 @@ async def run_extraction(
             if len(data) < 500:  # File paths are typically < 500 chars
                 path = Path(data)
                 if path.exists() and path.is_file():
-                    logger.info(f"Loading data from file: {path}")
-                    processed_data = load_json_file(path)
+                    file_ext = path.suffix.lower()
+
+                    # Check if file needs preprocessing
+                    if file_ext in [".json", ".pdf", ".md", ".txt", ".jsonl"]:
+                        logger.info(f"Preprocessing document: {path}")
+                        preprocessing_result = await preprocess_document(
+                            path,
+                            chunk_size=chunk_size,
+                            overlap=overlap
+                        )
+
+                        if not preprocessing_result.get("success"):
+                            # If preprocessing fails, return the error
+                            error_msg = preprocessing_result.get("error", "Preprocessing failed")
+                            logger.error(f"Preprocessing failed: {error_msg}")
+                            return {
+                                "success": False,
+                                "error": error_msg,
+                                "preprocessing_result": preprocessing_result,
+                            }
+
+                        # Use chunked data for extraction
+                        processed_data = preprocessing_result.get("chunks", [])
+                        logger.info(f"Document preprocessed into {len(processed_data)} chunks")
+
+                    # For other file types, try loading as JSON
+                    elif file_ext == ".json":
+                        logger.info(f"Loading data from JSON file: {path}")
+                        processed_data = load_json_file(path)
         except (OSError, ValueError):
             # Not a valid file path, treat as text data
             pass
@@ -103,7 +138,11 @@ async def run_extraction(
     else:
         # Normal extraction (triples/temporal/hyper)
         logger.info(f"Running {extraction_type} extraction")
-        result = await entry.extract_async(processed_data, extraction_type)
+        result = await entry.extract_async(
+            processed_data,
+            extraction_type,
+            save_to=save_to  # Pass save_to for batch resume support
+        )
 
     # Validate if requested
     if validate:
@@ -115,10 +154,82 @@ async def run_extraction(
             logger.warning(f"Validation failed: {e}")
             result["_validation_error"] = str(e)
 
-    # Save if requested
-    if save_to:
+    # Add preprocessing metadata if document was preprocessed
+    if preprocessing_result:
+        result["_preprocessing"] = {
+            "file_type": preprocessing_result.get("file_type"),
+            "pdf_type": preprocessing_result.get("pdf_type"),
+            "chunks_count": len(preprocessing_result.get("chunks", [])),
+            "original_file": preprocessing_result.get("original_file"),
+        }
+
+    # Save if requested (batch processing with resume already saves, so skip for list results)
+    if save_to and isinstance(result, dict):
         logger.info(f"Saving result to {save_to}")
         save_json_file(result, save_to)
         result["_saved_to"] = str(save_to)
+    elif save_to and isinstance(result, list):
+        # Batch processing with resume already saved the file
+        logger.info(f"Result already saved to {save_to} during batch processing")
 
+    return result
+
+
+async def run_conversion(
+    source: str,
+    target_format: str,
+    output_path: str | None = None,
+    last_result: dict | list | None = None,
+) -> dict[str, Any]:
+    """Run format conversion task.
+
+    Args:
+        source: Source data ("last" or "file:<path>")
+        target_format: Target format (neo4j_csv, rdf, graphml, json)
+        output_path: Optional output path
+        last_result: Last extraction result for "last" source
+
+    Returns:
+        Conversion result with output paths and statistics
+    """
+    logger.info(f"Running conversion: source={source}, format={target_format}")
+
+    # Resolve source data
+    if source == "last":
+        if last_result is None:
+            raise ValueError("No previous extraction result available")
+        input_data = last_result
+    elif source.startswith("file:"):
+        file_path = source[5:]  # Remove "file:" prefix
+        path = Path(file_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Source file not found: {file_path}")
+
+        # Check if source is an external format that needs importing first
+        suffix = path.suffix.lower()
+        if suffix in ['.graphml', '.xml', '.dump'] and target_format == 'json':
+            # This is actually an import operation (external format -> JSON)
+            logger.info(f"Detected import operation from {suffix} to JSON")
+            converter = ConversionEntry()
+            result = converter.convert_from(
+                input_path=path,
+                output_path=output_path,
+            )
+            logger.info(f"Import complete: {result.get('output_file')}")
+            return result
+
+        # Otherwise load as JSON for conversion
+        input_data = load_json_file(path)
+    else:
+        raise ValueError(f"Invalid source: {source}")
+
+    # Run conversion
+    converter = ConversionEntry()
+    result = converter.convert(
+        input_data=input_data,
+        output_format=target_format,
+        output_path=output_path,
+    )
+
+    logger.info(f"Conversion complete: {result.get('output_dir', result.get('output_file'))}")
     return result

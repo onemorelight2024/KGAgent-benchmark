@@ -45,9 +45,9 @@ class IntentEntry:
         Returns:
             Intent classification result with format:
             {
-                "intent": "chat" | "extract" | "help" | "command" | "save",
+                "intent": "chat" | "extract" | "help" | "command" | "save" | "convert",
                 "confidence": float,
-                "parameters": {...} or None,  # for extract/save intent
+                "parameters": {...} or None,  # for extract/save/convert intent
                 "explanation": str,
                 "response": str  # for chat intent
             }

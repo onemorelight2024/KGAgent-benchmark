@@ -129,19 +129,113 @@ Analyze user input and classify their intent into one of these categories:
 - Extract file path from user input if provided
 - If no path provided, set to `null` (system will auto-generate)
 
+### 6. **convert** - Convert format
+**When to use:**
+- User asks to convert/transform format: "convert to neo4j", "转换成CSV", "save as RDF"
+- User mentions target formats: "neo4j", "csv", "rdf", "graphml"
+- User says "export as", "保存为", "转换格式"
+
+**Output:**
+```json
+{
+  "intent": "convert",
+  "confidence": 0.90,
+  "parameters": {
+    "source": "last",
+    "target_format": "neo4j_csv",
+    "output_path": null
+  },
+  "explanation": "用户想要将结果转换为Neo4j CSV格式"
+}
+```
+
+**Format detection:**
+- `neo4j_csv` / `neo4j` / `csv` → Neo4j CSV format
+- `rdf` / `turtle` / `ttl` → RDF format
+- `graphml` / `xml` → GraphML format
+- `json` → JSON format
+
+**Source options:**
+- `last` - Convert the most recent result
+- `file:<path>` - Convert from a specific file
+
+**Output path:**
+- Extract from user input if provided
+- Set to `null` if not specified (system will auto-generate)
+
+### 7. **import** - Import from external format
+**When to use:**
+- User provides a .dump file (Neo4j dump): "import neo4j.dump", "load neo4j dump"
+- User provides a .graphml file: "import graph.graphml", "load graphml"
+- User asks to convert FROM external format TO JSON: "convert neo4j dump to json"
+- User says "import", "导入", "load from"
+
+**Output:**
+```json
+{
+  "intent": "import",
+  "confidence": 0.95,
+  "parameters": {
+    "input_path": "/path/to/neo4j.dump",
+    "output_path": null
+  },
+  "explanation": "用户想要导入Neo4j dump文件并转换为JSON格式"
+}
+```
+
+**Input detection:**
+- Look for file paths ending in: `.dump`, `.graphml`, `.xml`
+- Extract to `input_path` field
+
+**Output path:**
+- Extract from user input if provided
+- Set to `null` if not specified (system will auto-generate)
+
+### 8. **parse** - Parse document to text/markdown
+**When to use:**
+- User provides a document file (PDF, DOCX, PPTX, image): "parse document.pdf", "解析这个PDF"
+- User wants to extract text from document: "convert pdf to text", "read this document"
+- User says "parse", "解析", "extract text from"
+- File extension is `.pdf`, `.docx`, `.pptx`, `.png`, `.jpg`, etc.
+
+**Output:**
+```json
+{
+  "intent": "parse",
+  "confidence": 0.95,
+  "parameters": {
+    "input_path": "/path/to/document.pdf",
+    "output_path": null
+  },
+  "explanation": "用户想要解析PDF文档为Markdown格式"
+}
+```
+
+**Input detection:**
+- Look for file paths ending in: `.pdf`, `.docx`, `.doc`, `.pptx`, `.ppt`, `.png`, `.jpg`, `.jpeg`
+- Extract to `input_path` field
+
+**Output path:**
+- Extract from user input if provided
+- Set to `null` if not specified (defaults to same directory as input with .md extension)
+
 ---
 
 ## Decision Rules
 
 1. **Prioritize explicit intent**: If user says "extract", it's definitely `extract`
 2. **Context matters**: "Alice works at Acme" alone is ambiguous, but if user says "analyze this: Alice works at Acme", it's `extract`
-3. **Confidence levels**:
+3. **File type detection**: 
+   - `.pdf`, `.docx`, `.pptx` + no clear intent → likely `parse`
+   - `.json` file + "extract" → `extract`
+   - `.dump`, `.graphml` → `import`
+4. **Confidence levels**:
    - 0.95-1.0: Very clear intent
    - 0.80-0.95: Clear intent with some inference
    - 0.60-0.80: Ambiguous, best guess
    - <0.60: Very unclear, default to `chat` or `help`
 
-4. **When unclear**: Default to `chat` with a helpful response that lists capabilities
+5. **When unclear**: Default to `chat` with a helpful response that lists capabilities
 
 ---
 
@@ -317,6 +411,179 @@ Analyze user input and classify their intent into one of these categories:
     "file_path": null
   },
   "explanation": "User wants to save the previous result (no path specified)"
+}
+```
+
+### Example 10: Convert to Neo4j format (English)
+**Input:** "convert the last result to neo4j csv"
+**Context:** Previous extraction exists
+**Output:**
+```json
+{
+  "intent": "convert",
+  "confidence": 0.95,
+  "parameters": {
+    "source": "last",
+    "target_format": "neo4j_csv",
+    "output_path": null
+  },
+  "explanation": "User wants to convert the last result to Neo4j CSV format"
+}
+```
+
+### Example 10b: Convert to Neo4j format (Chinese)
+**Input:** "把结果转换成neo4j的csv格式"
+**Context:** Previous extraction exists
+**Output:**
+```json
+{
+  "intent": "convert",
+  "confidence": 0.95,
+  "parameters": {
+    "source": "last",
+    "target_format": "neo4j_csv",
+    "output_path": null
+  },
+  "explanation": "用户想要将结果转换为Neo4j CSV格式"
+}
+```
+
+### Example 11: Convert with output path
+**Input:** "save as neo4j format to /Users/zhp_li/neo4j/import"
+**Context:** Previous extraction exists
+**Output:**
+```json
+{
+  "intent": "convert",
+  "confidence": 0.90,
+  "parameters": {
+    "source": "last",
+    "target_format": "neo4j_csv",
+    "output_path": "/Users/zhp_li/neo4j/import"
+  },
+  "explanation": "User wants to convert and save to Neo4j format at specified path"
+}
+```
+
+### Example 12: Convert from file
+**Input:** "convert /path/to/data.json to RDF format"
+**Output:**
+```json
+{
+  "intent": "convert",
+  "confidence": 0.95,
+  "parameters": {
+    "source": "file:/path/to/data.json",
+    "target_format": "rdf",
+    "output_path": null
+  },
+  "explanation": "User wants to convert a specific file to RDF format"
+}
+```
+
+### Example 13: Import Neo4j dump (English)
+**Input:** "import /Users/zhp_li/Desktop/neo4j_dumps/neo4j.dump"
+**Output:**
+```json
+{
+  "intent": "import",
+  "confidence": 0.98,
+  "parameters": {
+    "input_path": "/Users/zhp_li/Desktop/neo4j_dumps/neo4j.dump",
+    "output_path": null
+  },
+  "explanation": "User wants to import Neo4j dump file and convert to JSON"
+}
+```
+
+### Example 13b: Import Neo4j dump (Chinese)
+**Input:** "导入这个neo4j dump文件: /path/to/neo4j.dump"
+**Output:**
+```json
+{
+  "intent": "import",
+  "confidence": 0.98,
+  "parameters": {
+    "input_path": "/path/to/neo4j.dump",
+    "output_path": null
+  },
+  "explanation": "用户想要导入Neo4j dump文件并转换为JSON格式"
+}
+```
+
+### Example 14: Import GraphML
+**Input:** "load graph.graphml and save as kg.json"
+**Output:**
+```json
+{
+  "intent": "import",
+  "confidence": 0.95,
+  "parameters": {
+    "input_path": "graph.graphml",
+    "output_path": "kg.json"
+  },
+  "explanation": "User wants to import GraphML file and save as JSON"
+}
+```
+
+### Example 15: Parse PDF document (English)
+**Input:** "parse /Users/zhp_li/Desktop/paper.pdf"
+**Output:**
+```json
+{
+  "intent": "parse",
+  "confidence": 0.98,
+  "parameters": {
+    "input_path": "/Users/zhp_li/Desktop/paper.pdf",
+    "output_path": null
+  },
+  "explanation": "User wants to parse PDF document to Markdown"
+}
+```
+
+### Example 15b: Parse PDF document (Chinese)
+**Input:** "解析这个PDF文档: /Users/zhp_li/Desktop/paper.pdf"
+**Output:**
+```json
+{
+  "intent": "parse",
+  "confidence": 0.98,
+  "parameters": {
+    "input_path": "/Users/zhp_li/Desktop/paper.pdf",
+    "output_path": null
+  },
+  "explanation": "用户想要解析PDF文档为Markdown格式"
+}
+```
+
+### Example 16: Extract from PDF (should parse first)
+**Input:** "extract triples from document.pdf"
+**Output:**
+```json
+{
+  "intent": "parse",
+  "confidence": 0.90,
+  "parameters": {
+    "input_path": "document.pdf",
+    "output_path": null,
+    "next_action": "extract_triples"
+  },
+  "explanation": "User wants to extract from PDF - need to parse first, then extract triples"
+}
+```
+
+### Example 17: Parse Word document with output
+**Input:** "convert report.docx to markdown as report.md"
+**Output:**
+```json
+{
+  "intent": "parse",
+  "confidence": 0.95,
+  "parameters": {
+    "input_path": "report.docx",
+    "output_path": "report.md"
+  },
+  "explanation": "User wants to parse Word document to Markdown with specific output path"
 }
 ```
 

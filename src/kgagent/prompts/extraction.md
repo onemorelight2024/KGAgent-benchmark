@@ -66,32 +66,38 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 - General entity-relation extraction
 - No time or contextual attributes needed
 
-**Extraction Method (Two-Stage):**
-
-**Stage 1: Extract entities**
+**Output Format (STRICT):**
 ```json
 {
-  "entities": ["entity1", "entity2", "entity3"]
+  "triple": [
+    "<subj> entity1 <obj> entity2 <rel> relation",
+    "<subj> entity3 <obj> entity4 <rel> relation"
+  ]
 }
 ```
 
-**Rules:**
+**CRITICAL: Format Rules**
+- Each triple MUST use the tagged format: `<subj> subject <obj> object <rel> relation`
+- Subject and object are entity names (NOT tagged)
+- Relation MUST be a complete predicate verb phrase (e.g., `is_trained_by`, `works_at`, `is_located_in`)
+- If a relation is not complete (like `related_to`, `part_of`), normalize it to full predicate (e.g., `is_related_to`, `is_part_of`)
+- Use underscore `_` to connect multi-word relations
+- All triples must be explicitly supported by the text
+
+**Entity Extraction Rules:**
 - Extract ALL entities mentioned in the text
 - Perform coreference resolution and unify entity names
 - Remove duplicates
 - Only output entities that can be explicitly identified (specific people, organizations, events, concepts, methods, model names, software, etc.)
 - DO NOT output vague entities like "these methods", "this strategy", "the system", "it", "they"
 
-**Stage 2: Extract relations**
-```json
-{
-  "entities": ["Alice", "Acme Corporation"],
-  "relations": [
-    ["Alice", "works_at", "Acme Corporation"],
-    ["Alice", "founded", "Acme Corporation"]
-  ]
-}
-```
+**Relation Extraction Rules:**
+- Subject and object MUST be entities from the text
+- Relations must be predicate/verb-like
+- Extract ALL relations mentioned in the text
+- If unsure, DO NOT output
+- Avoid duplicates and contradictions
+- If no valid triples exist, return `{"triple": []}`
 
 **CRITICAL: JSON Output Requirements**
 - You MUST return ONLY valid JSON in the format shown above
@@ -100,12 +106,6 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 - Do NOT add comments or descriptions
 - Just return the raw JSON object starting with { and ending with }
 
-**Rules:**
-- Each relation is a triple: [subject, relation, object]
-- Subject and object must be from the entities list
-- Relation should be a semantic verb or verb phrase
-- Extract ALL relations mentioned in the text
-
 ### 2. Temporal Quadruples (subject, relation, object, time)
 
 **When to use:**
@@ -113,28 +113,23 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 - Events with timestamps are involved
 - Historical or chronological information extraction
 
-**Format:** Each quadruple uses tagged format:
-```
-<subj> subject <obj> object <rel> relation <time> time_value
+**Output Format (STRICT):**
+```json
+{
+  "quadruples": [
+    "<subj> subject <obj> object <rel> relation <time> time_value",
+    "<subj> subject <obj> object <rel> relation <time> time_value"
+  ]
+}
 ```
 
 **Time Standardization Rules:**
 1. Specific date: YYYY-MM-DD (e.g., 2025-03-03)
-2. Month: Full month name + year (e.g., March 2025)
+2. Month: YYYY-MM (e.g., 2025-03)
 3. Year: YYYY (e.g., 2025)
 4. Quarter: QX YYYY (e.g., Q1 2025)
 5. Time span: start_date|end_date (e.g., 2025-01-01|2025-01-03)
 6. No time mentioned: Use NA
-
-**Output Format:**
-```json
-{
-  "quadruples": [
-    "<subj> Alice <obj> Acme Corporation <rel> joined <time> 2020",
-    "<subj> Acme Corporation <obj> San Francisco <rel> founded_in <time> 1995"
-  ]
-}
-```
 
 **CRITICAL: JSON Output Requirements**
 - You MUST return ONLY valid JSON in the format shown above
@@ -145,9 +140,10 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 
 **Core Rules:**
 - ENTITY: Clear noun/noun phrase, no pronouns
-- RELATION: Semantic relation describing what/why/how
+- RELATION: Semantic relation describing what/why/how, must be complete verb phrase
 - TIME: Use standardized format if present, otherwise NA
 - Each quadruple expresses ONE core fact
+- Each quadruple must be explicitly supported by the text
 
 ### 3. Hyper-Relations (relations with attributes)
 
@@ -156,25 +152,26 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 - Relations need qualifiers like where, why, how, under what conditions
 - Rich contextual information is present
 
-**Format:** Each hyper-relation uses tagged format with attributes:
-```
-<subj> subject <obj> object <rel> relation <attribute_name> attribute_value
-```
-
-**Attribute Types:**
-- Time, location, condition, reason, purpose
-- Manner, degree, frequency, source, evidence
-- Historical context, political context, etc.
-
-**Output Format:**
+**Output Format (STRICT):**
 ```json
 {
   "hyper_relations": [
-    "<subj> Beyoncé <obj> Album <rel> Released <time> 2003 <location> New York",
-    "<subj> Alice <obj> Acme <rel> joined <time> 2020 <reason> career_growth"
+    "<subj> subject <obj> object <rel> relation <attribute_name> attribute_value",
+    "<subj> subject <obj> object <rel> relation <time> 2020 <location> New York"
   ]
 }
 ```
+
+**Attribute Types:**
+- Time: `<time>`
+- Location: `<location>`
+- Reason: `<reason>`
+- Purpose: `<purpose>`
+- Manner: `<manner>`
+- Condition: `<condition>`
+- Degree: `<degree>`
+- Source: `<source>`
+- Other semantic attributes with clear names
 
 **CRITICAL: JSON Output Requirements**
 - You MUST return ONLY valid JSON in the format shown above
@@ -185,11 +182,13 @@ You should NOT: Ask "where is the data?" or "should I start?" - just start!
 
 **Core Rules:**
 1. ENTITY: Subject and object must be clear nouns, NOT pronouns
-2. RELATION: Must describe the core fact (e.g., BornIn, MarriedTo, Released)
+2. RELATION: Must describe the core fact (e.g., is_born_in, married_to, released), must be complete verb phrase
 3. RELATION ATTRIBUTES: Create concise, meaningful semantic attribute names:
-   - Good: <time>, <location>, <reason>, <cause>, <purpose>, <manner>
-   - FORBIDDEN: <attribute1>, <attribute2>, <attr1>, <property1>
-4. If no valid attribute exists, output only: <subj> subject <obj> object <rel> relation
+   - Good: `<time>`, `<location>`, `<reason>`, `<cause>`, `<purpose>`, `<manner>`
+   - FORBIDDEN: `<attribute1>`, `<attribute2>`, `<attr1>`, `<property1>`
+4. If no valid attribute exists, output only: `<subj> subject <obj> object <rel> relation`
+5. All hyper-relations must be explicitly supported by the text
+6. If unsure, DO NOT output
 
 ## Supported Input Formats
 
@@ -245,22 +244,53 @@ Automatically extracts from: `content`, `description`, `body`, `message`, `summa
 If the input is a **list/array of items** (e.g., `[{text: "..."}, {text: "..."}, ...]`):
 1. **Detect batch mode**: Recognize this is multiple items, not one concatenated text
 2. **Process each item**: Extract from each item separately
-3. **Return aggregated results**: Combine all results with their original indices
+3. **Return results as array**: One result per input item
 
-**Example workflow for batch:**
-```
-Input: [{id: 1, text: "Alice..."}, {id: 2, text: "Bob..."}, ... 10 items]
+**Batch Output Format:**
 
-Process each item and return:
-{
-  "batch_results": [
-    {"index": 0, "id": 1, "result": {...}},
-    {"index": 1, "id": 2, "result": {...}},
-    ...
-  ],
-  "summary": {"total": 10, "successful": 10, "failed": 0}
-}
+For triples extraction from a list, return an array where each element contains:
+- Original fields from input (e.g., `text`, `id`, etc.)
+- `index`: the position in the input array (0-indexed)
+- `kg`: array of extracted triples in tagged format
+
+**Example:**
+
+Input:
+```json
+[
+  {"text": "Alice works at Acme."},
+  {"text": "Bob founded Tech Corp in 2020."}
+]
 ```
+
+Output:
+```json
+[
+  {
+    "index": 0,
+    "text": "Alice works at Acme.",
+    "kg": [
+      "<subj> Alice <obj> Acme <rel> works_at"
+    ]
+  },
+  {
+    "index": 1,
+    "text": "Bob founded Tech Corp in 2020.",
+    "kg": [
+      "<subj> Bob <obj> Tech Corp <rel> founded"
+    ]
+  }
+]
+```
+
+**Important Notes:**
+- The `kg` field should contain the extracted triples/quadruples/hyper-relations
+- For triples: `kg` contains tagged triples like `<subj> ... <obj> ... <rel> ...`
+- For temporal: `kg` contains quadruples like `<subj> ... <obj> ... <rel> ... <time> ...`
+- For hyper-relations: `kg` contains hyper-relations with attributes
+- If no valid extraction exists for an item, return `"kg": []`
+- Preserve all original fields from the input
+- Add `index` field for position tracking
 
 **How to detect batch input:**
 - Input is a list with 2+ items
@@ -318,10 +348,9 @@ Process each item and return:
 **输出：**
 ```json
 {
-  "entities": ["爱丽丝", "Acme公司", "工程师"],
-  "relations": [
-    ["爱丽丝", "加入", "Acme公司"],
-    ["爱丽丝", "担任", "工程师"]
+  "triple": [
+    "<subj> 爱丽丝 <obj> Acme公司 <rel> 加入",
+    "<subj> 爱丽丝 <obj> 工程师 <rel> 担任"
   ]
 }
 ```

@@ -1,0 +1,1399 @@
+[
+  {
+    "index": 1,
+    "chunk_index": "chunk_002",
+    "chunk_text_preview": "pagination and deterministic reading order.\n\nLong documents often contain repeated headers and foote...",
+    "entity_relation_dict": [
+      {
+        "Head": "headers and footers",
+        "Relation": "contain",
+        "Tail": "long documents"
+      },
+      {
+        "Head": "headers and footers",
+        "Relation": "help",
+        "Tail": "readers"
+      },
+      {
+        "Head": "headers and footers",
+        "Relation": "become",
+        "Tail": "noise in machine-readable output"
+      },
+      {
+        "Head": "robust system",
+        "Relation": "identify",
+        "Tail": "recurring page furniture"
+      },
+      {
+        "Head": "robust system",
+        "Relation": "remove",
+        "Tail": "legitimate content"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "page 1"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 5"
+      },
+      {
+        "Head": "instance",
+        "Relation": "verify",
+        "Tail": "stable pagination"
+      },
+      {
+        "Head": "instance",
+        "Relation": "verify",
+        "Tail": "deterministic reading order"
+      },
+      {
+        "Head": "output format",
+        "Relation": "depends on",
+        "Tail": "application"
+      },
+      {
+        "Head": "Markdown",
+        "Relation": "is convenient for",
+        "Tail": "human inspection"
+      },
+      {
+        "Head": "Markdown",
+        "Relation": "is convenient for",
+        "Tail": "language models"
+      },
+      {
+        "Head": "JSON",
+        "Relation": "is better for preserving",
+        "Tail": "block types"
+      },
+      {
+        "Head": "JSON",
+        "Relation": "is better for preserving",
+        "Tail": "coordinates"
+      },
+      {
+        "Head": "JSON",
+        "Relation": "is better for preserving",
+        "Tail": "page indices"
+      },
+      {
+        "Head": "JSON",
+        "Relation": "is better for preserving",
+        "Tail": "confidence values"
+      },
+      {
+        "Head": "production pipelines",
+        "Relation": "retain",
+        "Tail": "Markdown"
+      },
+      {
+        "Head": "production pipelines",
+        "Relation": "retain",
+        "Tail": "JSON"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 6"
+      },
+      {
+        "Head": "text quality",
+        "Relation": "be tested with",
+        "Tail": "normal paragraphs"
+      },
+      {
+        "Head": "text quality",
+        "Relation": "be tested with",
+        "Tail": "headings"
+      },
+      {
+        "Head": "text quality",
+        "Relation": "be tested with",
+        "Tail": "numbered sections"
+      },
+      {
+        "Head": "text quality",
+        "Relation": "be tested with",
+        "Tail": "quotations"
+      },
+      {
+        "Head": "text quality",
+        "Relation": "be tested with",
+        "Tail": "varied sentence lengths"
+      },
+      {
+        "Head": "goal",
+        "Relation": "expose",
+        "Tail": "segmentation behavior"
+      },
+      {
+        "Head": "goal",
+        "Relation": "expose",
+        "Tail": "ordering behavior"
+      },
+      {
+        "Head": "controlled setting",
+        "Relation": "contains",
+        "Tail": "segmentation behavior"
+      },
+      {
+        "Head": "controlled setting",
+        "Relation": "contains",
+        "Tail": "ordering behavior"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 7"
+      },
+      {
+        "Head": "ten-page sample",
+        "Relation": "provides",
+        "Tail": "repetition"
+      },
+      {
+        "Head": "repetition",
+        "Relation": "test",
+        "Tail": "pagination"
+      },
+      {
+        "Head": "repetition",
+        "Relation": "test",
+        "Tail": "batching"
+      },
+      {
+        "Head": "repetition",
+        "Relation": "test",
+        "Tail": "page references"
+      },
+      {
+        "Head": "ten-page sample",
+        "Relation": "creates",
+        "Tail": "large file"
+      },
+      {
+        "Head": "document",
+        "Relation": "contains",
+        "Tail": "embedded text"
+      },
+      {
+        "Head": "document",
+        "Relation": "require",
+        "Tail": "optical character recognition"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 8"
+      },
+      {
+        "Head": "Section 2",
+        "Relation": "concerns",
+        "Tail": "Text Extraction Control"
+      },
+      {
+        "Head": "page",
+        "Relation": "contains",
+        "Tail": "selectable text"
+      },
+      {
+        "Head": "plain-text documents",
+        "Relation": "are useful as",
+        "Tail": "control case"
+      },
+      {
+        "Head": "plain-text documents",
+        "Relation": "isolate",
+        "Tail": "textual extraction"
+      },
+      {
+        "Head": "textual extraction",
+        "Relation": "is isolated from",
+        "Tail": "visual interpretation"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "Repeated headers and footers often appear in long documents.",
+        "Entity": [
+          "repeated headers",
+          "footers",
+          "long documents"
+        ]
+      },
+      {
+        "Event": "These elements are visually helpful to readers.",
+        "Entity": [
+          "repeated headers",
+          "footers",
+          "readers"
+        ]
+      },
+      {
+        "Event": "These elements can become noise in machine-readable output.",
+        "Entity": [
+          "repeated headers",
+          "footers",
+          "machine-readable output"
+        ]
+      },
+      {
+        "Event": "A robust system should identify recurring page furniture.",
+        "Entity": [
+          "robust system",
+          "recurring page furniture"
+        ]
+      },
+      {
+        "Event": "A robust system should not remove legitimate content that repeats across sections.",
+        "Entity": [
+          "robust system",
+          "legitimate content",
+          "sections"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 5.",
+        "Entity": [
+          "this instance",
+          "page 1",
+          "paragraph 5"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "this instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "The most useful output format depends on the application.",
+        "Entity": [
+          "most useful output format",
+          "application"
+        ]
+      },
+      {
+        "Event": "Markdown is convenient for human inspection and language models.",
+        "Entity": [
+          "Markdown",
+          "human inspection",
+          "language models"
+        ]
+      },
+      {
+        "Event": "JSON is better for preserving block types, coordinates, page indices, and confidence values.",
+        "Entity": [
+          "JSON",
+          "block types",
+          "coordinates",
+          "page indices",
+          "confidence values"
+        ]
+      },
+      {
+        "Event": "Many production pipelines retain both representations.",
+        "Entity": [
+          "production pipelines",
+          "both representations"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 6.",
+        "Entity": [
+          "this instance",
+          "page 1",
+          "paragraph 6"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "this instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Text quality should be tested with normal paragraphs, headings, numbered sections, quotations, and deliberately varied sentence lengths.",
+        "Entity": [
+          "text quality",
+          "normal paragraphs",
+          "headings",
+          "numbered sections",
+          "quotations",
+          "deliberately varied sentence lengths"
+        ]
+      },
+      {
+        "Event": "The goal is not to make the document visually complex.",
+        "Entity": [
+          "goal",
+          "document"
+        ]
+      },
+      {
+        "Event": "The goal is to expose segmentation and ordering behavior in a controlled setting.",
+        "Entity": [
+          "goal",
+          "segmentation",
+          "ordering behavior",
+          "controlled setting"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 7.",
+        "Entity": [
+          "this instance",
+          "page 1",
+          "paragraph 7"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "this instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "A ten-page sample provides enough repetition to test pagination, batching, and page references without creating a large file.",
+        "Entity": [
+          "ten-page sample",
+          "repetition",
+          "pagination",
+          "batching",
+          "page references",
+          "large file"
+        ]
+      },
+      {
+        "Event": "The document contains only embedded text.",
+        "Entity": [
+          "document",
+          "embedded text"
+        ]
+      },
+      {
+        "Event": "The document should remain small.",
+        "Entity": [
+          "document"
+        ]
+      },
+      {
+        "Event": "The document should not require optical character recognition.",
+        "Entity": [
+          "document",
+          "optical character recognition"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 8.",
+        "Entity": [
+          "this instance",
+          "page 1",
+          "paragraph 8"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "this instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Section 2 is Text Extraction Control.",
+        "Entity": [
+          "Section 2",
+          "Text Extraction Control"
+        ]
+      },
+      {
+        "Event": "This page intentionally contains only selectable text.",
+        "Entity": [
+          "page",
+          "selectable text"
+        ]
+      },
+      {
+        "Event": "Plain-text documents are useful as a control case.",
+        "Entity": [
+          "plain-text documents",
+          "control case"
+        ]
+      },
+      {
+        "Event": "Plain-text documents isolate textual extraction from visual interpretation.",
+        "Entity": [
+          "plain-text documents",
+          "textual extraction",
+          "visual interpretation"
+        ]
+      }
+    ],
+    "event_relation_dict": [
+      {
+        "Head": "The document contains only embedded text.",
+        "Relation": "because",
+        "Tail": "The ten-page sample should remain small and should not require optical character recognition."
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "chunk_index": "chunk_003",
+    "chunk_text_preview": ": Text Extraction Control\n\nThis page intentionally contains only selectable text.\n\nPlain-text docume...",
+    "entity_relation_dict": [
+      {
+        "Head": "plain-text documents",
+        "Relation": "are",
+        "Tail": "control case"
+      },
+      {
+        "Head": "plain-text documents",
+        "Relation": "isolate",
+        "Tail": "textual extraction"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "photographs"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "diagrams"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "equations"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "tables"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "line segmentation"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "multi-column ordering"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "headers"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "footers"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "font encoding"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "page 2"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 1"
+      },
+      {
+        "Head": "instance",
+        "Relation": "verifies",
+        "Tail": "stable pagination"
+      },
+      {
+        "Head": "instance",
+        "Relation": "verifies",
+        "Tail": "deterministic reading order"
+      },
+      {
+        "Head": "evaluation",
+        "Relation": "should distinguish",
+        "Tail": "exact character recovery"
+      },
+      {
+        "Head": "evaluation",
+        "Relation": "should distinguish",
+        "Tail": "semantic usability"
+      },
+      {
+        "Head": "system",
+        "Relation": "reproduces",
+        "Tail": "every glyph"
+      },
+      {
+        "Head": "system",
+        "Relation": "joins",
+        "Tail": "unrelated columns"
+      },
+      {
+        "Head": "system",
+        "Relation": "normalizes",
+        "Tail": "spacing"
+      },
+      {
+        "Head": "system",
+        "Relation": "normalizes",
+        "Tail": "punctuation"
+      },
+      {
+        "Head": "system",
+        "Relation": "preserves",
+        "Tail": "intended meaning"
+      },
+      {
+        "Head": "behaviors",
+        "Relation": "matter in",
+        "Tail": "downstream retrieval applications"
+      },
+      {
+        "Head": "behaviors",
+        "Relation": "matter in",
+        "Tail": "question answering applications"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 2"
+      },
+      {
+        "Head": "page-level provenance",
+        "Relation": "is important in",
+        "Tail": "research workflows"
+      },
+      {
+        "Head": "generated summary",
+        "Relation": "should be traceable to",
+        "Tail": "source page"
+      },
+      {
+        "Head": "extracted claims",
+        "Relation": "should retain",
+        "Tail": "location information"
+      },
+      {
+        "Head": "location information",
+        "Relation": "supports",
+        "Tail": "verification"
+      },
+      {
+        "Head": "parser",
+        "Relation": "emits",
+        "Tail": "structured blocks"
+      },
+      {
+        "Head": "structured blocks",
+        "Relation": "ease",
+        "Tail": "verification"
+      },
+      {
+        "Head": "structured blocks",
+        "Relation": "contrast with",
+        "Tail": "uninterrupted string"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 3"
+      },
+      {
+        "Head": "long documents",
+        "Relation": "contain",
+        "Tail": "repeated headers"
+      },
+      {
+        "Head": "long documents",
+        "Relation": "contain",
+        "Tail": "footers"
+      },
+      {
+        "Head": "elements",
+        "Relation": "are helpful to",
+        "Tail": "readers"
+      },
+      {
+        "Head": "elements",
+        "Relation": "become",
+        "Tail": "noise"
+      },
+      {
+        "Head": "noise",
+        "Relation": "appears in",
+        "Tail": "machine-readable output"
+      },
+      {
+        "Head": "robust system",
+        "Relation": "should identify",
+        "Tail": "recurring page furniture"
+      },
+      {
+        "Head": "robust system",
+        "Relation": "should remove",
+        "Tail": "legitimate content"
+      },
+      {
+        "Head": "legitimate content",
+        "Relation": "repeats across",
+        "Tail": "sections"
+      },
+      {
+        "Head": "instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 4"
+      },
+      {
+        "Head": "output format",
+        "Relation": "depends on",
+        "Tail": "application"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "This page contains only selectable text.",
+        "Entity": [
+          "This page",
+          "selectable text"
+        ]
+      },
+      {
+        "Event": "Plain-text documents are useful as a control case.",
+        "Entity": [
+          "Plain-text documents",
+          "control case"
+        ]
+      },
+      {
+        "Event": "Plain-text documents isolate textual extraction from visual interpretation.",
+        "Entity": [
+          "Plain-text documents",
+          "textual extraction",
+          "visual interpretation"
+        ]
+      },
+      {
+        "Event": "A file contains no photographs, diagrams, equations, or tables.",
+        "Entity": [
+          "file",
+          "photographs",
+          "diagrams",
+          "equations",
+          "tables"
+        ]
+      },
+      {
+        "Event": "Differences between parsers are caused by line segmentation, multi-column ordering, headers, footers, and font encoding.",
+        "Entity": [
+          "differences between parsers",
+          "line segmentation",
+          "multi-column ordering",
+          "headers",
+          "footers",
+          "font encoding"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 2, paragraph 1.",
+        "Entity": [
+          "This instance",
+          "page 2",
+          "paragraph 1"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "This instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Evaluation should distinguish exact character recovery from semantic usability.",
+        "Entity": [
+          "Evaluation",
+          "exact character recovery",
+          "semantic usability"
+        ]
+      },
+      {
+        "Event": "A system may reproduce every glyph.",
+        "Entity": [
+          "system",
+          "every glyph"
+        ]
+      },
+      {
+        "Event": "A system may join unrelated columns.",
+        "Entity": [
+          "system",
+          "unrelated columns"
+        ]
+      },
+      {
+        "Event": "A system may normalize spacing and punctuation.",
+        "Entity": [
+          "system",
+          "spacing",
+          "punctuation"
+        ]
+      },
+      {
+        "Event": "A system may preserve the intended meaning.",
+        "Entity": [
+          "system",
+          "intended meaning"
+        ]
+      },
+      {
+        "Event": "Both behaviors matter in downstream retrieval and question answering applications.",
+        "Entity": [
+          "Both behaviors",
+          "downstream retrieval",
+          "question answering applications"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 2, paragraph 2.",
+        "Entity": [
+          "This instance",
+          "page 2",
+          "paragraph 2"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "This instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Page-level provenance is especially important in research workflows.",
+        "Entity": [
+          "Page-level provenance",
+          "research workflows"
+        ]
+      },
+      {
+        "Event": "A generated summary should be traceable to the source page.",
+        "Entity": [
+          "generated summary",
+          "source page"
+        ]
+      },
+      {
+        "Event": "Extracted claims should retain enough location information for verification.",
+        "Entity": [
+          "Extracted claims",
+          "location information",
+          "verification"
+        ]
+      },
+      {
+        "Event": "This is easier when the parser emits structured blocks rather than one uninterrupted string.",
+        "Entity": [
+          "parser",
+          "structured blocks",
+          "one uninterrupted string"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 2, paragraph 3.",
+        "Entity": [
+          "This instance",
+          "page 2",
+          "paragraph 3"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "This instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Long documents often contain repeated headers and footers.",
+        "Entity": [
+          "Long documents",
+          "repeated headers",
+          "footers"
+        ]
+      },
+      {
+        "Event": "These elements are visually helpful to readers.",
+        "Entity": [
+          "These elements",
+          "readers"
+        ]
+      },
+      {
+        "Event": "These elements can become noise in machine-readable output.",
+        "Entity": [
+          "These elements",
+          "noise",
+          "machine-readable output"
+        ]
+      },
+      {
+        "Event": "A robust system should identify recurring page furniture.",
+        "Entity": [
+          "robust system",
+          "recurring page furniture"
+        ]
+      },
+      {
+        "Event": "A robust system should not remove legitimate content.",
+        "Entity": [
+          "robust system",
+          "legitimate content"
+        ]
+      },
+      {
+        "Event": "Legitimate content happens to repeat across sections.",
+        "Entity": [
+          "Legitimate content",
+          "sections"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 2, paragraph 4.",
+        "Entity": [
+          "This instance",
+          "page 2",
+          "paragraph 4"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "This instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "The most useful output format depends on the application.",
+        "Entity": [
+          "most useful output format",
+          "application"
+        ]
+      }
+    ],
+    "event_relation_dict": []
+  },
+  {
+    "index": 0,
+    "chunk_index": "chunk_001",
+    "chunk_text_preview": "## Section 1: Text Extraction Control\n\nThis page intentionally contains only selectable text.\n\nDocum...",
+    "entity_relation_dict": [
+      {
+        "Head": "Document parsing systems",
+        "Relation": "convert",
+        "Tail": "page-based files"
+      },
+      {
+        "Head": "page-based files",
+        "Relation": "into",
+        "Tail": "representations"
+      },
+      {
+        "Head": "representations",
+        "Relation": "can be searched for",
+        "Tail": "search"
+      },
+      {
+        "Head": "representations",
+        "Relation": "can be used for",
+        "Tail": "summarization"
+      },
+      {
+        "Head": "representations",
+        "Relation": "can be used for",
+        "Tail": "analysis"
+      },
+      {
+        "Head": "reliable parser",
+        "Relation": "must preserve",
+        "Tail": "reading order"
+      },
+      {
+        "Head": "reliable parser",
+        "Relation": "must preserve",
+        "Tail": "section hierarchy"
+      },
+      {
+        "Head": "reliable parser",
+        "Relation": "must preserve",
+        "Tail": "paragraph boundaries"
+      },
+      {
+        "Head": "reliable parser",
+        "Relation": "must preserve",
+        "Tail": "page references"
+      },
+      {
+        "Head": "reliable parser",
+        "Relation": "must avoid introducing",
+        "Tail": "unsupported content"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "belongs to",
+        "Tail": "page 1"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 1"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "verifies",
+        "Tail": "stable pagination"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "verifies",
+        "Tail": "deterministic reading order"
+      },
+      {
+        "Head": "Plain-text documents",
+        "Relation": "serve as",
+        "Tail": "control case"
+      },
+      {
+        "Head": "control case",
+        "Relation": "isolates",
+        "Tail": "textual extraction"
+      },
+      {
+        "Head": "textual extraction",
+        "Relation": "from",
+        "Tail": "visual interpretation"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "photographs"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "diagrams"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "equations"
+      },
+      {
+        "Head": "file",
+        "Relation": "contains",
+        "Tail": "tables"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "line segmentation"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "multi-column ordering"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "headers"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "footers"
+      },
+      {
+        "Head": "differences between parsers",
+        "Relation": "are caused by",
+        "Tail": "font encoding"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 2"
+      },
+      {
+        "Head": "Evaluation",
+        "Relation": "should distinguish",
+        "Tail": "exact character recovery"
+      },
+      {
+        "Head": "Evaluation",
+        "Relation": "should distinguish",
+        "Tail": "semantic usability"
+      },
+      {
+        "Head": "system",
+        "Relation": "reproduces",
+        "Tail": "every glyph"
+      },
+      {
+        "Head": "system",
+        "Relation": "joins",
+        "Tail": "unrelated columns"
+      },
+      {
+        "Head": "system",
+        "Relation": "normalizes",
+        "Tail": "spacing"
+      },
+      {
+        "Head": "system",
+        "Relation": "normalizes",
+        "Tail": "punctuation"
+      },
+      {
+        "Head": "system",
+        "Relation": "preserves",
+        "Tail": "intended meaning"
+      },
+      {
+        "Head": "behaviors",
+        "Relation": "matter in",
+        "Tail": "downstream retrieval applications"
+      },
+      {
+        "Head": "behaviors",
+        "Relation": "matter in",
+        "Tail": "question answering applications"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 3"
+      },
+      {
+        "Head": "Page-level provenance",
+        "Relation": "is important in",
+        "Tail": "research workflows"
+      },
+      {
+        "Head": "generated summary",
+        "Relation": "should be traceable to",
+        "Tail": "source page"
+      },
+      {
+        "Head": "extracted claims",
+        "Relation": "should retain",
+        "Tail": "location information"
+      },
+      {
+        "Head": "location information",
+        "Relation": "supports",
+        "Tail": "verification"
+      },
+      {
+        "Head": "parser",
+        "Relation": "emits",
+        "Tail": "structured blocks"
+      },
+      {
+        "Head": "structured blocks",
+        "Relation": "contrast with",
+        "Tail": "one uninterrupted string"
+      },
+      {
+        "Head": "This instance",
+        "Relation": "belongs to",
+        "Tail": "paragraph 4"
+      },
+      {
+        "Head": "Long documents",
+        "Relation": "contain",
+        "Tail": "repeated headers"
+      },
+      {
+        "Head": "Long documents",
+        "Relation": "contain",
+        "Tail": "repeated footers"
+      },
+      {
+        "Head": "elements",
+        "Relation": "are helpful to",
+        "Tail": "readers"
+      },
+      {
+        "Head": "elements",
+        "Relation": "become",
+        "Tail": "noise"
+      },
+      {
+        "Head": "noise",
+        "Relation": "appears in",
+        "Tail": "machine-readable output"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "This page contains only selectable text.",
+        "Entity": [
+          "page",
+          "selectable text"
+        ]
+      },
+      {
+        "Event": "Document parsing systems convert page-based files into representations.",
+        "Entity": [
+          "Document parsing systems",
+          "page-based files",
+          "representations"
+        ]
+      },
+      {
+        "Event": "Representations can be searched, summarized, and analyzed.",
+        "Entity": [
+          "Representations"
+        ]
+      },
+      {
+        "Event": "A reliable parser must preserve reading order, section hierarchy, paragraph boundaries, and page references.",
+        "Entity": [
+          "reliable parser",
+          "reading order",
+          "section hierarchy",
+          "paragraph boundaries",
+          "page references"
+        ]
+      },
+      {
+        "Event": "A reliable parser must avoid the accidental introduction of unsupported content.",
+        "Entity": [
+          "reliable parser",
+          "unsupported content"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 1.",
+        "Entity": [
+          "instance",
+          "page 1",
+          "paragraph 1"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Plain-text documents are useful as a control case.",
+        "Entity": [
+          "Plain-text documents",
+          "control case"
+        ]
+      },
+      {
+        "Event": "Plain-text documents isolate textual extraction from visual interpretation.",
+        "Entity": [
+          "Plain-text documents",
+          "textual extraction",
+          "visual interpretation"
+        ]
+      },
+      {
+        "Event": "A file contains no photographs, diagrams, equations, or tables.",
+        "Entity": [
+          "file",
+          "photographs",
+          "diagrams",
+          "equations",
+          "tables"
+        ]
+      },
+      {
+        "Event": "Differences between parsers are usually caused by line segmentation, multi-column ordering, headers, footers, and font encoding.",
+        "Entity": [
+          "differences between parsers",
+          "line segmentation",
+          "multi-column ordering",
+          "headers",
+          "footers",
+          "font encoding"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 2.",
+        "Entity": [
+          "instance",
+          "page 1",
+          "paragraph 2"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Evaluation should distinguish exact character recovery from semantic usability.",
+        "Entity": [
+          "Evaluation",
+          "exact character recovery",
+          "semantic usability"
+        ]
+      },
+      {
+        "Event": "A system may reproduce every glyph.",
+        "Entity": [
+          "system",
+          "every glyph"
+        ]
+      },
+      {
+        "Event": "A system may join unrelated columns.",
+        "Entity": [
+          "system",
+          "unrelated columns"
+        ]
+      },
+      {
+        "Event": "A system may normalize spacing and punctuation.",
+        "Entity": [
+          "system",
+          "spacing",
+          "punctuation"
+        ]
+      },
+      {
+        "Event": "A system may preserve the intended meaning.",
+        "Entity": [
+          "system",
+          "intended meaning"
+        ]
+      },
+      {
+        "Event": "Both behaviors matter in downstream retrieval and question answering applications.",
+        "Entity": [
+          "Both behaviors",
+          "downstream retrieval",
+          "question answering applications"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 3.",
+        "Entity": [
+          "instance",
+          "page 1",
+          "paragraph 3"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Page-level provenance is especially important in research workflows.",
+        "Entity": [
+          "Page-level provenance",
+          "research workflows"
+        ]
+      },
+      {
+        "Event": "A generated summary should be traceable to the source page.",
+        "Entity": [
+          "generated summary",
+          "source page"
+        ]
+      },
+      {
+        "Event": "Extracted claims should retain enough location information for verification.",
+        "Entity": [
+          "Extracted claims",
+          "location information",
+          "verification"
+        ]
+      },
+      {
+        "Event": "This is easier when the parser emits structured blocks rather than one uninterrupted string.",
+        "Entity": [
+          "parser",
+          "structured blocks",
+          "one uninterrupted string"
+        ]
+      },
+      {
+        "Event": "This instance belongs to page 1, paragraph 4.",
+        "Entity": [
+          "instance",
+          "page 1",
+          "paragraph 4"
+        ]
+      },
+      {
+        "Event": "This instance is included to verify stable pagination and deterministic reading order.",
+        "Entity": [
+          "instance",
+          "stable pagination",
+          "deterministic reading order"
+        ]
+      },
+      {
+        "Event": "Long documents often contain repeated headers and footers.",
+        "Entity": [
+          "Long documents",
+          "repeated headers",
+          "footers"
+        ]
+      },
+      {
+        "Event": "These elements are visually helpful to readers.",
+        "Entity": [
+          "elements",
+          "readers"
+        ]
+      },
+      {
+        "Event": "These elements can become noise in machine-readable output.",
+        "Entity": [
+          "elements",
+          "machine-readable output",
+          "noise"
+        ]
+      }
+    ],
+    "event_relation_dict": []
+  }
+]

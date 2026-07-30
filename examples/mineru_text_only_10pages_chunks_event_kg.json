@@ -1,0 +1,310 @@
+[
+  {
+    "index": 3,
+    "text": "across sections. This instance belongs to page 2, paragraph 4, and is included to verify stable pagination and deterministic reading order.\n\nThe most useful output format depends on the application. Markdown is convenient for human inspection and language models, while JSON is better for preserving block types, coordinates, page indices, and confidence values. Many production pipelines retain both representations. This instance belongs to page 2, paragraph 5, and is included to verify stable pagination and deterministic reading order.\n\nText quality should be tested with normal paragraphs, headings, numbered sections, quotations, and deliberately varied sentence lengths. The goal is not to make the document visually complex, but to expose segmentation and ordering behavior in a controlled setting. This instance belongs to page 2, paragraph 6, and is included to verify stable pagination and deterministic reading order.\n\nA ten-page sample provides enough repetition to test pagination, batching, and page references without creating a large file. Because the document contains only embedded text, it should remain small and should not require optical character recognition. This instance belongs to page 2, paragraph 7, and is included to verify stable pagination and deterministic reading order.\n\nDocument parsing systems convert page-based files into representations that can be searched, summarized, and analyzed. A reliable parser must preserve reading order, section hierarchy, paragraph boundaries, and page references while avoiding the accidental introduction of unsupported content. This instance belongs to page 2, paragraph 8, and is included to verify stable pagination and deterministic reading order.\n\n## Section 3: Text Extraction Control\n\nThis page intentionally contains only selectable text.\n\nEvaluation should distinguish exact character recovery from semantic usability.",
+    "kg": {
+      "entity_relations": [
+        {
+          "Head": "Markdown",
+          "Relation": "is_convenient_for",
+          "Tail": "human inspection"
+        },
+        {
+          "Head": "Markdown",
+          "Relation": "is_convenient_for",
+          "Tail": "language models"
+        },
+        {
+          "Head": "JSON",
+          "Relation": "is_better_for_preserving",
+          "Tail": "block types"
+        },
+        {
+          "Head": "JSON",
+          "Relation": "is_better_for_preserving",
+          "Tail": "coordinates"
+        },
+        {
+          "Head": "JSON",
+          "Relation": "is_better_for_preserving",
+          "Tail": "page indices"
+        },
+        {
+          "Head": "JSON",
+          "Relation": "is_better_for_preserving",
+          "Tail": "confidence values"
+        },
+        {
+          "Head": "production pipelines",
+          "Relation": "retain",
+          "Tail": "Markdown"
+        },
+        {
+          "Head": "production pipelines",
+          "Relation": "retain",
+          "Tail": "JSON"
+        },
+        {
+          "Head": "text quality",
+          "Relation": "should_be_tested_with",
+          "Tail": "normal paragraphs"
+        },
+        {
+          "Head": "text quality",
+          "Relation": "should_be_tested_with",
+          "Tail": "headings"
+        },
+        {
+          "Head": "text quality",
+          "Relation": "should_be_tested_with",
+          "Tail": "numbered sections"
+        },
+        {
+          "Head": "text quality",
+          "Relation": "should_be_tested_with",
+          "Tail": "quotations"
+        },
+        {
+          "Head": "text quality",
+          "Relation": "should_be_tested_with",
+          "Tail": "varied sentence lengths"
+        },
+        {
+          "Head": "document",
+          "Relation": "aims_to_expose",
+          "Tail": "segmentation behavior"
+        },
+        {
+          "Head": "document",
+          "Relation": "aims_to_expose",
+          "Tail": "ordering behavior"
+        },
+        {
+          "Head": "ten-page sample",
+          "Relation": "provides_enough_repetition_to_test",
+          "Tail": "pagination"
+        },
+        {
+          "Head": "ten-page sample",
+          "Relation": "provides_enough_repetition_to_test",
+          "Tail": "batching"
+        },
+        {
+          "Head": "ten-page sample",
+          "Relation": "provides_enough_repetition_to_test",
+          "Tail": "page references"
+        },
+        {
+          "Head": "document",
+          "Relation": "contains",
+          "Tail": "embedded text"
+        },
+        {
+          "Head": "embedded text",
+          "Relation": "reduces_need_for",
+          "Tail": "optical character recognition"
+        },
+        {
+          "Head": "document parsing systems",
+          "Relation": "convert",
+          "Tail": "page-based files"
+        },
+        {
+          "Head": "page-based files",
+          "Relation": "are_converted_into",
+          "Tail": "searchable representations"
+        },
+        {
+          "Head": "page-based files",
+          "Relation": "are_converted_into",
+          "Tail": "summarizable representations"
+        },
+        {
+          "Head": "page-based files",
+          "Relation": "are_converted_into",
+          "Tail": "analyzable representations"
+        },
+        {
+          "Head": "reliable parser",
+          "Relation": "must_preserve",
+          "Tail": "reading order"
+        },
+        {
+          "Head": "reliable parser",
+          "Relation": "must_preserve",
+          "Tail": "section hierarchy"
+        },
+        {
+          "Head": "reliable parser",
+          "Relation": "must_preserve",
+          "Tail": "paragraph boundaries"
+        },
+        {
+          "Head": "reliable parser",
+          "Relation": "must_preserve",
+          "Tail": "page references"
+        },
+        {
+          "Head": "reliable parser",
+          "Relation": "must_avoid_introduction_of",
+          "Tail": "unsupported content"
+        },
+        {
+          "Head": "page",
+          "Relation": "contains",
+          "Tail": "selectable text"
+        },
+        {
+          "Head": "evaluation",
+          "Relation": "should_distinguish",
+          "Tail": "exact character recovery"
+        },
+        {
+          "Head": "evaluation",
+          "Relation": "should_distinguish",
+          "Tail": "semantic usability"
+        }
+      ],
+      "event_entities": [
+        {
+          "Event": "Markdown is convenient for human inspection and language models.",
+          "Entity": [
+            "Markdown",
+            "human inspection",
+            "language models"
+          ]
+        },
+        {
+          "Event": "JSON is better for preserving block types, coordinates, page indices, and confidence values.",
+          "Entity": [
+            "JSON",
+            "block types",
+            "coordinates",
+            "page indices",
+            "confidence values"
+          ]
+        },
+        {
+          "Event": "Many production pipelines retain both representations.",
+          "Entity": [
+            "production pipelines",
+            "both representations",
+            "Markdown",
+            "JSON"
+          ]
+        },
+        {
+          "Event": "Text quality should be tested with normal paragraphs, headings, numbered sections, quotations, and deliberately varied sentence lengths.",
+          "Entity": [
+            "Text quality",
+            "normal paragraphs",
+            "headings",
+            "numbered sections",
+            "quotations",
+            "deliberately varied sentence lengths"
+          ]
+        },
+        {
+          "Event": "The goal is not to make the document visually complex.",
+          "Entity": [
+            "goal",
+            "document"
+          ]
+        },
+        {
+          "Event": "The goal is to expose segmentation and ordering behavior in a controlled setting.",
+          "Entity": [
+            "goal",
+            "segmentation",
+            "ordering behavior",
+            "controlled setting"
+          ]
+        },
+        {
+          "Event": "A ten-page sample provides enough repetition to test pagination, batching, and page references without creating a large file.",
+          "Entity": [
+            "ten-page sample",
+            "repetition",
+            "pagination",
+            "batching",
+            "page references",
+            "large file"
+          ]
+        },
+        {
+          "Event": "The document contains only embedded text.",
+          "Entity": [
+            "document",
+            "embedded text"
+          ]
+        },
+        {
+          "Event": "The document should remain small.",
+          "Entity": [
+            "document"
+          ]
+        },
+        {
+          "Event": "The document should not require optical character recognition.",
+          "Entity": [
+            "document",
+            "optical character recognition"
+          ]
+        },
+        {
+          "Event": "Document parsing systems convert page-based files into representations that can be searched, summarized, and analyzed.",
+          "Entity": [
+            "Document parsing systems",
+            "page-based files",
+            "representations"
+          ]
+        },
+        {
+          "Event": "A reliable parser must preserve reading order, section hierarchy, paragraph boundaries, and page references.",
+          "Entity": [
+            "reliable parser",
+            "reading order",
+            "section hierarchy",
+            "paragraph boundaries",
+            "page references"
+          ]
+        },
+        {
+          "Event": "A reliable parser must avoid the accidental introduction of unsupported content.",
+          "Entity": [
+            "reliable parser",
+            "accidental introduction",
+            "unsupported content"
+          ]
+        },
+        {
+          "Event": "This page intentionally contains only selectable text.",
+          "Entity": [
+            "page",
+            "selectable text"
+          ]
+        },
+        {
+          "Event": "Evaluation should distinguish exact character recovery from semantic usability.",
+          "Entity": [
+            "Evaluation",
+            "exact character recovery",
+            "semantic usability"
+          ]
+        }
+      ],
+      "event_relations": [
+        {
+          "Head": "The document contains only embedded text.",
+          "Relation": "because",
+          "Tail": "The sample should not require optical character recognition."
+        },
+        {
+          "Head": "The document contains only embedded text.",
+          "Relation": "as a result",
+          "Tail": "The sample should remain small."
+        }
+      ]
+    }
+  }
+]

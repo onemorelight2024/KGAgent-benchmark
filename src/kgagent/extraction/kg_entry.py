@@ -17,7 +17,7 @@ from claude_agent_sdk import (
 
 from kgagent.extraction.agents.extractor import build_extraction_agent
 from kgagent.extraction.config import ExtractionConfig
-from kgagent.extraction.three_stage import ThreeStageExtractor
+from kgagent.core.batch import is_batch_input, process_batch_with_resume
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +28,6 @@ class ExtractionEntry:
     def __init__(self, config: ExtractionConfig):
         self.config = config
         self.agent = build_extraction_agent()
-
-        # Initialize three-stage extractor
-        self.three_stage_extractor = ThreeStageExtractor(config)
-
-        # Enable three-stage mode by default for triples, temporal, and hyper
-        self.use_three_stage = True
 
     def extract(
         self,
@@ -47,29 +41,188 @@ class ExtractionEntry:
         self,
         data: str | dict | list,
         extraction_type: str,
-    ) -> dict[str, Any]:
+        save_to: str | None = None,
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         """Run extraction agent on the data.
 
         Args:
             data: Input data (text, dict, or list)
             extraction_type: Type of extraction (triples, temporal, hyper)
+            save_to: Optional path to save results (for batch with resume)
 
         Returns:
-            Extraction result as dict
+            Extraction result as dict or list (for batch)
         """
         logger.info(
             f"Starting extraction: type={extraction_type}, "
             f"data_type={type(data).__name__}"
         )
 
-        # Use three-stage extraction for triples, temporal, and hyper
-        if self.use_three_stage and extraction_type in ("triples", "temporal", "hyper"):
-            logger.info("Using three-stage extraction pipeline")
-            return await self.three_stage_extractor.extract_async(data, extraction_type)
+        # Check if input is a batch
+        if is_batch_input(data):
+            logger.info(f"Batch mode detected: {len(data)} items")
+            return await self._batch_extract(data, extraction_type, save_to)
 
-        # Fall back to original single-stage extraction
+        # Single-stage extraction
         logger.info("Using single-stage extraction")
         return await self._single_stage_extract(data, extraction_type)
+
+    async def _batch_extract(
+        self,
+        data_list: list,
+        extraction_type: str,
+        save_to: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Process batch of items with concurrency control and resume support.
+
+        Args:
+            data_list: List of data items
+            extraction_type: Type of extraction
+            save_to: Optional path to save results (enables resume support)
+
+        Returns:
+            List of results with index, text, and kg fields
+        """
+        from kgagent.core.batch import process_batch_with_resume, process_batch
+        from pathlib import Path
+
+        async def process_single_item(item: Any) -> dict[str, Any]:
+            """Process a single item from the batch."""
+            # Extract text from item
+            if isinstance(item, dict):
+                text = (
+                    item.get("text") or
+                    item.get("content") or
+                    item.get("description") or
+                    str(item)
+                )
+            else:
+                text = str(item)
+
+            # Extract from this single item
+            extraction_result = await self._single_stage_extract(text, extraction_type)
+            return extraction_result
+
+        def format_result(result: dict, item: Any, index: int) -> dict[str, Any]:
+            """Format result for output."""
+            # DEBUG: Log what we received
+            logger.debug(f"format_result called for index {index}")
+            logger.debug(f"  result type: {type(result)}")
+            logger.debug(f"  result keys: {list(result.keys()) if isinstance(result, dict) else 'N/A'}")
+
+            # Extract text
+            if isinstance(item, dict):
+                text = (
+                    item.get("text") or
+                    item.get("content") or
+                    item.get("description") or
+                    str(item)
+                )
+            else:
+                text = str(item)
+
+            # Build result item
+            result_item = {
+                "index": index,
+                "text": text,
+            }
+
+            # Copy original fields if dict
+            if isinstance(item, dict):
+                for key, value in item.items():
+                    if key not in result_item:
+                        result_item[key] = value
+
+            # Add kg field based on extraction type
+            if extraction_type == "triples":
+                kg_value = result.get("triple", [])
+                logger.debug(f"  extraction_type=triples, kg length: {len(kg_value)}")
+                result_item["kg"] = kg_value
+            elif extraction_type == "temporal":
+                result_item["kg"] = result.get("quadruples", [])
+            elif extraction_type == "hyper":
+                result_item["kg"] = result.get("hyper_relations", [])
+            else:
+                result_item["kg"] = []
+
+            return result_item
+
+        # If save_to is provided, use process_batch_with_resume for resume support
+        if save_to:
+            logger.info(f"Using batch processing with resume support (output: {save_to})")
+
+            await process_batch_with_resume(
+                items=data_list,
+                process_fn=process_single_item,
+                output_path=save_to,
+                max_concurrent=3,
+                format_fn=format_result,
+            )
+
+            # Load the saved results and return
+            import json
+            with open(save_to, "r", encoding="utf-8") as f:
+                results = json.load(f)
+
+            logger.info(f"Batch extraction complete: {len(results)} items")
+            return results
+
+        # Otherwise use regular process_batch (no resume)
+        logger.info(f"Starting batch processing with max_concurrent=3")
+        batch_result = await process_batch(
+            items=data_list,
+            process_fn=process_single_item,
+            max_concurrent=3,
+            return_errors=True,
+        )
+
+        # Format results
+        results = []
+        successful_results = batch_result.get("batch_results", [])
+        errors = batch_result.get("batch_errors", [])
+
+        # Add successful results
+        for item_result in successful_results:
+            index = item_result["index"]
+            extraction_result = item_result["result"]
+            original_item = data_list[index]
+            formatted = format_result(extraction_result, original_item, index)
+            results.append(formatted)
+
+        # Add error results (with empty kg)
+        for error_item in errors:
+            index = error_item["index"]
+            original_item = data_list[index]
+
+            if isinstance(original_item, dict):
+                text = original_item.get("text") or original_item.get("content") or str(original_item)
+            else:
+                text = str(original_item)
+
+            result_item = {
+                "index": index,
+                "text": text,
+                "kg": [],
+                "error": error_item["error"]
+            }
+
+            if isinstance(original_item, dict):
+                for key, value in original_item.items():
+                    if key not in result_item:
+                        result_item[key] = value
+
+            results.append(result_item)
+
+        # Sort by index to maintain order
+        results.sort(key=lambda x: x["index"])
+
+        summary = batch_result.get("summary", {})
+        logger.info(
+            f"Batch extraction complete: {summary.get('successful', 0)} successful, "
+            f"{summary.get('failed', 0)} failed out of {summary.get('total', 0)} items"
+        )
+
+        return results
 
     async def _single_stage_extract(
         self,
@@ -114,9 +267,15 @@ class ExtractionEntry:
                     break
 
         if result is None:
+            logger.error("Extraction agent returned no valid result")
+            logger.error(f"Last response text (first 1000 chars): {text[:1000]}")
             raise ValueError("Extraction agent returned no valid result")
 
         logger.info(f"Extraction complete: {len(str(result))} bytes")
+        logger.info(f"Result structure: keys={list(result.keys()) if isinstance(result, dict) else 'not a dict'}")
+        if isinstance(result, dict) and extraction_type == 'triples':
+            triple_count = len(result.get('triple', []))
+            logger.info(f"Triple count: {triple_count}")
         return result
 
     def _build_prompt(
@@ -168,6 +327,9 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
 
         text = text.strip()
 
+        # DEBUG: Log the raw response
+        logger.debug(f"Raw LLM response (first 500 chars): {text[:500]}")
+
         # Strategy 1: Try to find the final/complete JSON block
         # Look for ```json ... ``` blocks
         json_blocks = re.findall(r'```(?:json)?\s*\n(.*?)\n```', text, re.DOTALL)
@@ -179,6 +341,7 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
                     result = json.loads(block.strip())
                     # Check if it's a complete result (has expected fields)
                     if isinstance(result, dict) and (
+                        'triple' in result or
                         'triples' in result or
                         'relations' in result or
                         'quadruples' in result or
@@ -186,13 +349,19 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
                         'entities' in result  # Accept partial results too
                     ):
                         logger.info(f"Parsed JSON from code block")
+                        logger.info(f"Result keys: {list(result.keys())}")
+                        logger.info(f"Result preview: {str(result)[:200]}")
+
+                        # Normalize relations/triples field
+                        result = self._normalize_result(result)
                         return result
                 except json.JSONDecodeError:
                     continue
 
         # Strategy 2: Try to parse entire text as JSON
         try:
-            return json.loads(text)
+            result = json.loads(text)
+            return self._normalize_result(result) if isinstance(result, dict) else result
         except json.JSONDecodeError:
             pass
 
@@ -204,7 +373,7 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
                 result = json.loads(text[start : end + 1])
                 if isinstance(result, dict):
                     logger.info(f"Parsed JSON from text extraction")
-                    return result
+                    return self._normalize_result(result)
             except json.JSONDecodeError:
                 pass
 
@@ -226,6 +395,53 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
 
         logger.warning(f"Could not parse JSON from response: {text[:200]}...")
         return None
+
+    def _normalize_result(self, result: dict[str, Any]) -> dict[str, Any]:
+        """Normalize result to standard format.
+
+        Convert 'relations' to 'triple', 'triples' to 'triple', etc.
+
+        Args:
+            result: Raw result dict
+
+        Returns:
+            Normalized result dict
+        """
+        # Handle relations field (legacy format from _parse_structured_text)
+        if 'relations' in result and 'triple' not in result:
+            relations = result.pop('relations')
+            # Convert to tagged format
+            if isinstance(relations, list) and relations:
+                # Check format of first item
+                if isinstance(relations[0], list) and len(relations[0]) >= 3:
+                    # [[subj, rel, obj], ...] format
+                    result['triple'] = [
+                        f"<subj> {r[0]} <obj> {r[2]} <rel> {r[1]}"
+                        for r in relations
+                    ]
+                elif isinstance(relations[0], str):
+                    # Already in tagged format or malformed
+                    # Try to keep only valid ones
+                    valid_triples = []
+                    for r in relations:
+                        if '<subj>' in r and '<obj>' in r and '<rel>' in r:
+                            valid_triples.append(r)
+                    result['triple'] = valid_triples
+
+        # Handle triples field (should be triple)
+        if 'triples' in result and 'triple' not in result:
+            result['triple'] = result.pop('triples')
+
+        # Remove entities field if it's malformed (not a simple list of strings)
+        if 'entities' in result:
+            entities = result['entities']
+            if isinstance(entities, list) and entities:
+                # Check if all items are simple strings
+                if not all(isinstance(e, str) and '<subj>' not in e for e in entities):
+                    # Malformed entities, remove it
+                    result.pop('entities')
+
+        return result
 
     def _parse_structured_text(self, text: str) -> dict[str, Any] | None:
         """Parse structured text format (markdown lists, tuples, etc.).
@@ -250,13 +466,11 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
         for pattern in triple_patterns:
             matches = re.findall(pattern, text)
             if matches:
-                result['relations'] = [[s.strip(), r.strip(), o.strip()] for s, r, o in matches]
-                # Extract entities
-                entities = set()
-                for s, r, o in matches:
-                    entities.add(s.strip())
-                    entities.add(o.strip())
-                result['entities'] = sorted(list(entities))
+                # Convert to standard tagged format
+                result['triple'] = [
+                    f"<subj> {s.strip()} <obj> {o.strip()} <rel> {r.strip()}"
+                    for s, r, o in matches
+                ]
                 return result
 
         # Try to parse temporal quadruples: (subject, relation, object, time)
