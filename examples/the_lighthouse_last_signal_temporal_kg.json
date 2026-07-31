@@ -1,0 +1,82 @@
+[
+  {
+    "index": 0,
+    "chunk_index": "chunk_001",
+    "kg": [
+      "<subj> Mara Ellison <obj> post office door <rel> locked <time> 1986-11-14T17:40",
+      "<subj> Mara Ellison <obj> eastern lighthouse <rel> walked_to <time> 1986-11-14T17:40",
+      "<subj> weather station <obj> storm warning <rel> issued <time> 1986-11-11|1986-11-13",
+      "<subj> fishing boats <obj> harbour <rel> left_from <time> 1986-11-12T06:00",
+      "<subj> Elias <obj> lighthouse keeper position <rel> held <time> NA",
+      "<subj> Elias <obj> NA <rel> died <time> 1976-11-14",
+      "<subj> Mara Ellison <obj> lantern room <rel> visits <time> 1976-11-14|1986-11-14",
+      "<subj> Mara Ellison <obj> eastern lighthouse <rel> arrived_at <time> 1986-11-14T18:12",
+      "<subj> main power line <obj> NA <rel> failed <time> 1986-11-14T18:01",
+      "<subj> backup generator <obj> NA <rel> was_tested <time> 1986-11-10T09:00",
+      "<subj> backup generator <obj> NA <rel> ran_normally <time> 1986-11-10T09:00",
+      "<subj> radio forecast <obj> NA <rel> changed <time> 1986-11-14T17:55",
+      "<subj> storm <obj> Greyhaven <rel> will_reach <time> 1986-11-14T19:00|1986-11-14T19:30",
+      "<subj> North Star <obj> engine trouble <rel> reported <time> 1986-11-14T18:03",
+      "<subj> Thomas Reed <obj> generator <rel> started <time> 1986-11-14T18:25",
+      "<subj> drive belt <obj> NA <rel> snapped <time> 1986-11-14T18:25",
+      "<subj> harbour warehouse <obj> NA <rel> closed <time> 1986-11-14T18:00"
+    ]
+  },
+  {
+    "index": 1,
+    "chunk_index": "chunk_002",
+    "kg": [
+      "<subj> harbour warehouse <obj> NA <rel> closed <time> 18:00",
+      "<subj> Elias <obj> lamp <rel> kept_turning_by_hand <time> 1976",
+      "<subj> Elias <obj> NA <rel> collapsed <time> 1976",
+      "<subj> ferry <obj> reef <rel> was_saved_from <time> 1976",
+      "<subj> Mara <obj> mechanism room <rel> climbed_into <time> 2026-07-31 18:31",
+      "<subj> Thomas <obj> mechanism room <rel> climbed_into <time> 2026-07-31 18:31",
+      "<subj> Mara <obj> broken drive <rel> disconnected <time> 2026-07-31 18:31",
+      "<subj> Thomas <obj> broken drive <rel> disconnected <time> 2026-07-31 18:31",
+      "<subj> Mara <obj> manual crank <rel> attached <time> 2026-07-31 18:31",
+      "<subj> Thomas <obj> manual crank <rel> attached <time> 2026-07-31 18:31",
+      "<subj> rain <obj> glass <rel> struck <time> 2026-07-31 18:47",
+      "<subj> harbour radio <obj> Ellen May crossed breakwater safely <rel> reported <time> 2026-07-31 18:53",
+      "<subj> Ellen May <obj> breakwater <rel> crossed <time> 2026-07-31 18:53",
+      "<subj> North Star captain <obj> lighthouse beam <rel> could_see <time> 2026-07-31 19:02",
+      "<subj> storm <obj> NA <rel> arrived <time> 2026-07-31 19:08",
+      "<subj> wind <obj> tower <rel> shook <time> 2026-07-31 19:08",
+      "<subj> window <obj> NA <rel> cracked <time> 2026-07-31 19:08",
+      "<subj> Hope <obj> North Star <rel> found <time> 2026-07-31 19:18",
+      "<subj> Hope <obj> North Star <rel> began_towing <time> 2026-07-31 19:19",
+      "<subj> Thomas <obj> why she came to lighthouse <rel> asked <time> 2026-07-31 19:42"
+    ]
+  },
+  {
+    "index": 2,
+    "chunk_index": "chunk_003",
+    "kg": [
+      "<subj> Thomas <obj> Mara <rel> asked <time> 1986-11-14T19:42:00",
+      "<subj> Mara <obj> watch <rel> showed <time> 1986-11-14T19:42:00",
+      "<subj> Mara <obj> promise <rel> kept <time> 1986-11-14T19:42:00",
+      "<subj> harbour bell <obj> signal <rel> rang <time> 1986-11-14T20:01:00",
+      "<subj> North Star <obj> breakwater <rel> crossed <time> 1986-11-14T20:06:00",
+      "<subj> Mara <obj> lantern <rel> stopped <time> 1986-11-14T20:06:00",
+      "<subj> Thomas <obj> lantern <rel> stopped <time> 1986-11-14T20:06:00",
+      "<subj> storm <obj> inland <rel> moved <time> 1986-11-15T00:00:00",
+      "<subj> electricity <obj> NA <rel> returned <time> 1986-11-15T00:20:00",
+      "<subj> Engineers <obj> belt <rel> replaced <time> 1986-11-15T09:00:00",
+      "<subj> lighthouse <obj> automatic operation <rel> resumed <time> 1986-11-15T10:15:00",
+      "<subj> Mara <obj> father's watch <rel> reset <time> 1986-11-15",
+      "<subj> town <obj> plaque <rel> placed <time> 1987-11-14",
+      "<subj> Greyhaven <obj> emergency mechanism <rel> tested <time> 1987-11",
+      "<subj> fishermen <obj> hill <rel> climbed <time> 1987-11-14T18:00:00"
+    ]
+  },
+  {
+    "index": 3,
+    "chunk_index": "chunk_004",
+    "kg": [
+      "<subj> Mara <obj> lighthouse <rel> visited <time> NA",
+      "<subj> Mara <obj> lighthouse <rel> visited <time> 11-14",
+      "<subj> fishermen and their families <obj> hill <rel> climbed <time> 18:00",
+      "<subj> fishermen and their families <obj> lantern <rel> turned <time> 18:31"
+    ]
+  }
+]

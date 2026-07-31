@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="name" for="node" attr.name="name" attr.type="string" />
+  <key id="relation" for="edge" attr.name="relation" attr.type="string" />
+  <key id="index" for="edge" attr.name="index" attr.type="int" />
+  <key id="time" for="edge" attr.name="time" attr.type="string" />
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="name">Mara Ellison</data>
+    </node>
+    <node id="n1">
+      <data key="name">post office door</data>
+    </node>
+    <node id="n2">
+      <data key="name">eastern lighthouse</data>
+    </node>
+    <node id="n3">
+      <data key="name">weather station</data>
+    </node>
+    <node id="n4">
+      <data key="name">storm warning</data>
+    </node>
+    <node id="n5">
+      <data key="name">fishing boats</data>
+    </node>
+    <node id="n6">
+      <data key="name">harbour</data>
+    </node>
+    <node id="n7">
+      <data key="name">Elias</data>
+    </node>
+    <node id="n8">
+      <data key="name">lighthouse keeper position</data>
+    </node>
+    <node id="n9">
+      <data key="name">NA</data>
+    </node>
+    <node id="n10">
+      <data key="name">lantern room</data>
+    </node>
+    <node id="n11">
+      <data key="name">main power line</data>
+    </node>
+    <node id="n12">
+      <data key="name">backup generator</data>
+    </node>
+    <node id="n13">
+      <data key="name">radio forecast</data>
+    </node>
+    <node id="n14">
+      <data key="name">storm</data>
+    </node>
+    <node id="n15">
+      <data key="name">Greyhaven</data>
+    </node>
+    <node id="n16">
+      <data key="name">North Star</data>
+    </node>
+    <node id="n17">
+      <data key="name">engine trouble</data>
+    </node>
+    <node id="n18">
+      <data key="name">Thomas Reed</data>
+    </node>
+    <node id="n19">
+      <data key="name">generator</data>
+    </node>
+    <node id="n20">
+      <data key="name">drive belt</data>
+    </node>
+    <node id="n21">
+      <data key="name">harbour warehouse</data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+      <data key="relation">locked</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T17:40</data>
+    </edge>
+    <edge id="e1" source="n0" target="n2">
+      <data key="relation">walked_to</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T17:40</data>
+    </edge>
+    <edge id="e2" source="n3" target="n4">
+      <data key="relation">issued</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-11|1986-11-13</data>
+    </edge>
+    <edge id="e3" source="n5" target="n6">
+      <data key="relation">left_from</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-12T06:00</data>
+    </edge>
+    <edge id="e4" source="n7" target="n8">
+      <data key="relation">held</data>
+      <data key="index">0</data>
+      <data key="time">NA</data>
+    </edge>
+    <edge id="e5" source="n7" target="n9">
+      <data key="relation">died</data>
+      <data key="index">0</data>
+      <data key="time">1976-11-14</data>
+    </edge>
+    <edge id="e6" source="n0" target="n10">
+      <data key="relation">visits</data>
+      <data key="index">0</data>
+      <data key="time">1976-11-14|1986-11-14</data>
+    </edge>
+    <edge id="e7" source="n0" target="n2">
+      <data key="relation">arrived_at</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:12</data>
+    </edge>
+    <edge id="e8" source="n11" target="n9">
+      <data key="relation">failed</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:01</data>
+    </edge>
+    <edge id="e9" source="n12" target="n9">
+      <data key="relation">was_tested</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-10T09:00</data>
+    </edge>
+    <edge id="e10" source="n12" target="n9">
+      <data key="relation">ran_normally</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-10T09:00</data>
+    </edge>
+    <edge id="e11" source="n13" target="n9">
+      <data key="relation">changed</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T17:55</data>
+    </edge>
+    <edge id="e12" source="n14" target="n15">
+      <data key="relation">will_reach</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T19:00|1986-11-14T19:30</data>
+    </edge>
+    <edge id="e13" source="n16" target="n17">
+      <data key="relation">reported</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:03</data>
+    </edge>
+    <edge id="e14" source="n18" target="n19">
+      <data key="relation">started</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:25</data>
+    </edge>
+    <edge id="e15" source="n20" target="n9">
+      <data key="relation">snapped</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:25</data>
+    </edge>
+    <edge id="e16" source="n21" target="n9">
+      <data key="relation">closed</data>
+      <data key="index">0</data>
+      <data key="time">1986-11-14T18:00</data>
+    </edge>
+  </graph>
+</graphml>

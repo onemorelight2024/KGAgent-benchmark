@@ -3,252 +3,154 @@
   <key id="name" for="node" attr.name="name" attr.type="string" />
   <key id="relation" for="edge" attr.name="relation" attr.type="string" />
   <key id="index" for="edge" attr.name="index" attr.type="int" />
+  <key id="time" for="edge" attr.name="time" attr.type="string" />
   <graph id="G" edgedefault="directed">
     <node id="n0">
-      <data key="name">Plain-text documents</data>
+      <data key="name">Thomas</data>
     </node>
     <node id="n1">
-      <data key="name">control case</data>
+      <data key="name">Mara</data>
     </node>
     <node id="n2">
-      <data key="name">textual extraction</data>
+      <data key="name">watch</data>
     </node>
     <node id="n3">
-      <data key="name">file</data>
+      <data key="name">promise</data>
     </node>
     <node id="n4">
-      <data key="name">photographs, diagrams, equations, or tables</data>
+      <data key="name">harbour bell</data>
     </node>
     <node id="n5">
-      <data key="name">differences between parsers</data>
+      <data key="name">signal</data>
     </node>
     <node id="n6">
-      <data key="name">line segmentation, multi-column ordering, headers, footers, and font encoding</data>
+      <data key="name">North Star</data>
     </node>
     <node id="n7">
-      <data key="name">This instance</data>
+      <data key="name">breakwater</data>
     </node>
     <node id="n8">
-      <data key="name">page 2, paragraph 1</data>
+      <data key="name">lantern</data>
     </node>
     <node id="n9">
-      <data key="name">stable pagination and deterministic reading order</data>
+      <data key="name">storm</data>
     </node>
     <node id="n10">
-      <data key="name">Evaluation</data>
+      <data key="name">inland</data>
     </node>
     <node id="n11">
-      <data key="name">exact character recovery</data>
+      <data key="name">electricity</data>
     </node>
     <node id="n12">
-      <data key="name">semantic usability</data>
+      <data key="name">NA</data>
     </node>
     <node id="n13">
-      <data key="name">system</data>
+      <data key="name">Engineers</data>
     </node>
     <node id="n14">
-      <data key="name">every glyph</data>
+      <data key="name">belt</data>
     </node>
     <node id="n15">
-      <data key="name">unrelated columns</data>
+      <data key="name">lighthouse</data>
     </node>
     <node id="n16">
-      <data key="name">spacing and punctuation</data>
+      <data key="name">automatic operation</data>
     </node>
     <node id="n17">
-      <data key="name">intended meaning</data>
+      <data key="name">father's watch</data>
     </node>
     <node id="n18">
-      <data key="name">Both behaviors</data>
+      <data key="name">town</data>
     </node>
     <node id="n19">
-      <data key="name">downstream retrieval and question answering applications</data>
+      <data key="name">plaque</data>
     </node>
     <node id="n20">
-      <data key="name">page 2, paragraph 2</data>
+      <data key="name">Greyhaven</data>
     </node>
     <node id="n21">
-      <data key="name">Page-level provenance</data>
+      <data key="name">emergency mechanism</data>
     </node>
     <node id="n22">
-      <data key="name">research workflows</data>
+      <data key="name">fishermen</data>
     </node>
     <node id="n23">
-      <data key="name">generated summary</data>
-    </node>
-    <node id="n24">
-      <data key="name">source page</data>
-    </node>
-    <node id="n25">
-      <data key="name">extracted claims</data>
-    </node>
-    <node id="n26">
-      <data key="name">enough location information</data>
-    </node>
-    <node id="n27">
-      <data key="name">verification</data>
-    </node>
-    <node id="n28">
-      <data key="name">This</data>
-    </node>
-    <node id="n29">
-      <data key="name">parser emits structured blocks rather than one uninterrupted string</data>
-    </node>
-    <node id="n30">
-      <data key="name">page 2, paragraph 3</data>
-    </node>
-    <node id="n31">
-      <data key="name">Long documents</data>
-    </node>
-    <node id="n32">
-      <data key="name">repeated headers and footers</data>
-    </node>
-    <node id="n33">
-      <data key="name">These elements</data>
-    </node>
-    <node id="n34">
-      <data key="name">readers</data>
-    </node>
-    <node id="n35">
-      <data key="name">noise in machine-readable output</data>
-    </node>
-    <node id="n36">
-      <data key="name">robust system</data>
-    </node>
-    <node id="n37">
-      <data key="name">recurring page furniture</data>
-    </node>
-    <node id="n38">
-      <data key="name">legitimate content that happens to repeat across sections</data>
-    </node>
-    <node id="n39">
-      <data key="name">page 2, paragraph 4</data>
-    </node>
-    <node id="n40">
-      <data key="name">output format</data>
-    </node>
-    <node id="n41">
-      <data key="name">application</data>
+      <data key="name">hill</data>
     </node>
     <edge id="e0" source="n0" target="n1">
-      <data key="relation">are_useful_as</data>
+      <data key="relation">asked</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T19:42:00</data>
     </edge>
     <edge id="e1" source="n1" target="n2">
-      <data key="relation">isolates</data>
+      <data key="relation">showed</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T19:42:00</data>
     </edge>
-    <edge id="e2" source="n3" target="n4">
-      <data key="relation">contains_no</data>
+    <edge id="e2" source="n1" target="n3">
+      <data key="relation">kept</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T19:42:00</data>
     </edge>
-    <edge id="e3" source="n5" target="n6">
-      <data key="relation">are_usually_caused_by</data>
+    <edge id="e3" source="n4" target="n5">
+      <data key="relation">rang</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T20:01:00</data>
     </edge>
-    <edge id="e4" source="n7" target="n8">
-      <data key="relation">belongs_to</data>
+    <edge id="e4" source="n6" target="n7">
+      <data key="relation">crossed</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T20:06:00</data>
     </edge>
-    <edge id="e5" source="n7" target="n9">
-      <data key="relation">is_included_to_verify</data>
+    <edge id="e5" source="n1" target="n8">
+      <data key="relation">stopped</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T20:06:00</data>
     </edge>
-    <edge id="e6" source="n10" target="n11">
-      <data key="relation">should_distinguish</data>
+    <edge id="e6" source="n0" target="n8">
+      <data key="relation">stopped</data>
       <data key="index">2</data>
+      <data key="time">1986-11-14T20:06:00</data>
     </edge>
-    <edge id="e7" source="n10" target="n12">
-      <data key="relation">should_distinguish</data>
+    <edge id="e7" source="n9" target="n10">
+      <data key="relation">moved</data>
       <data key="index">2</data>
+      <data key="time">1986-11-15T00:00:00</data>
     </edge>
-    <edge id="e8" source="n13" target="n14">
-      <data key="relation">may_reproduce</data>
+    <edge id="e8" source="n11" target="n12">
+      <data key="relation">returned</data>
       <data key="index">2</data>
+      <data key="time">1986-11-15T00:20:00</data>
     </edge>
-    <edge id="e9" source="n13" target="n15">
-      <data key="relation">may_join</data>
+    <edge id="e9" source="n13" target="n14">
+      <data key="relation">replaced</data>
       <data key="index">2</data>
+      <data key="time">1986-11-15T09:00:00</data>
     </edge>
-    <edge id="e10" source="n13" target="n16">
-      <data key="relation">may_normalize</data>
+    <edge id="e10" source="n15" target="n16">
+      <data key="relation">resumed</data>
       <data key="index">2</data>
+      <data key="time">1986-11-15T10:15:00</data>
     </edge>
-    <edge id="e11" source="n13" target="n17">
-      <data key="relation">preserves</data>
+    <edge id="e11" source="n1" target="n17">
+      <data key="relation">reset</data>
       <data key="index">2</data>
+      <data key="time">1986-11-15</data>
     </edge>
     <edge id="e12" source="n18" target="n19">
-      <data key="relation">matter_in</data>
+      <data key="relation">placed</data>
       <data key="index">2</data>
+      <data key="time">1987-11-14</data>
     </edge>
-    <edge id="e13" source="n7" target="n20">
-      <data key="relation">belongs_to</data>
+    <edge id="e13" source="n20" target="n21">
+      <data key="relation">tested</data>
       <data key="index">2</data>
+      <data key="time">1987-11</data>
     </edge>
-    <edge id="e14" source="n7" target="n9">
-      <data key="relation">is_included_to_verify</data>
+    <edge id="e14" source="n22" target="n23">
+      <data key="relation">climbed</data>
       <data key="index">2</data>
-    </edge>
-    <edge id="e15" source="n21" target="n22">
-      <data key="relation">is_important_in</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e16" source="n23" target="n24">
-      <data key="relation">should_be_traceable_to</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e17" source="n25" target="n26">
-      <data key="relation">should_retain</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e18" source="n26" target="n27">
-      <data key="relation">is_for</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e19" source="n28" target="n29">
-      <data key="relation">is_easier_when</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e20" source="n7" target="n30">
-      <data key="relation">belongs_to</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e21" source="n7" target="n9">
-      <data key="relation">is_included_to_verify</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e22" source="n31" target="n32">
-      <data key="relation">often_contain</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e23" source="n33" target="n34">
-      <data key="relation">are_visually_helpful_to</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e24" source="n33" target="n35">
-      <data key="relation">can_become</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e25" source="n36" target="n37">
-      <data key="relation">should_identify</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e26" source="n36" target="n38">
-      <data key="relation">should_not_remove</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e27" source="n7" target="n39">
-      <data key="relation">belongs_to</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e28" source="n7" target="n9">
-      <data key="relation">is_included_to_verify</data>
-      <data key="index">2</data>
-    </edge>
-    <edge id="e29" source="n40" target="n41">
-      <data key="relation">depends_on</data>
-      <data key="index">2</data>
+      <data key="time">1987-11-14T18:00:00</data>
     </edge>
   </graph>
 </graphml>

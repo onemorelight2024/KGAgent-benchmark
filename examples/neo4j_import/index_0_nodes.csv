@@ -1,0 +1,40 @@
+entityId:ID,name:STRING,:LABEL
+0,Mara Ellison,Entity
+1,post office,Entity
+2,eastern lighthouse,Entity
+3,weather station,Entity
+4,storm,Entity
+5,fishing boats,Entity
+6,dawn,Entity
+7,brass pocket watch,Entity
+8,Elias,Entity
+9,lighthouse keeper,Entity
+10,hill,Entity
+11,watch,Entity
+12,lantern room,Entity
+13,lighthouse,Entity
+14,Thomas Reed,Entity
+15,new keeper,Entity
+16,auxiliary generator,Entity
+17,main power line,Entity
+18,failure,Entity
+19,backup generator,Entity
+20,maintenance log,Entity
+21,radio forecast,Entity
+22,Greyhaven,Entity
+23,North Star,Entity
+24,boat,Entity
+25,Ellen May,Entity
+26,Hope,Entity
+27,rescue launch,Entity
+28,engine trouble,Entity
+29,harbour,Entity
+30,generator,Entity
+31,lantern,Entity
+32,turning,Entity
+33,drive belt,Entity
+34,corroded,Entity
+35,snapping,Entity
+36,spare belt,Entity
+37,harbour warehouse,Entity
+38,closing time,Entity

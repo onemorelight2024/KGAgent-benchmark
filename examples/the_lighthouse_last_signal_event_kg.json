@@ -1,0 +1,1340 @@
+[
+  {
+    "index": 2,
+    "chunk_index": "chunk_003",
+    "entity_relation_dict": [
+      {
+        "Head": "Mara",
+        "Relation": "showed",
+        "Tail": "watch"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "told",
+        "Tail": "Thomas"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "kept",
+        "Tail": "promise"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "turned",
+        "Tail": "lantern"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "turned",
+        "Tail": "lantern"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "asked",
+        "Tail": "Mara"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "replied to",
+        "Tail": "Mara"
+      },
+      {
+        "Head": "harbour bell",
+        "Relation": "rang",
+        "Tail": "signal"
+      },
+      {
+        "Head": "boats",
+        "Relation": "entered",
+        "Tail": "channel"
+      },
+      {
+        "Head": "North Star",
+        "Relation": "crossed",
+        "Tail": "breakwater"
+      },
+      {
+        "Head": "storm",
+        "Relation": "moved into",
+        "Tail": "inland"
+      },
+      {
+        "Head": "electricity",
+        "Relation": "returned to",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "Engineers",
+        "Relation": "replaced",
+        "Tail": "belt"
+      },
+      {
+        "Head": "lighthouse",
+        "Relation": "resumed",
+        "Tail": "automatic operation"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "reset",
+        "Tail": "father's watch"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "adjusted",
+        "Tail": "father's watch"
+      },
+      {
+        "Head": "watch",
+        "Relation": "belonged to",
+        "Tail": "father"
+      },
+      {
+        "Head": "town",
+        "Relation": "placed",
+        "Tail": "plaque"
+      },
+      {
+        "Head": "plaque",
+        "Relation": "named",
+        "Tail": "Mara"
+      },
+      {
+        "Head": "plaque",
+        "Relation": "named",
+        "Tail": "Thomas"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "asked about",
+        "Tail": "father's name"
+      },
+      {
+        "Head": "plaque",
+        "Relation": "included",
+        "Tail": "father's name"
+      },
+      {
+        "Head": "Greyhaven",
+        "Relation": "tested",
+        "Tail": "emergency mechanism"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "visited",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "fishermen",
+        "Relation": "climbed",
+        "Tail": "hill"
+      },
+      {
+        "Head": "families",
+        "Relation": "climbed",
+        "Tail": "hill"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "Mara and Thomas continued turning the lantern",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "lantern"
+        ]
+      },
+      {
+        "Event": "Thomas asked why Mara had come to the lighthouse on such a night",
+        "Entity": [
+          "Thomas",
+          "Mara",
+          "lighthouse"
+        ]
+      },
+      {
+        "Event": "Mara showed Thomas the watch",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "watch"
+        ]
+      },
+      {
+        "Event": "Mara told Thomas about the promise she had kept for ten years",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "promise"
+        ]
+      },
+      {
+        "Event": "Thomas replied that memory was not only about looking backward",
+        "Entity": [
+          "Thomas",
+          "memory"
+        ]
+      },
+      {
+        "Event": "The harbour bell rang three times",
+        "Entity": [
+          "harbour bell"
+        ]
+      },
+      {
+        "Event": "Both boats had entered the channel",
+        "Entity": [
+          "boats",
+          "channel"
+        ]
+      },
+      {
+        "Event": "The North Star crossed the breakwater",
+        "Entity": [
+          "North Star",
+          "breakwater"
+        ]
+      },
+      {
+        "Event": "Mara and Thomas stopped the lantern",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "lantern"
+        ]
+      },
+      {
+        "Event": "They had turned the lantern by hand for one hour and thirty-five minutes",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "lantern"
+        ]
+      },
+      {
+        "Event": "The storm moved inland",
+        "Entity": [
+          "storm"
+        ]
+      },
+      {
+        "Event": "The electricity returned",
+        "Entity": [
+          "electricity"
+        ]
+      },
+      {
+        "Event": "Engineers replaced the broken belt",
+        "Entity": [
+          "Engineers",
+          "broken belt"
+        ]
+      },
+      {
+        "Event": "The lighthouse resumed automatic operation",
+        "Entity": [
+          "lighthouse"
+        ]
+      },
+      {
+        "Event": "Mara reset her father's watch",
+        "Entity": [
+          "Mara",
+          "father's watch"
+        ]
+      },
+      {
+        "Event": "Mara adjusted the watch seven minutes forward",
+        "Entity": [
+          "Mara",
+          "watch"
+        ]
+      },
+      {
+        "Event": "Mara understood that keeping a promise did not require preserving every imperfection",
+        "Entity": [
+          "Mara",
+          "promise"
+        ]
+      },
+      {
+        "Event": "The town placed a small plaque inside the lighthouse",
+        "Entity": [
+          "town",
+          "plaque",
+          "lighthouse"
+        ]
+      },
+      {
+        "Event": "The plaque named both Mara and Thomas",
+        "Entity": [
+          "plaque",
+          "Mara",
+          "Thomas"
+        ]
+      },
+      {
+        "Event": "Mara asked that her father's name be added below theirs",
+        "Entity": [
+          "Mara",
+          "father's name",
+          "plaque"
+        ]
+      },
+      {
+        "Event": "Greyhaven tested the emergency mechanism on the first Monday of every month",
+        "Entity": [
+          "Greyhaven",
+          "emergency mechanism"
+        ]
+      },
+      {
+        "Event": "Mara still visited the lighthouse each 14 November",
+        "Entity": [
+          "Mara",
+          "lighthouse"
+        ]
+      },
+      {
+        "Event": "The fishermen and their families climbed the hill together",
+        "Entity": [
+          "fishermen",
+          "families",
+          "hill"
+        ]
+      }
+    ],
+    "event_relation_dict": [
+      {
+        "Head": "Thomas asked why Mara had come to the lighthouse on such a night",
+        "Relation": "before",
+        "Tail": "Mara showed him the watch and told him about the promise she had kept for ten years"
+      },
+      {
+        "Head": "The harbour bell rang three times",
+        "Relation": "before",
+        "Tail": "The North Star crossed the breakwater"
+      },
+      {
+        "Head": "The North Star crossed the breakwater",
+        "Relation": "before",
+        "Tail": "Mara and Thomas stopped the lantern"
+      },
+      {
+        "Head": "The storm moved inland",
+        "Relation": "before",
+        "Tail": "The electricity returned"
+      },
+      {
+        "Head": "The electricity returned",
+        "Relation": "before",
+        "Tail": "Engineers replaced the broken belt"
+      },
+      {
+        "Head": "Engineers replaced the broken belt",
+        "Relation": "before",
+        "Tail": "The lighthouse resumed automatic operation"
+      },
+      {
+        "Head": "The lighthouse resumed automatic operation",
+        "Relation": "before",
+        "Tail": "Mara reset her father's watch"
+      },
+      {
+        "Head": "Mara reset her father's watch",
+        "Relation": "before",
+        "Tail": "Mara adjusted it seven minutes forward"
+      },
+      {
+        "Head": "The town placed a small plaque inside the lighthouse",
+        "Relation": "as a result",
+        "Tail": "Greyhaven tested the emergency mechanism on the first Monday of every month"
+      }
+    ]
+  },
+  {
+    "index": 3,
+    "chunk_index": "chunk_004",
+    "entity_relation_dict": [
+      {
+        "Head": "Mara",
+        "Relation": "visited",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "fishermen",
+        "Relation": "climbed",
+        "Tail": "hill"
+      },
+      {
+        "Head": "families",
+        "Relation": "climbed",
+        "Tail": "hill"
+      },
+      {
+        "Head": "fishermen",
+        "Relation": "turned",
+        "Tail": "lantern"
+      },
+      {
+        "Head": "families",
+        "Relation": "turned",
+        "Tail": "lantern"
+      },
+      {
+        "Head": "machine",
+        "Relation": "had_failed",
+        "Tail": "lantern"
+      },
+      {
+        "Head": "signal",
+        "Relation": "brought_home",
+        "Tail": "everyone"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "Mara visited the lighthouse each 14 November",
+        "Entity": [
+          "Mara",
+          "lighthouse",
+          "14 November"
+        ]
+      },
+      {
+        "Event": "Mara no longer sat alone",
+        "Entity": [
+          "Mara"
+        ]
+      },
+      {
+        "Event": "The fishermen and their families climbed the hill together at 6:00 p.m.",
+        "Entity": [
+          "fishermen",
+          "families",
+          "hill"
+        ]
+      },
+      {
+        "Event": "They turned the lantern once by hand at 6:31 p.m.",
+        "Entity": [
+          "fishermen",
+          "families",
+          "lantern"
+        ]
+      },
+      {
+        "Event": "The machine had failed",
+        "Entity": [
+          "machine"
+        ]
+      },
+      {
+        "Event": "Time brought everyone home",
+        "Entity": [
+          "time",
+          "everyone"
+        ]
+      },
+      {
+        "Event": "Courage brought everyone home",
+        "Entity": [
+          "courage",
+          "everyone"
+        ]
+      },
+      {
+        "Event": "A single repeated signal brought everyone home",
+        "Entity": [
+          "signal",
+          "everyone"
+        ]
+      }
+    ],
+    "event_relation_dict": [
+      {
+        "Head": "Mara visited the lighthouse each 14 November",
+        "Relation": "at the same time",
+        "Tail": "The fishermen and their families climbed the hill together at 6:00 p.m."
+      },
+      {
+        "Head": "The fishermen and their families climbed the hill together at 6:00 p.m.",
+        "Relation": "before",
+        "Tail": "They turned the lantern once by hand at 6:31 p.m."
+      },
+      {
+        "Head": "Time, courage, and a single repeated signal brought everyone home",
+        "Relation": "because",
+        "Tail": "They turned the lantern once by hand at 6:31 p.m."
+      }
+    ]
+  },
+  {
+    "index": 0,
+    "chunk_index": "chunk_001",
+    "entity_relation_dict": [
+      {
+        "Head": "Mara Ellison",
+        "Relation": "locked",
+        "Tail": "post office door"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "walked_toward",
+        "Tail": "eastern lighthouse"
+      },
+      {
+        "Head": "weather station",
+        "Relation": "warned_of",
+        "Tail": "storm"
+      },
+      {
+        "Head": "fishing boats",
+        "Relation": "left_from",
+        "Tail": "Greyhaven"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "carried",
+        "Tail": "brass pocket watch"
+      },
+      {
+        "Head": "brass pocket watch",
+        "Relation": "belonged_to",
+        "Tail": "Elias"
+      },
+      {
+        "Head": "Elias",
+        "Relation": "was",
+        "Tail": "lighthouse keeper"
+      },
+      {
+        "Head": "Elias",
+        "Relation": "was_father_of",
+        "Tail": "Mara Ellison"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "climbed",
+        "Tail": "hill"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "wound",
+        "Tail": "brass pocket watch"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "sat_in",
+        "Tail": "lantern room"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "reached",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "Mara Ellison",
+        "Relation": "found",
+        "Tail": "Thomas Reed"
+      },
+      {
+        "Head": "Thomas Reed",
+        "Relation": "was",
+        "Tail": "new keeper"
+      },
+      {
+        "Head": "Thomas Reed",
+        "Relation": "struggled_with",
+        "Tail": "auxiliary generator"
+      },
+      {
+        "Head": "main power line",
+        "Relation": "failed_at",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "backup generator",
+        "Relation": "was_tested_according_to",
+        "Tail": "maintenance log"
+      },
+      {
+        "Head": "Thomas Reed",
+        "Relation": "told",
+        "Tail": "Mara Ellison"
+      },
+      {
+        "Head": "radio forecast",
+        "Relation": "changed_regarding",
+        "Tail": "storm"
+      },
+      {
+        "Head": "storm",
+        "Relation": "would_reach",
+        "Tail": "Greyhaven"
+      },
+      {
+        "Head": "North Star",
+        "Relation": "was_at",
+        "Tail": "sea"
+      },
+      {
+        "Head": "Ellen May",
+        "Relation": "was_at",
+        "Tail": "sea"
+      },
+      {
+        "Head": "Hope",
+        "Relation": "was_at",
+        "Tail": "sea"
+      },
+      {
+        "Head": "Hope",
+        "Relation": "was",
+        "Tail": "rescue launch"
+      },
+      {
+        "Head": "North Star",
+        "Relation": "reported",
+        "Tail": "engine trouble"
+      },
+      {
+        "Head": "North Star",
+        "Relation": "was_located_east_of",
+        "Tail": "harbour"
+      },
+      {
+        "Head": "Thomas Reed",
+        "Relation": "started",
+        "Tail": "generator"
+      },
+      {
+        "Head": "lantern",
+        "Relation": "did_not_turn_in",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "corroded drive belt",
+        "Relation": "snapped_in",
+        "Tail": "lighthouse"
+      },
+      {
+        "Head": "spare belt",
+        "Relation": "was_stored_at",
+        "Tail": "harbour warehouse"
+      },
+      {
+        "Head": "harbour warehouse",
+        "Relation": "closed_at",
+        "Tail": "Greyhaven"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "Mara Ellison locked the door of the small post office in Greyhaven",
+        "Entity": [
+          "Mara Ellison",
+          "post office",
+          "Greyhaven"
+        ]
+      },
+      {
+        "Event": "Mara Ellison began the twenty-minute walk toward the eastern lighthouse",
+        "Entity": [
+          "Mara Ellison",
+          "eastern lighthouse"
+        ]
+      },
+      {
+        "Event": "The November sky had already darkened",
+        "Entity": [
+          "November sky"
+        ]
+      },
+      {
+        "Event": "The weather station had warned of a storm",
+        "Entity": [
+          "weather station",
+          "storm"
+        ]
+      },
+      {
+        "Event": "The fishing boats had continued to leave before dawn",
+        "Entity": [
+          "fishing boats"
+        ]
+      },
+      {
+        "Event": "Mara was carrying a brass pocket watch",
+        "Entity": [
+          "Mara Ellison",
+          "brass pocket watch"
+        ]
+      },
+      {
+        "Event": "The brass pocket watch had belonged to her father Elias",
+        "Entity": [
+          "brass pocket watch",
+          "Elias"
+        ]
+      },
+      {
+        "Event": "Elias had died",
+        "Entity": [
+          "Elias"
+        ]
+      },
+      {
+        "Event": "Mara climbed the hill before sunset",
+        "Entity": [
+          "Mara Ellison",
+          "hill"
+        ]
+      },
+      {
+        "Event": "Mara wound the watch",
+        "Entity": [
+          "Mara Ellison",
+          "brass pocket watch"
+        ]
+      },
+      {
+        "Event": "Mara sat in the lantern room until the first light swept across the bay",
+        "Entity": [
+          "Mara Ellison",
+          "lantern room",
+          "first light",
+          "bay"
+        ]
+      },
+      {
+        "Event": "Elias had taught Mara that a signal mattered only when someone was waiting for it",
+        "Entity": [
+          "Elias",
+          "Mara Ellison"
+        ]
+      },
+      {
+        "Event": "Mara reached the lighthouse",
+        "Entity": [
+          "Mara Ellison",
+          "eastern lighthouse"
+        ]
+      },
+      {
+        "Event": "Mara found Thomas Reed struggling with the auxiliary generator",
+        "Entity": [
+          "Mara Ellison",
+          "Thomas Reed",
+          "auxiliary generator"
+        ]
+      },
+      {
+        "Event": "The main power line had failed",
+        "Entity": [
+          "main power line"
+        ]
+      },
+      {
+        "Event": "The backup generator had last been tested on Monday morning",
+        "Entity": [
+          "backup generator"
+        ]
+      },
+      {
+        "Event": "The backup generator had run normally for thirty minutes",
+        "Entity": [
+          "backup generator"
+        ]
+      },
+      {
+        "Event": "Thomas told Mara that the radio forecast had changed",
+        "Entity": [
+          "Thomas Reed",
+          "Mara Ellison",
+          "radio forecast"
+        ]
+      },
+      {
+        "Event": "The storm would reach Greyhaven between 7:00 and 7:30 p.m.",
+        "Entity": [
+          "storm",
+          "Greyhaven"
+        ]
+      },
+      {
+        "Event": "Three boats were still at sea",
+        "Entity": [
+          "North Star",
+          "Ellen May",
+          "Hope"
+        ]
+      },
+      {
+        "Event": "The North Star had reported engine trouble",
+        "Entity": [
+          "North Star"
+        ]
+      },
+      {
+        "Event": "Thomas started the generator",
+        "Entity": [
+          "Thomas Reed",
+          "auxiliary generator"
+        ]
+      },
+      {
+        "Event": "The lantern did not turn",
+        "Entity": [
+          "lantern"
+        ]
+      },
+      {
+        "Event": "A corroded drive belt had snapped",
+        "Entity": [
+          "corroded drive belt"
+        ]
+      },
+      {
+        "Event": "The spare belt was stored at the harbour warehouse",
+        "Entity": [
+          "spare belt",
+          "harbour warehouse"
+        ]
+      },
+      {
+        "Event": "The harbour warehouse closed at 6:00 p.m.",
+        "Entity": [
+          "harbour warehouse"
+        ]
+      }
+    ],
+    "event_relation_dict": [
+      {
+        "Head": "Mara Ellison locked the door of the small post office in Greyhaven",
+        "Relation": "before",
+        "Tail": "Mara Ellison began the twenty-minute walk toward the eastern lighthouse"
+      },
+      {
+        "Head": "The weather station had warned of a storm",
+        "Relation": "before",
+        "Tail": "The fishing boats had continued to leave before dawn"
+      },
+      {
+        "Head": "Elias died",
+        "Relation": "before",
+        "Tail": "Mara climbed the hill before sunset"
+      },
+      {
+        "Head": "Mara reached the lighthouse",
+        "Relation": "at the same time",
+        "Tail": "Thomas Reed struggled with the auxiliary generator"
+      },
+      {
+        "Head": "The main power line had failed",
+        "Relation": "before",
+        "Tail": "Mara reached the lighthouse"
+      },
+      {
+        "Head": "The backup generator had been tested on Monday morning",
+        "Relation": "before",
+        "Tail": "The main power line had failed"
+      },
+      {
+        "Head": "The radio forecast had changed",
+        "Relation": "before",
+        "Tail": "Thomas told Mara about the storm timing"
+      },
+      {
+        "Head": "The North Star had reported engine trouble",
+        "Relation": "before",
+        "Tail": "Thomas told Mara about the storm timing"
+      },
+      {
+        "Head": "Thomas started the generator",
+        "Relation": "as a result",
+        "Tail": "The lantern did not turn"
+      },
+      {
+        "Head": "A corroded drive belt had snapped",
+        "Relation": "because",
+        "Tail": "The lantern did not turn"
+      }
+    ]
+  },
+  {
+    "index": 1,
+    "chunk_index": "chunk_002",
+    "entity_relation_dict": [
+      {
+        "Head": "corroded drive belt",
+        "Relation": "snapped",
+        "Tail": "mechanism"
+      },
+      {
+        "Head": "spare belt",
+        "Relation": "stored_at",
+        "Tail": "harbour warehouse"
+      },
+      {
+        "Head": "harbour warehouse",
+        "Relation": "closed_at",
+        "Tail": "6:00 p.m."
+      },
+      {
+        "Head": "Mara",
+        "Relation": "looked_at",
+        "Tail": "father's watch"
+      },
+      {
+        "Head": "father's watch",
+        "Relation": "was_slow_by",
+        "Tail": "seven minutes"
+      },
+      {
+        "Head": "Elias",
+        "Relation": "kept_turning",
+        "Tail": "lamp"
+      },
+      {
+        "Head": "Elias",
+        "Relation": "saved",
+        "Tail": "ferry"
+      },
+      {
+        "Head": "ferry",
+        "Relation": "threatened_by",
+        "Tail": "reef"
+      },
+      {
+        "Head": "Elias",
+        "Relation": "collapsed_before",
+        "Tail": "dawn"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "climbed_into",
+        "Tail": "mechanism room"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "climbed_into",
+        "Tail": "mechanism room"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "disconnected",
+        "Tail": "broken drive"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "disconnected",
+        "Tail": "broken drive"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "attached",
+        "Tail": "manual crank"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "attached",
+        "Tail": "manual crank"
+      },
+      {
+        "Head": "manual crank",
+        "Relation": "connected_to",
+        "Tail": "lantern assembly"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "pushed",
+        "Tail": "manual crank"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "pushed",
+        "Tail": "manual crank"
+      },
+      {
+        "Head": "rain",
+        "Relation": "struck",
+        "Tail": "glass"
+      },
+      {
+        "Head": "harbour radio",
+        "Relation": "reported",
+        "Tail": "Ellen May status"
+      },
+      {
+        "Head": "Ellen May",
+        "Relation": "crossed",
+        "Tail": "breakwater"
+      },
+      {
+        "Head": "North Star's captain",
+        "Relation": "saw",
+        "Tail": "lighthouse beam"
+      },
+      {
+        "Head": "North Star's captain",
+        "Relation": "steered_by",
+        "Tail": "signal"
+      },
+      {
+        "Head": "rescue launch",
+        "Relation": "searched_for",
+        "Tail": "North Star"
+      },
+      {
+        "Head": "storm",
+        "Relation": "arrived_at",
+        "Tail": "7:08 p.m."
+      },
+      {
+        "Head": "wind",
+        "Relation": "shook",
+        "Tail": "tower"
+      },
+      {
+        "Head": "window",
+        "Relation": "cracked",
+        "Tail": "glass"
+      },
+      {
+        "Head": "Mara",
+        "Relation": "counted",
+        "Tail": "sweep"
+      },
+      {
+        "Head": "Hope",
+        "Relation": "found",
+        "Tail": "North Star"
+      },
+      {
+        "Head": "North Star",
+        "Relation": "could_not_restart",
+        "Tail": "engine"
+      },
+      {
+        "Head": "Hope",
+        "Relation": "towed",
+        "Tail": "North Star"
+      },
+      {
+        "Head": "Hope",
+        "Relation": "towed_toward",
+        "Tail": "Greyhaven"
+      },
+      {
+        "Head": "Thomas",
+        "Relation": "asked",
+        "Tail": "Mara"
+      }
+    ],
+    "event_entity_relation_dict": [
+      {
+        "Event": "A corroded drive belt had snapped",
+        "Entity": [
+          "corroded drive belt"
+        ]
+      },
+      {
+        "Event": "The spare belt was stored at the harbour warehouse",
+        "Entity": [
+          "spare belt",
+          "harbour warehouse"
+        ]
+      },
+      {
+        "Event": "The harbour warehouse closed at 6:00 p.m.",
+        "Entity": [
+          "harbour warehouse"
+        ]
+      },
+      {
+        "Event": "The storm would be over the bay",
+        "Entity": [
+          "storm",
+          "bay"
+        ]
+      },
+      {
+        "Event": "Mara looked at her father's watch",
+        "Entity": [
+          "Mara",
+          "father's watch"
+        ]
+      },
+      {
+        "Event": "The watch was seven minutes slow",
+        "Entity": [
+          "watch"
+        ]
+      },
+      {
+        "Event": "Elias had kept the lamp turning by hand for nearly two hours after the mechanism failed",
+        "Entity": [
+          "Elias",
+          "lamp",
+          "mechanism"
+        ]
+      },
+      {
+        "Event": "The work had saved a ferry from the reef",
+        "Entity": [
+          "work",
+          "ferry",
+          "reef"
+        ]
+      },
+      {
+        "Event": "Elias collapsed before dawn",
+        "Entity": [
+          "Elias"
+        ]
+      },
+      {
+        "Event": "Elias never recovered",
+        "Entity": [
+          "Elias"
+        ]
+      },
+      {
+        "Event": "Mara and Thomas climbed into the mechanism room at 6:31 p.m.",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "mechanism room"
+        ]
+      },
+      {
+        "Event": "They disconnected the broken drive",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "broken drive"
+        ]
+      },
+      {
+        "Event": "They attached a manual crank to the lantern assembly",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "manual crank",
+          "lantern assembly"
+        ]
+      },
+      {
+        "Event": "Thomas pushed for five minutes",
+        "Entity": [
+          "Thomas"
+        ]
+      },
+      {
+        "Event": "Mara took over",
+        "Entity": [
+          "Mara"
+        ]
+      },
+      {
+        "Event": "They changed places every five minutes",
+        "Entity": [
+          "Mara",
+          "Thomas"
+        ]
+      },
+      {
+        "Event": "Rain struck the glass at 6:47 p.m.",
+        "Entity": [
+          "rain",
+          "glass"
+        ]
+      },
+      {
+        "Event": "The harbour radio reported that the Ellen May had crossed the breakwater safely at 6:53 p.m.",
+        "Entity": [
+          "harbour radio",
+          "Ellen May",
+          "breakwater"
+        ]
+      },
+      {
+        "Event": "The Ellen May had crossed the breakwater safely",
+        "Entity": [
+          "Ellen May",
+          "breakwater"
+        ]
+      },
+      {
+        "Event": "The North Star's captain said he could see the lighthouse beam between the waves at 7:02 p.m.",
+        "Entity": [
+          "North Star's captain",
+          "lighthouse beam",
+          "waves"
+        ]
+      },
+      {
+        "Event": "The North Star's captain would steer west by the signal until the rescue launch reached him",
+        "Entity": [
+          "North Star's captain",
+          "signal",
+          "rescue launch"
+        ]
+      },
+      {
+        "Event": "The storm arrived at 7:08 p.m.",
+        "Entity": [
+          "storm"
+        ]
+      },
+      {
+        "Event": "Wind shook the tower",
+        "Entity": [
+          "wind",
+          "tower"
+        ]
+      },
+      {
+        "Event": "One window cracked",
+        "Entity": [
+          "window"
+        ]
+      },
+      {
+        "Event": "The light completed one rotation after another",
+        "Entity": [
+          "light"
+        ]
+      },
+      {
+        "Event": "Mara counted each sweep aloud",
+        "Entity": [
+          "Mara",
+          "sweep"
+        ]
+      },
+      {
+        "Event": "The Hope reported that it had found the North Star at 7:18 p.m.",
+        "Entity": [
+          "Hope",
+          "North Star"
+        ]
+      },
+      {
+        "Event": "The Hope had found the North Star",
+        "Entity": [
+          "Hope",
+          "North Star"
+        ]
+      },
+      {
+        "Event": "The North Star could not restart its engine",
+        "Entity": [
+          "North Star",
+          "engine"
+        ]
+      },
+      {
+        "Event": "The Hope began towing the North Star toward Greyhaven",
+        "Entity": [
+          "Hope",
+          "North Star",
+          "Greyhaven"
+        ]
+      },
+      {
+        "Event": "Mara and Thomas continued turning the lantern",
+        "Entity": [
+          "Mara",
+          "Thomas",
+          "lantern"
+        ]
+      },
+      {
+        "Event": "Thomas asked why she had come to the lighthouse on such a night at 7:42 p.m.",
+        "Entity": [
+          "Thomas",
+          "Mara",
+          "lighthouse"
+        ]
+      }
+    ],
+    "event_relation_dict": [
+      {
+        "Head": "A corroded drive belt had snapped",
+        "Relation": "before",
+        "Tail": "Mara looked at her father's watch"
+      },
+      {
+        "Head": "The mechanism failed",
+        "Relation": "before",
+        "Tail": "Elias kept the lamp turning by hand for nearly two hours"
+      },
+      {
+        "Head": "Elias kept the lamp turning by hand for nearly two hours",
+        "Relation": "before",
+        "Tail": "The work saved a ferry from the reef"
+      },
+      {
+        "Head": "The work saved a ferry from the reef",
+        "Relation": "before",
+        "Tail": "Elias collapsed before dawn"
+      },
+      {
+        "Head": "Mara and Thomas climbed into the mechanism room",
+        "Relation": "before",
+        "Tail": "They disconnected the broken drive and attached a manual crank to the lantern assembly"
+      },
+      {
+        "Head": "They disconnected the broken drive and attached a manual crank to the lantern assembly",
+        "Relation": "before",
+        "Tail": "Thomas pushed for five minutes"
+      },
+      {
+        "Head": "Thomas pushed for five minutes",
+        "Relation": "before",
+        "Tail": "Mara took over"
+      },
+      {
+        "Head": "Rain struck the glass",
+        "Relation": "before",
+        "Tail": "The harbour radio reported that the Ellen May had crossed the breakwater safely"
+      },
+      {
+        "Head": "The harbour radio reported that the Ellen May had crossed the breakwater safely",
+        "Relation": "before",
+        "Tail": "The North Star's captain said he could see the lighthouse beam between the waves"
+      },
+      {
+        "Head": "The North Star's captain said he could see the lighthouse beam between the waves",
+        "Relation": "before",
+        "Tail": "The storm arrived"
+      },
+      {
+        "Head": "The storm arrived",
+        "Relation": "before",
+        "Tail": "Wind shook the tower and one window cracked"
+      },
+      {
+        "Head": "The light completed one rotation after another",
+        "Relation": "before",
+        "Tail": "The Hope reported that it had found the North Star"
+      },
+      {
+        "Head": "The Hope found the North Star",
+        "Relation": "before",
+        "Tail": "The Hope began towing it toward Greyhaven"
+      },
+      {
+        "Head": "The North Star could not restart its engine",
+        "Relation": "because",
+        "Tail": "The Hope began towing it toward Greyhaven"
+      },
+      {
+        "Head": "The Hope began towing it toward Greyhaven",
+        "Relation": "at the same time",
+        "Tail": "Mara and Thomas continued turning the lantern"
+      }
+    ]
+  }
+]

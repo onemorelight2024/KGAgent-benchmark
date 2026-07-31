@@ -133,16 +133,9 @@ class ExtractionEntry:
                     if key not in result_item:
                         result_item[key] = value
 
-            # Add kg field based on extraction type
-            if extraction_type == "triples":
-                kg_value = result.get("triple", [])
-                logger.debug(f"  extraction_type=triples, kg length: {len(kg_value)}")
-                result_item["kg"] = kg_value
-            elif extraction_type == "temporal":
-                result_item["kg"] = result.get("quadruples", [])
-            elif extraction_type == "hyper":
-                result_item["kg"] = result.get("hyper_relations", [])
-            else:
+            # kg field is already set by _normalize_result
+            # Just ensure it exists
+            if "kg" not in result_item:
                 result_item["kg"] = []
 
             return result_item
@@ -273,9 +266,9 @@ class ExtractionEntry:
 
         logger.info(f"Extraction complete: {len(str(result))} bytes")
         logger.info(f"Result structure: keys={list(result.keys()) if isinstance(result, dict) else 'not a dict'}")
-        if isinstance(result, dict) and extraction_type == 'triples':
-            triple_count = len(result.get('triple', []))
-            logger.info(f"Triple count: {triple_count}")
+        if isinstance(result, dict):
+            kg_count = len(result.get('kg', []))
+            logger.info(f"KG count: {kg_count}")
         return result
 
     def _build_prompt(
@@ -399,7 +392,7 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
     def _normalize_result(self, result: dict[str, Any]) -> dict[str, Any]:
         """Normalize result to standard format.
 
-        Convert 'relations' to 'triple', 'triples' to 'triple', etc.
+        Convert 'relations' to 'kg', 'triple' to 'kg', 'quadruples' to 'kg', etc.
 
         Args:
             result: Raw result dict
@@ -408,14 +401,14 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
             Normalized result dict
         """
         # Handle relations field (legacy format from _parse_structured_text)
-        if 'relations' in result and 'triple' not in result:
+        if 'relations' in result and 'kg' not in result:
             relations = result.pop('relations')
             # Convert to tagged format
             if isinstance(relations, list) and relations:
                 # Check format of first item
                 if isinstance(relations[0], list) and len(relations[0]) >= 3:
                     # [[subj, rel, obj], ...] format
-                    result['triple'] = [
+                    result['kg'] = [
                         f"<subj> {r[0]} <obj> {r[2]} <rel> {r[1]}"
                         for r in relations
                     ]
@@ -426,11 +419,23 @@ CRITICAL: Your response must be ONLY valid JSON. Start with {{ and end with }}. 
                     for r in relations:
                         if '<subj>' in r and '<obj>' in r and '<rel>' in r:
                             valid_triples.append(r)
-                    result['triple'] = valid_triples
+                    result['kg'] = valid_triples
 
-        # Handle triples field (should be triple)
-        if 'triples' in result and 'triple' not in result:
-            result['triple'] = result.pop('triples')
+        # Unify field names: triple, triples, quadruples, hyper_relations -> kg
+        if 'kg' not in result:
+            if 'triple' in result:
+                result['kg'] = result.pop('triple')
+            elif 'triples' in result:
+                result['kg'] = result.pop('triples')
+            elif 'quadruples' in result:
+                result['kg'] = result.pop('quadruples')
+            elif 'hyper_relations' in result:
+                result['kg'] = result.pop('hyper_relations')
+
+        # Remove old field names if kg exists
+        if 'kg' in result:
+            for old_field in ['triple', 'triples', 'quadruples', 'hyper_relations']:
+                result.pop(old_field, None)
 
         # Remove entities field if it's malformed (not a simple list of strings)
         if 'entities' in result:

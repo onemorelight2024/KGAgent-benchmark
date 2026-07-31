@@ -1,0 +1,53 @@
+# The Lighthouse Keeper's Last Signal
+
+A short story with explicit dates, clock times, durations, recurring events, and temporal dependencies
+
+## Friday, 14 November 1986 - 5:40 p.m.
+
+At 5:40 p.m., Mara Ellison locked the door of the small post office in Greyhaven and began the twenty-minute walk toward the eastern lighthouse. The November sky had already darkened. For the past three evenings, the weather station had warned of a storm, but the fishing boats had continued to leave before dawn because the winter catch had been poor.
+
+Mara was carrying a brass pocket watch that had belonged to her father, Elias, the lighthouse keeper. He had died exactly ten years earlier, on 14 November 1976. Every year on that date, Mara climbed the hill before sunset, wound the watch, and sat in the lantern room until the first light swept across the bay. It was a private promise: as long as the watch kept time, she would remember the man who had taught her that a signal mattered only when someone was waiting for it.
+
+## 6:12 p.m.
+
+When Mara reached the lighthouse at 6:12 p.m., she found the new keeper, Thomas Reed, struggling with the auxiliary generator. The main power line had failed eleven minutes earlier. According to the maintenance log, the backup generator had last been tested on Monday morning and had run normally for thirty minutes.
+
+Thomas told her that the radio forecast had changed at 5:55 p.m. The storm, originally expected after midnight, would now reach Greyhaven between 7:00 and 7:30 p.m. Three boats were still at sea: the North Star, the Ellen May, and the small rescue launch Hope. The North Star had reported engine trouble at 6:03 p.m., fourteen nautical miles east of the harbour.
+
+## 6:25 p.m.
+
+At 6:25 p.m., Thomas finally started the generator, but the lantern did not turn. A corroded drive belt had snapped. The spare belt was stored at the harbour warehouse, which closed at 6:00 p.m. Even by bicycle, the round trip would take at least forty-five minutes. By then, the storm would be over the bay.
+
+Mara looked at her father's watch. It was seven minutes slow, just as it had been on the final evening of his life. She remembered the story her mother had told her: during the storm of 1976, Elias had kept the lamp turning by hand for nearly two hours after the mechanism failed. The work had saved a ferry from the reef, but he collapsed before dawn and never recovered.
+
+## 6:31 p.m. to 7:18 p.m.
+
+At 6:31 p.m., Mara and Thomas climbed into the mechanism room. They disconnected the broken drive and attached a manual crank to the lantern assembly. The lens was heavy; each full rotation took almost a minute. Thomas pushed for five minutes, then Mara took over. They changed places every five minutes so that neither would lose strength too quickly.
+
+At 6:47 p.m., rain struck the glass. At 6:53 p.m., the harbour radio reported that the Ellen May had crossed the breakwater safely. At 7:02 p.m., the North Star's captain said he could see the lighthouse beam between the waves. He would steer west by the signal until the rescue launch reached him.
+
+The storm arrived at 7:08 p.m., twenty-two minutes earlier than the latest forecast. Wind shook the tower, and one window cracked. Still, the light completed one rotation after another. Mara counted each sweep aloud. At 7:18 p.m., the Hope reported that it had found the North Star.
+
+## 7:19 p.m. to 8:06 p.m.
+
+The danger was not over. The North Star could not restart its engine, so the Hope began towing it toward Greyhaven. The journey normally took thirty-five minutes, but against the storm it would take nearly an hour. Mara and Thomas continued turning the lantern.
+
+At 7:42 p.m., Thomas asked why she had come to the lighthouse on such a night. Mara showed him the watch and told him about the promise she had kept for ten years. Thomas replied that memory was not only about looking backward; sometimes it was a way of knowing what to do next.
+
+At 8:01 p.m., the harbour bell rang three times - the agreed signal that both boats had entered the channel. Five minutes later, at 8:06 p.m., the North Star crossed the breakwater. Only then did Mara and Thomas stop the lantern. They had turned it by hand for one hour and thirty-five minutes.
+
+## Saturday, 15 November 1986 - 12:20 a.m.
+
+Shortly after midnight, the storm moved inland. At 12:20 a.m., the electricity returned. Engineers replaced the broken belt at 9:00 the next morning, and the lighthouse resumed automatic operation at 10:15 a.m.
+
+Before leaving, Mara reset her father's watch. For the first time in ten years, she adjusted it seven minutes forward. She understood that keeping a promise did not require preserving every imperfection. The important thing was not that the old watch had remained unchanged, but that it had brought her to the right place at the right time.
+
+## One year later - 14 November 1987
+
+On the following anniversary, the town placed a small plaque inside the lighthouse: 'For those who kept the light moving when the machinery stopped.' The plaque named both Mara and Thomas, but Mara asked that her father's name be added below theirs.
+
+From that year onward, Greyhaven tested the emergency mechanism on the first Monday of every month. Mara still visited the lighthouse each 14 November, but she no longer sat alone. At 6:00 p.m., the fishermen and their families climbed the hill together, and at 6:31 p.m. they turned the lantern once by hand - not because the machine had failed, but because they remembered the night when time, courage, and a single repeated signal brought everyone home.
+
+## Temporal structure in the story
+
+The narrative contains a precise sequence of events, including an anniversary ten years after a death, a storm forecast that changes over time, events occurring earlier than expected, repeated five-minute work intervals, a one-hour-and-thirty-five-minute rescue effort, and a recurring annual commemoration.

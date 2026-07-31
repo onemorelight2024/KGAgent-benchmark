@@ -1,0 +1,13 @@
+entityId:ID,name:STRING,:LABEL
+0,Mara,Entity
+1,lighthouse,Entity
+2,14 November,Entity
+3,fishermen,Entity
+4,hill,Entity
+5,families,Entity
+6,lantern,Entity
+7,hand,Entity
+8,time,Entity
+9,everyone,Entity
+10,courage,Entity
+11,signal,Entity

@@ -1,0 +1,26 @@
+entityId:ID,name:STRING,:LABEL
+0,drive belt,Entity
+1,corroded,Entity
+2,spare belt,Entity
+3,harbour warehouse,Entity
+4,6:00 p.m.,Entity
+5,Mara,Entity
+6,father's watch,Entity
+7,seven minutes,Entity
+8,Elias,Entity
+9,Mara's father,Entity
+10,lamp,Entity
+11,ferry,Entity
+12,reef,Entity
+13,Thomas,Entity
+14,mechanism room,Entity
+15,manual crank,Entity
+16,lantern assembly,Entity
+17,lantern,Entity
+18,Ellen May,Entity
+19,breakwater,Entity
+20,North Star,Entity
+21,lighthouse beam,Entity
+22,North Star's captain,Entity
+23,Hope,Entity
+24,Greyhaven,Entity

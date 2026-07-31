@@ -1,0 +1,20 @@
+{
+  "index": 0,
+  "kg": [
+    "<subj> Thomas <obj> Mara <rel> asked <index> 2 <time> 1986-11-14T19:42:00",
+    "<subj> Mara <obj> watch <rel> showed <index> 2 <time> 1986-11-14T19:42:00",
+    "<subj> Mara <obj> promise <rel> kept <index> 2 <time> 1986-11-14T19:42:00",
+    "<subj> harbour bell <obj> signal <rel> rang <index> 2 <time> 1986-11-14T20:01:00",
+    "<subj> North Star <obj> breakwater <rel> crossed <index> 2 <time> 1986-11-14T20:06:00",
+    "<subj> Mara <obj> lantern <rel> stopped <index> 2 <time> 1986-11-14T20:06:00",
+    "<subj> Thomas <obj> lantern <rel> stopped <index> 2 <time> 1986-11-14T20:06:00",
+    "<subj> storm <obj> inland <rel> moved <index> 2 <time> 1986-11-15T00:00:00",
+    "<subj> electricity <obj> NA <rel> returned <index> 2 <time> 1986-11-15T00:20:00",
+    "<subj> Engineers <obj> belt <rel> replaced <index> 2 <time> 1986-11-15T09:00:00",
+    "<subj> lighthouse <obj> automatic operation <rel> resumed <index> 2 <time> 1986-11-15T10:15:00",
+    "<subj> Mara <obj> father's watch <rel> reset <index> 2 <time> 1986-11-15",
+    "<subj> town <obj> plaque <rel> placed <index> 2 <time> 1987-11-14",
+    "<subj> Greyhaven <obj> emergency mechanism <rel> tested <index> 2 <time> 1987-11",
+    "<subj> fishermen <obj> hill <rel> climbed <index> 2 <time> 1987-11-14T18:00:00"
+  ]
+}

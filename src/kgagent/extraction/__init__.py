@@ -7,6 +7,7 @@ from kgagent.extraction.document_processor import (
     preprocess_document,
     process_pdf_with_type,
 )
+from kgagent.extraction.merge import merge_kg_chunks
 
 __all__ = [
     "ExtractionEntry",
@@ -14,4 +15,5 @@ __all__ = [
     "chunk_text",
     "preprocess_document",
     "process_pdf_with_type",
+    "merge_kg_chunks",
 ]

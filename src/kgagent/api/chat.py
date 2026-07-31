@@ -540,11 +540,35 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                     with open(kg_output_file, "r", encoding="utf-8") as f:
                         all_results = json.load(f)
 
-                    total_triples = sum(len(r.get("triples", [])) for r in all_results)
+                    total_kg = sum(len(r.get("kg", [])) for r in all_results)
                     total_entities = sum(len(r.get("entities", [])) for r in all_results)
 
                     print(f"  - 实体: {total_entities}")
-                    print(f"  - 三元组: {total_triples}")
+                    print(f"  - 知识图谱项: {total_kg}")
+
+                    # Step 5: Merge chunks into single graph
+                    print(f"\n[5/5] 合并图谱...")
+                    try:
+                        from kgagent.extraction.merge import merge_kg_chunks
+
+                        merge_result = await merge_kg_chunks(
+                            kg_file=kg_output_file,
+                            extraction_type=extraction_type,
+                            llm_client=system,
+                        )
+
+                        print(f"✓ 图谱合并完成")
+                        if merge_result.get("disambiguation"):
+                            print(f"  - 合并后图谱项: {merge_result['total_items']}")
+                            print(f"  - 实体: {merge_result['entities']} (消歧: {merge_result['entities_merged']})")
+                            print(f"  - 关系: {merge_result['relations']} (消歧: {merge_result['relations_merged']})")
+                        else:
+                            print(f"  - 事件类型，简单合并")
+                        print(f"  - 输出文件: {merge_result['output_file']}")
+                    except Exception as e:
+                        print(f"⚠️  图谱合并失败: {e}")
+                        logger.warning(f"Failed to merge KG chunks: {e}")
+
                     print(f"\n💾 已保存文件:")
 
                     # List all saved files
@@ -552,7 +576,9 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                     if md_file:
                         print(f"  - Markdown: {md_file}")
                     print(f"  - Chunks: {chunks_file}")
-                    print(f"  - 知识图谱: {kg_output_file}")
+                    print(f"  - 知识图谱 (chunks): {kg_output_file}")
+                    if merge_result and merge_result.get("output_file"):
+                        print(f"  - 知识图谱 (合并): {merge_result['output_file']}")
                     print()
 
                     # Update session history
@@ -783,14 +809,14 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
 
                         # Display summary
                         print("\n" + "=" * 50)
-                        total_triples = sum(len(r.get("triples", [])) for r in all_results)
+                        total_kg = sum(len(r.get("kg", [])) for r in all_results)
                         total_entities = sum(len(r.get("entities", [])) for r in all_results)
 
                         print(f"✓ 提取完成!")
                         print(f"  - 文档: {Path(file_path).name}")
                         print(f"  - Chunks: {len(chunks)}")
                         print(f"  - 实体: {total_entities}")
-                        print(f"  - 三元组: {total_triples}")
+                        print(f"  - 知识图谱项: {total_kg}")
 
                         # Save results
                         output_file = Path(file_path).parent / f"{Path(file_path).stem}_kg.json"

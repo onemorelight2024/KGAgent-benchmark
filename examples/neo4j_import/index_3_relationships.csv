@@ -1,0 +1,12 @@
+:START_ID,:END_ID,relation:STRING,:TYPE
+0,1,visited,RELATION
+0,2,visited_on,RELATION
+3,4,climbed,RELATION
+5,4,climbed,RELATION
+3,5,climbed_with,RELATION
+3,6,turned,RELATION
+5,6,turned,RELATION
+6,7,turned_by,RELATION
+8,9,brought_home,RELATION
+10,9,brought_home,RELATION
+11,9,brought_home,RELATION

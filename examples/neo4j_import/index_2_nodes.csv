@@ -1,0 +1,27 @@
+entityId:ID,name:STRING,:LABEL
+0,Mara,Entity
+1,Thomas,Entity
+2,watch,Entity
+3,promise,Entity
+4,ten years,Entity
+5,harbour bell,Entity
+6,three times,Entity
+7,North Star,Entity
+8,breakwater,Entity
+9,lantern,Entity
+10,storm,Entity
+11,inland,Entity
+12,electricity,Entity
+13,lighthouse,Entity
+14,Engineers,Entity
+15,broken belt,Entity
+16,automatic operation,Entity
+17,father's watch,Entity
+18,town,Entity
+19,plaque,Entity
+20,father's name,Entity
+21,Greyhaven,Entity
+22,emergency mechanism,Entity
+23,fishermen,Entity
+24,hill,Entity
+25,families,Entity
