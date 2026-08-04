@@ -30,19 +30,25 @@ Fields:
   "task": "KGQA" | "KGQG" | null,
   "input_path": string | null,
   "sample_count": integer | null,
-  "method": "role_agent_qg" | "kqg_cot_plus" | "r2dqg_prompt" | "sgsh_prompt" | "chronoqg" | null,
+  "method": "role_agent_qg" | "sgsh_prompt" | "chronoqg" | null,
   "base_url": string | null,
   "api_key": string | null,
   "model": string | null,
-  "config_path": string | null
+  "config_path": string | null,
+  "run_id": string | null,
+  "resume": boolean | null,
+  "batch_size": integer | null
 }
 
 Rules:
 - "1", "普通", "静态", "static" means graph_type KG.
 - "2", "时序", "temporal", "TKG" means graph_type TKG.
 - KGQA/KGQG are task names.
-- A means role_agent_qg, B means kqg_cot_plus, C means r2dqg_prompt, D means sgsh_prompt, E means chronoqg.
-- "选择最合适的方法" means sgsh_prompt for KG and chronoqg for TKG.
+- A means sgsh_prompt, B means role_agent_qg.
+- C or ChronoQG means chronoqg.
+- "选择最合适的方法" means sgsh_prompt.
+- "断点", "续跑", "resume" means resume=true.
+- "不续跑", "重新跑", "fresh" means resume=false.
 - Extract file paths even when embedded in Chinese text, e.g. "在examples/a.json" -> "examples/a.json".
 - If the user says a config file contains the API settings, put that path in config_path.
 - Never invent API keys or URLs.

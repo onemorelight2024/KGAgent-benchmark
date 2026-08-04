@@ -14,9 +14,9 @@ from kgagent.extraction.config import ExtractionConfig
 from kgagent.intent import IntentEntry
 from kgagent.core.session import ChatSession
 from kgagent.core.batch import process_batch_with_resume
-from kgagent.core.config import get_model
-from kgagent.benchmark.chat_flow import looks_like_benchmark_request
-from kgagent.benchmark.conversation import BenchmarkConversation
+from kgagent.core.config import get_api_config, get_model
+from kgagent.benchmark.agents.chat_flow import looks_like_benchmark_request
+from kgagent.benchmark.agents.conversation import BenchmarkConversation
 
 try:
     from prompt_toolkit import PromptSession
@@ -52,6 +52,7 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
     print("  /path/to/file.json --type event")
     print()
 
+    get_api_config()
     chat_model = model or get_model()
 
     # Create system
@@ -73,9 +74,9 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
     chat_session = ChatSession(max_history=10)
     print(f"💾 Session memory enabled (keeping last 10 extractions)\n")
     benchmark_conversation = BenchmarkConversation(
-        workspace=Path(workspace or ".").resolve(),
+        workspace=Path(workspace or "./tmp_sdk").resolve(),
         sdk_model=chat_model,
-        benchmark_model="gpt-4o-mini",
+        benchmark_model="gpt-5.4",
     )
 
     # Setup prompt session if available
@@ -158,10 +159,14 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
         # Benchmark is a multi-turn agent workflow. The benchmark conversation
         # agent interprets natural replies and updates the workflow state.
         if benchmark_conversation.active or looks_like_benchmark_request(user_input):
-            if benchmark_conversation.active:
-                message, benchmark_params = await benchmark_conversation.handle(user_input)
-            else:
-                message, benchmark_params = await benchmark_conversation.start(user_input)
+            try:
+                if benchmark_conversation.active:
+                    message, benchmark_params = await benchmark_conversation.handle(user_input)
+                else:
+                    message, benchmark_params = await benchmark_conversation.start(user_input)
+            except Exception as e:
+                print(f"\nError: benchmark 对话失败: {e}\n")
+                continue
             print(f"\nAssistant> {message}\n")
 
             if benchmark_params is None:
@@ -175,15 +180,7 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
                 current_task = None
                 stats = result.get("stats", {})
                 output_path = result.get("output_path")
-                print("\nAssistant> benchmark 生成完成。\n")
-                print(f"| 项目 | 结果 |")
-                print(f"|---|---|")
-                print(f"| 类型 | {result.get('benchmark_type')} / {result.get('graph_type')} |")
-                print(f"| 方法 | {result.get('method')} |")
-                print(f"| 模型 | {result.get('model')} |")
-                print(f"| 样本数 | {stats.get('valid', 0)} / {stats.get('total', 0)} 有效 |")
-                print(f"| 输出文件 | `{output_path}` |")
-                print()
+                _print_benchmark_result(result, output_path, benchmark_conversation.current_reply_language())
 
                 chat_session.add_extraction(
                     input_type="benchmark",
@@ -1356,3 +1353,29 @@ async def main_chat_async(workspace: str | None = None, model: str | None = None
 def main_chat(workspace: str | None = None, model: str | None = None):
     """Synchronous wrapper for chat."""
     asyncio.run(main_chat_async(workspace, model))
+
+
+def _print_benchmark_result(result: dict, output_path: str | None, reply_language: str) -> None:
+    """Print benchmark completion summary in the active conversation language."""
+    stats = result.get("stats", {})
+    if reply_language == "en":
+        print("\nAssistant> benchmark generation completed.\n")
+        print("| Item | Result |")
+        print("|---|---|")
+        print(f"| Type | {result.get('benchmark_type')} / {result.get('graph_type')} |")
+        print(f"| Method | {result.get('method')} |")
+        print(f"| Model | {result.get('model')} |")
+        print(f"| Samples | {stats.get('valid', 0)} / {stats.get('total', 0)} valid |")
+        print(f"| Output file | `{output_path}` |")
+        print()
+        return
+
+    print("\nAssistant> benchmark 生成完成。\n")
+    print("| 项目 | 结果 |")
+    print("|---|---|")
+    print(f"| 类型 | {result.get('benchmark_type')} / {result.get('graph_type')} |")
+    print(f"| 方法 | {result.get('method')} |")
+    print(f"| 模型 | {result.get('model')} |")
+    print(f"| 样本数 | {stats.get('valid', 0)} / {stats.get('total', 0)} 有效 |")
+    print(f"| 输出文件 | `{output_path}` |")
+    print()

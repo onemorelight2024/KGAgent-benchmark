@@ -33,6 +33,7 @@ def load_method_input_jsonl(input_path: Path) -> list[KGQGMethodInputItem]:
 def samples_to_method_input(
     samples: list[KGQGMethodInputItem],
     task: str = "KGQG",
+    language: str = "en",
 ) -> list[KGQGMethodInputItem]:
     """Convert sampled subgraphs to method input format.
 
@@ -41,4 +42,5 @@ def samples_to_method_input(
     # Ensure all items have correct task
     for sample in samples:
         sample["task"] = task
+        sample["language"] = language
     return samples

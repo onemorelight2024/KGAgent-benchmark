@@ -1,0 +1,6 @@
+# 11_zh_tkg_chronoqg_resume.txt
+我想做一个时序 KGQA benchmark
+时序 TKG
+examples/tkg_benchmark_input.json
+2，断点续跑
+:quit

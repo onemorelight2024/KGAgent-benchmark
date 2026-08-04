@@ -14,12 +14,12 @@ def get_model() -> str:
     Resolution order:
     1. KG_MODEL
     2. ANTHROPIC_MODEL
-    3. Default: claude-sonnet-4-6
+    3. Default: gpt-5.4
     """
     model = (
         os.getenv("KG_MODEL")
         or os.getenv("ANTHROPIC_MODEL")
-        or "claude-sonnet-4-6"
+        or "gpt-5.4"
     )
     logger.debug(f"Resolved model: {model}")
     return model
@@ -31,17 +31,24 @@ def get_api_config() -> dict[str, str | None]:
     Returns:
         Dictionary with api_url and api_key
     """
-    api_url = os.getenv("KG_API_URL") or os.getenv("ANTHROPIC_BASE_URL")
+    kg_api_url = os.getenv("KG_API_URL")
+    kg_api_key = os.getenv("KG_API_KEY")
+    api_url = kg_api_url or os.getenv("ANTHROPIC_BASE_URL") or os.getenv("DF_API_URL")
     api_key = (
-        os.getenv("KG_API_KEY")
+        kg_api_key
         or os.getenv("ANTHROPIC_API_KEY")
         or os.getenv("ANTHROPIC_AUTH_TOKEN")
+        or os.getenv("DF_API_KEY")
     )
 
     # Export to ANTHROPIC_* for Claude Agent SDK compatibility
-    if api_url:
+    if kg_api_url:
+        os.environ["ANTHROPIC_BASE_URL"] = kg_api_url
+    elif api_url:
         os.environ.setdefault("ANTHROPIC_BASE_URL", api_url)
-    if api_key:
+    if kg_api_key:
+        os.environ["ANTHROPIC_API_KEY"] = kg_api_key
+    elif api_key:
         os.environ.setdefault("ANTHROPIC_API_KEY", api_key)
 
     logger.debug(f"API config: url={api_url is not None}, key={api_key is not None}")

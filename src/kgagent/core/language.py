@@ -29,10 +29,10 @@ def detect_language(text: str) -> str:
     if total_meaningful_chars == 0:
         return "en"
 
-    # If >30% of meaningful characters are Chinese, treat as Chinese
+    # If at least 15% of meaningful characters are Chinese, treat as Chinese.
     chinese_ratio = chinese_chars / total_meaningful_chars
 
-    if chinese_ratio > 0.3:
+    if chinese_ratio >= 0.15:
         return "zh"
     else:
         return "en"

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-import os
+import logging
 import shutil
 import sys
 from contextlib import redirect_stderr, redirect_stdout
@@ -14,6 +14,7 @@ from typing import Any
 
 CHRONOQG_PATH = Path(__file__).parent / "chronoqg"
 CHRONOQG_MODULE_PATH = CHRONOQG_PATH / "chrono_qg"
+logger = logging.getLogger(__name__)
 
 
 def run_chronoqg(
@@ -23,13 +24,15 @@ def run_chronoqg(
     mode: str = "tc1",
     time_granularity: str = "auto",
     per_code: int = 5,
-    model: str = "gpt-4o-mini",
+    model: str = "gpt-5.4",
     base_url: str | None = None,
     api_key: str | None = None,
     parallelism: int = 4,
+    language: str = "en",
+    resume: bool = True,
 ) -> dict[str, Any]:
     """Run ChronoQG against a normalized TKG."""
-    from kgagent.benchmark.chronoqg_converter import (
+    from kgagent.benchmark.tools.chronoqg_converter import (
         convert_tkg_to_chronoqg_format,
         estimate_time_granularity,
     )
@@ -66,37 +69,42 @@ def run_chronoqg(
         "answer_model": model,
         "judge_model": model,
         "parallelism": parallelism,
+        "language": "zh" if language == "zh" else "en",
     }
-    if base_url:
-        config["api_base_url"] = base_url
     config_path.write_text(json.dumps(config, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    logger.info("ChronoQG started: mode=%s per_code=%s model=%s resume=%s", mode, per_code, model, resume)
     from main import _run_build, _run_sample, _run_verify
     from tkgqg_config import PipelineConfig
 
     cfg = PipelineConfig.load(config_path)
-    old_openai_key = os.environ.get("OPENAI_API_KEY")
-    old_llm_base = os.environ.get("LLM_BASE_URL")
-    if api_key:
-        os.environ["OPENAI_API_KEY"] = api_key
-    if base_url:
-        os.environ["LLM_BASE_URL"] = base_url
 
     run_log = StringIO()
-    try:
-        with redirect_stdout(run_log), redirect_stderr(run_log):
+    skipped_stages: list[str] = []
+    with redirect_stdout(run_log), redirect_stderr(run_log):
+        trace_path = chronoqg_output_dir / "traces" / "trace_samples.jsonl"
+        benchmark_path = chronoqg_output_dir / "benchmark" / f"benchmark_{mode}.jsonl"
+        verified_dir = chronoqg_output_dir / "verified" / mode
+        verified_path = verified_dir / "dataset.jsonl"
+        verified_details_path = verified_dir / "all_details.jsonl"
+
+        if resume and _count_jsonl(trace_path) > 0:
+            skipped_stages.append("sample")
+            print(f"[resume] sample skipped, using {trace_path}")
+        else:
             _run_sample(cfg)
+
+        if resume and _count_jsonl(benchmark_path) > 0:
+            skipped_stages.append("build")
+            print(f"[resume] build skipped, using {benchmark_path}")
+        else:
             _run_build(cfg)
+
+        if resume and (_count_jsonl(verified_path) > 0 or _count_jsonl(verified_details_path) > 0):
+            skipped_stages.append("verify")
+            print(f"[resume] verify skipped, using {verified_dir}")
+        else:
             verified_dir = _run_verify(cfg, tc_mode=mode)
-    finally:
-        if old_openai_key is None:
-            os.environ.pop("OPENAI_API_KEY", None)
-        else:
-            os.environ["OPENAI_API_KEY"] = old_openai_key
-        if old_llm_base is None:
-            os.environ.pop("LLM_BASE_URL", None)
-        else:
-            os.environ["LLM_BASE_URL"] = old_llm_base
 
     verified_path = verified_dir / "dataset.jsonl"
     fallback_preverify = False
@@ -109,9 +117,16 @@ def run_chronoqg(
     log_path.write_text(run_log.getvalue(), encoding="utf-8")
 
     rows = _load_jsonl(final_output)
+    logger.info("ChronoQG completed: rows=%s output=%s", len(rows), final_output)
     return {
         "items": [
-            _convert_chronoqg_row(row, index, tkg, fallback_preverify=fallback_preverify)
+            _convert_chronoqg_row(
+                row,
+                index,
+                tkg,
+                fallback_preverify=fallback_preverify,
+                language="zh" if language == "zh" else "en",
+            )
             for index, row in enumerate(rows)
         ],
         "output_path": str(final_output),
@@ -124,6 +139,8 @@ def run_chronoqg(
             "mode": mode,
             "chronoqg_log": str(log_path),
             "fallback_preverify": fallback_preverify,
+            "resume": resume,
+            "skipped_stages": skipped_stages,
         },
     }
 
@@ -150,6 +167,7 @@ def _convert_chronoqg_row(
     tkg: dict[str, Any],
     *,
     fallback_preverify: bool = False,
+    language: str = "en",
 ) -> dict[str, Any]:
     question = (
         row.get("question")
@@ -173,11 +191,12 @@ def _convert_chronoqg_row(
     )
     if not isinstance(facts, list) or not facts:
         facts = tkg.get("temporal_facts", [])[:1]
+    supporting_graph = _build_supporting_graph(facts, tkg)
     return {
         "sample_id": str(row.get("id") or row.get("benchmark_id") or f"chronoqg_{index:06d}"),
         "generated_question": _naturalize_question(str(question)),
         "answer": {"text": str(answer_text), "type": _answer_type(row), "id": None},
-        "subgraph": {"facts": facts},
+        "subgraph": supporting_graph,
         "constraints": {
             "temporal_question_type": row.get("tc_code") or row.get("template_id") or "temporal",
             "hop": 1,
@@ -188,9 +207,63 @@ def _convert_chronoqg_row(
             "sample_strategy": "chronoqg",
         },
         "graph_type": "TKG",
+        "language": language,
         "method": "chronoqg",
-        "metadata": {**row, "chronoqg_fallback": "preverify" if fallback_preverify else "verified"},
+        "metadata": {
+            **row,
+            "chronoqg_fallback": "preverify" if fallback_preverify else "verified",
+            "language": language,
+        },
     }
+
+
+def _build_supporting_graph(facts: list[dict[str, Any]], tkg: dict[str, Any]) -> dict[str, Any]:
+    entities = {
+        entity.get("id"): entity
+        for entity in tkg.get("entities", [])
+        if entity.get("id")
+    }
+    node_ids: list[str] = []
+    edges: list[dict[str, Any]] = []
+    for fact in facts:
+        subject = str(fact.get("subject", ""))
+        obj = str(fact.get("object", ""))
+        for node_id in (subject, obj):
+            if node_id and node_id not in node_ids:
+                node_ids.append(node_id)
+        edges.append(
+            {
+                "id": fact.get("id"),
+                "source": subject,
+                "relation": fact.get("relation", ""),
+                "target": obj,
+                "time": _fact_time(fact),
+            }
+        )
+    nodes = []
+    for node_id in node_ids:
+        entity = entities.get(node_id, {})
+        nodes.append(
+            {
+                "id": node_id,
+                "name": entity.get("name", node_id),
+                "type": entity.get("type", "Entity"),
+            }
+        )
+    return {"nodes": nodes, "edges": edges, "facts": facts}
+
+
+def _fact_time(fact: dict[str, Any]) -> dict[str, Any]:
+    time = fact.get("time")
+    if isinstance(time, dict) and time:
+        return time
+    if fact.get("start") is not None or fact.get("end") is not None:
+        return {
+            "type": fact.get("time_type", "interval"),
+            "start": fact.get("start"),
+            "end": fact.get("end"),
+        }
+    return {}
 
 
 def _naturalize_question(question: str) -> str:
@@ -203,7 +276,7 @@ def _naturalize_question(question: str) -> str:
     cleaned = cleaned.replace('"member_of"', "member_of")
     cleaned = cleaned.replace(" period period", " period")
     cleaned = cleaned.replace("the the", "the")
-    if cleaned and not cleaned.endswith("?"):
+    if cleaned and not cleaned.endswith(("?", "？")):
         cleaned += "?"
     return cleaned
 

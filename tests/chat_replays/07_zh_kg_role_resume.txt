@@ -1,0 +1,7 @@
+# 07_zh_kg_role_resume.txt
+我想做一个 KGQA benchmark
+普通 KG
+examples/kg_benchmark_input.json
+2
+多角色编审，run_id 是 07_zh_kg_role_resume，断点续跑，model用gpt-5.4，batch 2，其他默认
+:quit

@@ -13,7 +13,7 @@ Usage:
     python eval_benchmark.py \\
         --input-jsonl allen10_benchmark.jsonl \\
         --tc-mode tc1 \\
-        --model gpt-4o-mini \\
+        --model gpt-5.4 \\
         --answer-model gpt-5 \\
         --parallelism 16
 """
@@ -428,10 +428,10 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--input-jsonl", type=Path, required=True)
     parser.add_argument("--tc-mode", choices=["tc1", "tc_gt1"], required=True)
     parser.add_argument("--output-dir", type=Path, default=None)
-    parser.add_argument("--model", default="gpt-4o-mini", help="Rewrite/judge model")
+    parser.add_argument("--model", default="gpt-5.4", help="Rewrite/judge model")
     parser.add_argument("--answer-model", default="gpt-5", help="Strong answer model")
-    parser.add_argument("--base-url", default=None, help="OpenAI-compatible API base URL (or set LLM_BASE_URL)")
-    parser.add_argument("--api-key", default=None, help="API key (or set OPENAI_API_KEY / DF_API_KEY)")
+    parser.add_argument("--base-url", default=None, help="Legacy compatibility option; Claude SDK routing uses ANTHROPIC_* / CCR")
+    parser.add_argument("--api-key", default=None, help="Legacy compatibility option; Claude SDK routing uses ANTHROPIC_* / CCR")
     parser.add_argument("--parallelism", type=int, default=64)
     return parser.parse_args()
 

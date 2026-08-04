@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import logging
 from collections import defaultdict
 from typing import Any
 
@@ -17,6 +18,8 @@ from kgagent.benchmark.types import (
     SubgraphEdge,
     SubgraphNode,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def sample_subgraphs(
@@ -41,6 +44,7 @@ def sample_subgraphs(
         Dict with 'samples' and 'stats'
     """
     random.seed(seed)
+    logger.info("Sampling subgraphs: graph_id=%s sample_count=%s seed=%s", kg.get("graph_id"), sample_count, seed)
 
     # Default distributions
     if hop_distribution is None:

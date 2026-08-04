@@ -91,14 +91,15 @@ python -m chrono_qg.main init-config \
 - `time_granularity`：`year`、`month` 或 `day`。
 - `per_code`：验证前每类时间约束最多选择的候选样本数。
 - `rewrite_model`、`answer_model`、`judge_model`：用于改写、回答和判断的 LLM。
-- `api_base_url`、`api_key`：可选的配置内 API 设置。
+- `api_base_url`、`api_key`：为兼容旧配置保留的字段；实际 LLM 调用走 Claude SDK 路由。
 - `parallelism`：验证阶段并发数。
 
-LLM 验证阶段使用 OpenAI-compatible API。推荐设置：
+LLM 验证阶段使用 Claude Agent SDK。推荐设置与 KGAgent chat 一致：运行前激活 CCR。
 
 ```bash
-export OPENAI_API_KEY="..."
-export LLM_BASE_URL="https://api.openai.com/v1"
+ccr restart
+eval "$(ccr activate)"
+export ANTHROPIC_MODEL="gpt-5.4"
 ```
 
 运行完整发布版流水线：
@@ -148,7 +149,7 @@ output/
 - `chrono_qg/build_tkgqg_benchmark.py`：benchmark 构建脚本，按时间约束 code 选择单约束/多约束样本，生成 trace-grounded benchmark records。
 - `chrono_qg/eval_benchmark.py`：改写与验证脚本，执行问题改写、答案模型回答、等价性判断、严格验证/修复，并输出 `dataset.jsonl`、`dataset_pp.jsonl` 和 `discarded.jsonl`。
 - `chrono_qg/verify_tkgqg_gold_benchmark.py`：验证阶段复用的辅助函数。
-- `chrono_qg/llm_client.py`：OpenAI-compatible LLM 客户端，包含重试和 token usage 统计。
+- `chrono_qg/llm_client.py`：Claude SDK LLM 客户端，包含轻量 token usage 统计。
 - `chrono_qg/prompts.py`：改写、回答、判断、修复和严格验证使用的 prompt 模板。
 - `chrono_qg/allen.py`：Allen 时间关系相关工具。
 - `chrono_qg/tkgqg_shared.py`：共享常量和工具函数，包括 trace 渲染、时间约束、benchmark record 和 JSONL I/O。

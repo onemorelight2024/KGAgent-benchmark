@@ -1,4 +1,4 @@
-from kgagent.benchmark.subgraph_sampler import _build_adjacency, _extract_subgraph_from_path, _random_walk, sample_subgraphs
+from kgagent.benchmark.tools.subgraph_sampler import _build_adjacency, _extract_subgraph_from_path, _random_walk, sample_subgraphs
 
 
 def _tiny_kg():

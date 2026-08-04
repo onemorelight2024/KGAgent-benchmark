@@ -1,0 +1,7 @@
+# 04_en_kg_sgsh_resume.txt
+I want to generate a KGQA benchmark
+static KG
+examples/kg_benchmark_input.json
+2
+skeleton method, run_id is 04_en_kg_sgsh_resume, resume, model gpt-5.4, batch 2, defaults for the rest
+:quit

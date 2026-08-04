@@ -24,6 +24,7 @@ from typing import Any
 from kgagent.core.config import get_model
 from kgagent.core.logging_setup import setup_logging
 from kgagent.benchmark import BenchmarkEntry
+from kgagent.benchmark.tools.llm import resolve_model
 from kgagent.system.orchestrator import run_extraction
 from kgagent.system.registry import ExtractionRegistry
 
@@ -136,7 +137,7 @@ class KGAgentSystem:
         *,
         graph_type: str = "KG",
         task: str = "KGQA",
-        method: str = "sgsh_prompt",
+        method: str | None = None,
         sample_count: int = 5,
         model: str | None = None,
         base_url: str | None = None,
@@ -144,8 +145,13 @@ class KGAgentSystem:
         output_path: str | None = None,
         temperature: float = 0.7,
         parallelism: int = 4,
+        run_id: str | None = None,
+        resume: bool = True,
+        batch_size: int | None = None,
+        language: str | None = "auto",
     ) -> dict[str, Any]:
         """Generate KGQA/KGQG benchmark data synchronously."""
+        logger.info("Benchmark request received: graph_type=%s task=%s method=%s", graph_type, task, method)
         return asyncio.run(
             self.benchmark_async(
                 data=data,
@@ -159,6 +165,10 @@ class KGAgentSystem:
                 output_path=output_path,
                 temperature=temperature,
                 parallelism=parallelism,
+                run_id=run_id,
+                resume=resume,
+                batch_size=batch_size,
+                language=language,
             )
         )
 
@@ -168,7 +178,7 @@ class KGAgentSystem:
         *,
         graph_type: str = "KG",
         task: str = "KGQA",
-        method: str = "sgsh_prompt",
+        method: str | None = None,
         sample_count: int = 5,
         model: str | None = None,
         base_url: str | None = None,
@@ -176,10 +186,15 @@ class KGAgentSystem:
         output_path: str | None = None,
         temperature: float = 0.7,
         parallelism: int = 4,
+        run_id: str | None = None,
+        resume: bool = True,
+        batch_size: int | None = None,
+        language: str | None = "auto",
     ) -> dict[str, Any]:
         """Generate KGQA/KGQG benchmark data asynchronously."""
+        logger.info("Dispatching benchmark workflow: graph_type=%s task=%s method=%s", graph_type, task, method)
         entry = BenchmarkEntry(
-            model_name=model or "gpt-4o-mini",
+            model_name=resolve_model(model),
             work_dir=self.work_dir,
             output_dir=self.work_dir / "outputs",
         )
@@ -194,6 +209,10 @@ class KGAgentSystem:
             output_path=output_path,
             temperature=temperature,
             parallelism=parallelism,
+            run_id=run_id,
+            resume=resume,
+            batch_size=batch_size,
+            language=language,
         )
 
     async def extract_batch(

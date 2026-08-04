@@ -1,0 +1,7 @@
+# 03_zh_kg_sgsh_resume.txt
+我想做一个 KGQA benchmark
+普通 KG
+examples/kg_benchmark_input.json
+2
+骨架法，run_id 是 03_zh_kg_sgsh_resume，断点续跑，model用gpt-5.4，batch 2，其他默认
+:quit

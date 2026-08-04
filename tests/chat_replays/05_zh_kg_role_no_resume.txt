@@ -1,0 +1,7 @@
+# 05_zh_kg_role_no_resume.txt
+我想做一个 KGQA benchmark
+普通 KG
+examples/kg_benchmark_input.json
+2
+RoleAgentQG，run_id 是 05_zh_kg_role_no_resume，不续跑，model用gpt-5.4，batch 2，其他默认
+:quit

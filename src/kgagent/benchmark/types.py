@@ -78,7 +78,9 @@ class Subgraph(TypedDict):
     edges: list[SubgraphEdge]
 
 
-class TemporalSubgraph(TypedDict):
+class TemporalSubgraph(TypedDict, total=False):
+    nodes: list[SubgraphNode]
+    edges: list[dict[str, Any]]
     facts: list[TemporalFact]
 
 

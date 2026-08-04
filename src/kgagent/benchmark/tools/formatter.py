@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 from kgagent.benchmark.types import BenchmarkItem, BenchmarkMetadata, QualityInfo, Reasoning
+
+logger = logging.getLogger(__name__)
 
 
 def format_benchmark(
@@ -80,6 +83,7 @@ def format_benchmark(
         with output_path.open("w", encoding="utf-8") as f:
             for item in benchmark:
                 f.write(json.dumps(item, ensure_ascii=False) + "\n")
+        logger.info("Benchmark written: output=%s total=%s", output_path, len(benchmark))
 
     # Compute stats
     stats = {
@@ -91,6 +95,7 @@ def format_benchmark(
         "method_distribution": _compute_distribution(benchmark, lambda x: x["metadata"]["method"]),
     }
 
+    logger.info("Benchmark validation stats: total=%s valid=%s invalid=%s", stats["total"], stats["valid"], stats["invalid"])
     return {
         "benchmark": benchmark,
         "stats": stats,
@@ -130,8 +135,14 @@ def validate_benchmark_item(item: BenchmarkItem) -> dict[str, Any]:
     elif isinstance(item["supporting_graph"], dict):
         if item.get("graph_type") == "TKG":
             facts = item["supporting_graph"].get("facts", [])
+            nodes = item["supporting_graph"].get("nodes", [])
+            edges = item["supporting_graph"].get("edges", [])
             if len(facts) == 0:
                 warnings.append("Empty temporal supporting facts")
+            if len(nodes) == 0:
+                warnings.append("Empty temporal supporting graph nodes")
+            if len(edges) == 0:
+                warnings.append("Empty temporal supporting graph edges")
         else:
             nodes = item["supporting_graph"].get("nodes", [])
             edges = item["supporting_graph"].get("edges", [])
@@ -141,8 +152,8 @@ def validate_benchmark_item(item: BenchmarkItem) -> dict[str, Any]:
                 warnings.append("Empty supporting graph edges")
 
     # Check question quality
-    if question and not question.strip().endswith("?"):
-        warnings.append("Question does not end with '?'")
+    if question and not question.strip().endswith(("?", "？")):
+        warnings.append("Question does not end with '?' or '？'")
 
     kg_jargon = ("knowledge graph", "entity", "relation", "triple", "subgraph", "hop")
     if any(term in question.lower() for term in kg_jargon):

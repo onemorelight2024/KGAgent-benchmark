@@ -257,12 +257,13 @@ class PipelineConfig:
     max_per_template: dict[str, int] = field(default_factory=dict)
 
     # ── LLM settings ────────────────────────────────────────────────
-    rewrite_model: str = "gpt-4o-mini"
+    rewrite_model: str = "gpt-5.4"
     answer_model: str = "gpt-5"
-    judge_model: str = "gpt-4o-mini"
+    judge_model: str = "gpt-5.4"
     api_base_url: str = ""
     api_key: str = ""
     parallelism: int = 64
+    language: str = "en"
 
     # ── Deleted relations (KG-specific) ─────────────────────────────
     deleted_relations: set[str] = field(default_factory=set)

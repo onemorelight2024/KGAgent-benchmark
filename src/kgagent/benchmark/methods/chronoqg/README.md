@@ -93,14 +93,16 @@ Before running, check and edit the key fields in `config.json`:
 - `time_granularity`: `year`, `month`, or `day`.
 - `per_code`: maximum number of candidate examples selected per temporal constraint type before verification.
 - `rewrite_model`, `answer_model`, `judge_model`: LLMs used for rewriting, answering, and judging.
-- `api_base_url`, `api_key`: optional API settings inside the config.
+- `api_base_url`, `api_key`: legacy fields kept for config compatibility; LLM calls use Claude SDK routing.
 - `parallelism`: number of parallel workers in the verification stage.
 
-The LLM verification stage uses an OpenAI-compatible API. Recommended settings:
+The LLM verification stage uses Claude Agent SDK. Recommended settings are the
+same as KGAgent chat: activate CCR before running.
 
 ```bash
-export OPENAI_API_KEY="..."
-export LLM_BASE_URL="https://api.openai.com/v1"
+ccr restart
+eval "$(ccr activate)"
+export ANTHROPIC_MODEL="gpt-5.4"
 ```
 
 Run the full released pipeline:
@@ -150,7 +152,7 @@ Core files:
 - `chrono_qg/build_tkgqg_benchmark.py`: benchmark construction script. It selects single-constraint and multi-constraint examples by temporal constraint code and generates trace-grounded benchmark records.
 - `chrono_qg/eval_benchmark.py`: rewriting and verification script. It performs question rewriting, answer-model prediction, equivalence judging, strict verification/repair, and writes `dataset.jsonl`, `dataset_pp.jsonl`, and `discarded.jsonl`.
 - `chrono_qg/verify_tkgqg_gold_benchmark.py`: helper functions reused by the verification stage.
-- `chrono_qg/llm_client.py`: OpenAI-compatible LLM client with retries and token usage accounting.
+- `chrono_qg/llm_client.py`: Claude SDK LLM client with lightweight usage accounting.
 - `chrono_qg/prompts.py`: prompt templates for rewriting, answering, judging, repair, and strict verification.
 - `chrono_qg/allen.py`: utilities for Allen temporal relations.
 - `chrono_qg/tkgqg_shared.py`: shared constants and helper functions, including trace rendering, temporal constraints, benchmark records, and JSONL I/O.

@@ -1,0 +1,16 @@
+{
+  "entities": [
+    {"id": "E1", "name": "Alice Chen", "type": "Person"},
+    {"id": "E2", "name": "Acme Robotics", "type": "Organization"},
+    {"id": "E3", "name": "Bob Smith", "type": "Person"},
+    {"id": "E4", "name": "TechVentures", "type": "Organization"},
+    {"id": "E5", "name": "San Francisco", "type": "Location"}
+  ],
+  "relations": [
+    {"source": "E1", "relation": "founded", "target": "E2"},
+    {"source": "E1", "relation": "works_at", "target": "E2"},
+    {"source": "E3", "relation": "invested_in", "target": "E2"},
+    {"source": "E3", "relation": "works_at", "target": "E4"},
+    {"source": "E2", "relation": "located_in", "target": "E5"}
+  ]
+}

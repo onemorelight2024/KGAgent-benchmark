@@ -162,8 +162,8 @@ def main():
     )
     benchmark_parser.add_argument(
         "--method",
-        default="sgsh_prompt",
-        help="Generation method (default: sgsh_prompt)",
+        default=None,
+        help="Generation method: KG supports sgsh_prompt/role_agent_qg; TKG supports chronoqg",
     )
     benchmark_parser.add_argument(
         "--sample-count",
@@ -176,7 +176,11 @@ def main():
     benchmark_parser.add_argument("--api-key", default=None, help="API key")
     benchmark_parser.add_argument("--output", "-o", default=None, help="Output JSONL path")
     benchmark_parser.add_argument("--workspace", "-w", default=None, help="Working directory")
-    benchmark_parser.add_argument("--model", "-m", default="gpt-4o-mini", help="Model name")
+    benchmark_parser.add_argument("--model", "-m", default=None, help="Benchmark model name (default: KG_BENCHMARK_MODEL/KG_MODEL/gpt-5.4)")
+    benchmark_parser.add_argument("--run-id", default=None, help="Benchmark run id for resumable runs")
+    benchmark_parser.add_argument("--batch-size", type=int, default=None, help="Batch size, capped at 50")
+    benchmark_parser.add_argument("--language", choices=["auto", "zh", "en"], default="auto", help="Output language (default: auto)")
+    benchmark_parser.add_argument("--no-resume", action="store_true", help="Start fresh instead of resuming an existing run id")
 
     args = parser.parse_args()
 
@@ -330,6 +334,10 @@ def main():
             base_url=args.base_url,
             api_key=args.api_key,
             output_path=args.output,
+            run_id=args.run_id,
+            resume=not args.no_resume,
+            batch_size=args.batch_size,
+            language=args.language,
         )
         safe_result = dict(result)
         print(json.dumps(safe_result, indent=2, ensure_ascii=False))

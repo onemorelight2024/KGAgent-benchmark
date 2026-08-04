@@ -3,37 +3,31 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
-from kgagent.benchmark.llm import chat_json
+from kgagent.benchmark.tools.llm import chat_json
 from kgagent.benchmark.methods.sgsh_prompt_adapter import _fallback_question, _reveals_answer
 
+logger = logging.getLogger(__name__)
 
-METHOD_SPECS: dict[str, dict[str, str]] = {
+
+METHOD_SPECS: dict[str, dict[str, Any]] = {
     "role_agent_qg": {
         "name": "RoleAgentQG",
-        "system": """You are a collaborative editorial team for KG benchmark question generation.
+        "prompts": {
+            "en": """You are a collaborative editorial team for KG benchmark question generation.
 Act as editor-in-chief, writer, content editor, and copy editor in one concise pass.
 Generate one natural question that is answerable from the support graph.
-Do not reveal the answer. Do not use KG jargon. Return ONLY JSON:
+Use the requested output language. Do not reveal the answer. Do not use KG jargon. Return ONLY JSON:
 {"question": "...", "review_notes": "..."}""",
-    },
-    "kqg_cot_plus": {
-        "name": "KQG-CoT+",
-        "system": """You generate KG benchmark questions using concise hidden reasoning.
-First infer the reasoning path from the support graph, then write one final natural question.
-The final question must be answerable from the support graph and must not reveal the answer.
-Do not expose chain-of-thought; put only a short rationale. Return ONLY JSON:
-{"question": "...", "rationale": "..."}""",
-    },
-    "r2dqg_prompt": {
-        "name": "R2DQG",
-        "system": """You generate diverse KG benchmark questions with a draft-and-refine process.
-Create a question template internally, draft a question, then correct semantic drift.
-The final question must preserve relation direction, be answerable from the support graph,
-and must not reveal the answer. Return ONLY JSON:
-{"question": "...", "template_style": "...", "revision": "..."}""",
+            "zh": """你是一个用于知识图谱 benchmark 问题生成的协作式编委团队。
+请在一次简洁流程中同时扮演主编、作者、内容编辑和文字编辑。
+生成一个能从支持图中回答的自然中文问题。
+不要泄露答案。不要使用“实体”“关系”“三元组”“子图”“跳数”等知识图谱术语。只返回 JSON：
+{"question": "...", "review_notes": "..."}""",
+        },
     },
 }
 
@@ -54,13 +48,15 @@ def run_prompt_method(
 
     spec = METHOD_SPECS[method]
     results: list[dict[str, Any]] = []
+    logger.info("%s batch started: size=%s model=%s", spec["name"], len(items), model)
     for index, item in enumerate(items):
         try:
+            language = _normalize_language(item.get("language", "en"))
             payload = chat_json(
                 base_url=base_url,
                 api_key=api_key,
                 model=model,
-                system_prompt=spec["system"],
+                system_prompt=spec["prompts"][language],
                 user_prompt=_format_prompt(item, spec["name"]),
                 temperature=temperature,
                 max_tokens=700,
@@ -86,14 +82,16 @@ def run_prompt_method(
         for result in results:
             f.write(json.dumps(result, ensure_ascii=False) + "\n")
 
+    errors = sum(1 for r in results if "adapter_error" in r.get("metadata", {}))
+    logger.info("%s batch completed: total=%s success=%s errors=%s", spec["name"], len(results), len(results) - errors, errors)
     return {
         "items": results,
         "output_path": str(output_jsonl),
         "method": method,
         "stats": {
             "total": len(results),
-            "success": len(results),
-            "errors": sum(1 for r in results if "adapter_error" in r.get("metadata", {})),
+            "success": len(results) - errors,
+            "errors": errors,
         },
     }
 
@@ -125,6 +123,7 @@ def _format_prompt(item: dict[str, Any], method_name: str) -> str:
         [
             f"Method: {method_name}",
             f"Task: {item.get('task', 'KGQA')}",
+            f"Output language: {_language_label(item.get('language', 'en'))}",
             "Support graph:",
             _format_support(item.get("subgraph") or item.get("temporal_subgraph", {})),
             "",
@@ -157,3 +156,11 @@ def _format_support(support: dict[str, Any]) -> str:
         target = names.get(edge.get("target", ""), edge.get("target", ""))
         lines.append(f"- {source} -- {edge.get('relation', '')} --> {target}")
     return "\n".join(lines)
+
+
+def _language_label(language: str) -> str:
+    return "Chinese" if language == "zh" else "English"
+
+
+def _normalize_language(language: Any) -> str:
+    return "zh" if language == "zh" else "en"

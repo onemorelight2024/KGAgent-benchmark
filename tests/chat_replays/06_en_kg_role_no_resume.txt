@@ -1,0 +1,7 @@
+# 06_en_kg_role_no_resume.txt
+I want to generate a KGQA benchmark
+static KG
+examples/kg_benchmark_input.json
+2
+RoleAgentQG, run_id is 06_en_kg_role_no_resume, fresh run, model gpt-5.4, batch 2, defaults for the rest
+:quit

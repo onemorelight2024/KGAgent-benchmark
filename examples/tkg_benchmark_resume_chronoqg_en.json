@@ -1,0 +1,86 @@
+{
+  "graph_id": "us_presidents_tkg",
+  "graph_type": "TKG",
+  "entities": [
+    {"id": "US", "name": "United States", "type": "Country"},
+    {"id": "DEM", "name": "Democratic Party", "type": "Organization"},
+    {"id": "REP", "name": "Republican Party", "type": "Organization"},
+    {"id": "CLINTON", "name": "Bill Clinton", "type": "Person"},
+    {"id": "BUSH", "name": "George W. Bush", "type": "Person"},
+    {"id": "OBAMA", "name": "Barack Obama", "type": "Person"},
+    {"id": "TRUMP", "name": "Donald Trump", "type": "Person"},
+    {"id": "BIDEN", "name": "Joe Biden", "type": "Person"}
+  ],
+  "temporal_facts": [
+    {
+      "id": "TF1",
+      "subject": "CLINTON",
+      "relation": "president_of",
+      "object": "US",
+      "time": {"type": "interval", "start": "1993-01-20", "end": "2001-01-20"}
+    },
+    {
+      "id": "TF2",
+      "subject": "BUSH",
+      "relation": "president_of",
+      "object": "US",
+      "time": {"type": "interval", "start": "2001-01-20", "end": "2009-01-20"}
+    },
+    {
+      "id": "TF3",
+      "subject": "OBAMA",
+      "relation": "president_of",
+      "object": "US",
+      "time": {"type": "interval", "start": "2009-01-20", "end": "2017-01-20"}
+    },
+    {
+      "id": "TF4",
+      "subject": "TRUMP",
+      "relation": "president_of",
+      "object": "US",
+      "time": {"type": "interval", "start": "2017-01-20", "end": "2021-01-20"}
+    },
+    {
+      "id": "TF5",
+      "subject": "BIDEN",
+      "relation": "president_of",
+      "object": "US",
+      "time": {"type": "interval", "start": "2021-01-20", "end": "2025-01-20"}
+    },
+    {
+      "id": "TF6",
+      "subject": "CLINTON",
+      "relation": "member_of",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1968", "end": "2024"}
+    },
+    {
+      "id": "TF7",
+      "subject": "BUSH",
+      "relation": "member_of",
+      "object": "REP",
+      "time": {"type": "interval", "start": "1979", "end": "2024"}
+    },
+    {
+      "id": "TF8",
+      "subject": "OBAMA",
+      "relation": "member_of",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1992", "end": "2024"}
+    },
+    {
+      "id": "TF9",
+      "subject": "TRUMP",
+      "relation": "member_of",
+      "object": "REP",
+      "time": {"type": "interval", "start": "2012", "end": "2024"}
+    },
+    {
+      "id": "TF10",
+      "subject": "BIDEN",
+      "relation": "member_of",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1969", "end": "2024"}
+    }
+  ]
+}

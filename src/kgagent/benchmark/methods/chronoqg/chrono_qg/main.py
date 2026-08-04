@@ -245,6 +245,17 @@ def _inject_shared_config(cfg: PipelineConfig) -> None:
         if hasattr(prompts, "FAILURE_DIAGNOSIS_PROMPT"):
             prompts.FAILURE_DIAGNOSIS_PROMPT = prompts.FAILURE_DIAGNOSIS_PROMPT.replace(
                 old_facts_line, new_facts_line)
+        language = "zh" if cfg.language == "zh" else "en"
+        if hasattr(prompts, "REWRITE_PROMPTS"):
+            prompts.REWRITE_PROMPT = prompts.REWRITE_PROMPTS[language]
+        if hasattr(prompts, "REWRITE_FIX_PROMPTS"):
+            prompts.REWRITE_FIX_PROMPT = prompts.REWRITE_FIX_PROMPTS[language]
+        try:
+            import eval_benchmark
+            eval_benchmark.REWRITE_PROMPT = prompts.REWRITE_PROMPT
+            eval_benchmark.REWRITE_FIX_PROMPT = prompts.REWRITE_FIX_PROMPT
+        except ImportError:
+            pass
     except ImportError:
         pass
 

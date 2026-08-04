@@ -1,0 +1,16 @@
+{
+  "entities": [
+    {"id": "E1", "name": "陈爱丽丝", "type": "人物"},
+    {"id": "E2", "name": "阿克米机器人公司", "type": "组织"},
+    {"id": "E3", "name": "鲍勃·史密斯", "type": "人物"},
+    {"id": "E4", "name": "科技风投公司", "type": "组织"},
+    {"id": "E5", "name": "旧金山", "type": "地点"}
+  ],
+  "relations": [
+    {"source": "E1", "relation": "创办", "target": "E2"},
+    {"source": "E1", "relation": "任职于", "target": "E2"},
+    {"source": "E3", "relation": "投资于", "target": "E2"},
+    {"source": "E3", "relation": "任职于", "target": "E4"},
+    {"source": "E2", "relation": "位于", "target": "E5"}
+  ]
+}

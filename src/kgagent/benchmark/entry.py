@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from pathlib import Path
 from typing import Any
 
+from kgagent.benchmark.tools.llm import resolve_model
 from kgagent.benchmark.orchestrator import run_benchmark
+
+logger = logging.getLogger(__name__)
 
 
 class BenchmarkEntry:
@@ -14,11 +18,11 @@ class BenchmarkEntry:
 
     def __init__(
         self,
-        model_name: str = "gpt-4o-mini",
+        model_name: str | None = None,
         work_dir: str | Path = ".",
         output_dir: str | Path | None = None,
     ):
-        self.model_name = model_name
+        self.model_name = resolve_model(model_name)
         self.work_dir = Path(work_dir)
         self.output_dir = Path(output_dir) if output_dir else self.work_dir / "outputs"
 
@@ -28,6 +32,7 @@ class BenchmarkEntry:
 
     async def run_async(self, **kwargs: Any) -> dict[str, Any]:
         """Run benchmark generation asynchronously."""
+        logger.info("Benchmark entry started")
         return await run_benchmark(
             model=kwargs.pop("model", self.model_name),
             work_dir=self.work_dir,

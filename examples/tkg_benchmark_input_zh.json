@@ -1,0 +1,86 @@
+{
+  "graph_id": "us_presidents_tkg_zh",
+  "graph_type": "TKG",
+  "entities": [
+    {"id": "US", "name": "美国", "type": "国家"},
+    {"id": "DEM", "name": "民主党", "type": "组织"},
+    {"id": "REP", "name": "共和党", "type": "组织"},
+    {"id": "CLINTON", "name": "比尔·克林顿", "type": "人物"},
+    {"id": "BUSH", "name": "乔治·W·布什", "type": "人物"},
+    {"id": "OBAMA", "name": "贝拉克·奥巴马", "type": "人物"},
+    {"id": "TRUMP", "name": "唐纳德·特朗普", "type": "人物"},
+    {"id": "BIDEN", "name": "乔·拜登", "type": "人物"}
+  ],
+  "temporal_facts": [
+    {
+      "id": "TF1",
+      "subject": "CLINTON",
+      "relation": "担任总统",
+      "object": "US",
+      "time": {"type": "interval", "start": "1993-01-20", "end": "2001-01-20"}
+    },
+    {
+      "id": "TF2",
+      "subject": "BUSH",
+      "relation": "担任总统",
+      "object": "US",
+      "time": {"type": "interval", "start": "2001-01-20", "end": "2009-01-20"}
+    },
+    {
+      "id": "TF3",
+      "subject": "OBAMA",
+      "relation": "担任总统",
+      "object": "US",
+      "time": {"type": "interval", "start": "2009-01-20", "end": "2017-01-20"}
+    },
+    {
+      "id": "TF4",
+      "subject": "TRUMP",
+      "relation": "担任总统",
+      "object": "US",
+      "time": {"type": "interval", "start": "2017-01-20", "end": "2021-01-20"}
+    },
+    {
+      "id": "TF5",
+      "subject": "BIDEN",
+      "relation": "担任总统",
+      "object": "US",
+      "time": {"type": "interval", "start": "2021-01-20", "end": "2025-01-20"}
+    },
+    {
+      "id": "TF6",
+      "subject": "CLINTON",
+      "relation": "属于",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1968", "end": "2024"}
+    },
+    {
+      "id": "TF7",
+      "subject": "BUSH",
+      "relation": "属于",
+      "object": "REP",
+      "time": {"type": "interval", "start": "1979", "end": "2024"}
+    },
+    {
+      "id": "TF8",
+      "subject": "OBAMA",
+      "relation": "属于",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1992", "end": "2024"}
+    },
+    {
+      "id": "TF9",
+      "subject": "TRUMP",
+      "relation": "属于",
+      "object": "REP",
+      "time": {"type": "interval", "start": "2012", "end": "2024"}
+    },
+    {
+      "id": "TF10",
+      "subject": "BIDEN",
+      "relation": "属于",
+      "object": "DEM",
+      "time": {"type": "interval", "start": "1969", "end": "2024"}
+    }
+  ]
+}

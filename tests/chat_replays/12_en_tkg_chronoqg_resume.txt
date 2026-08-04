@@ -1,0 +1,6 @@
+# 12_en_tkg_chronoqg_resume.txt
+I want to generate a temporal KGQA benchmark
+temporal TKG
+examples/tkg_benchmark_input.json
+2, resume
+:quit
