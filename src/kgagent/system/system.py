@@ -23,14 +23,14 @@ from typing import Any
 
 from kgagent.core.config import get_model
 from kgagent.core.logging_setup import setup_logging
-from kgagent.system.orchestrator import run_extraction
+from kgagent.system.orchestrator import run_extraction, run_reasoning
 from kgagent.system.registry import ExtractionRegistry
 
 logger = logging.getLogger(__name__)
 
 
 class KGAgentSystem:
-    """Unified entry point for knowledge graph extraction."""
+    """Unified entry point for extraction and reasoning."""
 
     def __init__(
         self,
@@ -128,6 +128,77 @@ class KGAgentSystem:
 
         logger.info("Extraction complete")
         return result
+
+    def reason(
+        self,
+        data: str | dict,
+        task_type: str,
+        *,
+        validate: bool = False,
+        save_to: str | None = None,
+    ) -> dict[str, Any]:
+        """Run a reasoning task synchronously."""
+        return asyncio.run(
+            self.reason_async(
+                data=data,
+                task_type=task_type,
+                validate=validate,
+                save_to=save_to,
+            )
+        )
+
+    async def reason_async(
+        self,
+        data: str | dict,
+        task_type: str,
+        *,
+        validate: bool = False,
+        save_to: str | None = None,
+    ) -> dict[str, Any]:
+        """Run a reasoning task asynchronously."""
+        logger.info(f"Starting reasoning: task_type={task_type}")
+        result = await run_reasoning(
+            data=data,
+            task_type=task_type,
+            model_name=self.model_name,
+            work_dir=self.work_dir,
+            permission_mode=self.permission_mode,
+            max_turns=self.max_turns,
+            validate=validate,
+            save_to=save_to,
+        )
+        logger.info("Reasoning complete")
+        return result
+
+    async def reason_batch(
+        self,
+        tasks: list[dict[str, Any]],
+        max_concurrency: int = 2,
+    ) -> list[dict[str, Any]]:
+        """Run multiple reasoning tasks in parallel."""
+        semaphore = asyncio.Semaphore(max_concurrency)
+
+        async def _reason_with_semaphore(task: dict[str, Any]) -> dict[str, Any]:
+            async with semaphore:
+                return await self.reason_async(
+                    data=task["data"],
+                    task_type=task["task_type"],
+                    validate=task.get("validate", False),
+                    save_to=task.get("save_to"),
+                )
+
+        results = await asyncio.gather(
+            *[_reason_with_semaphore(task) for task in tasks],
+            return_exceptions=True,
+        )
+
+        processed_results = []
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                processed_results.append({"error": str(result), "task": tasks[i]})
+            else:
+                processed_results.append(result)
+        return processed_results
 
     async def extract_batch(
         self,

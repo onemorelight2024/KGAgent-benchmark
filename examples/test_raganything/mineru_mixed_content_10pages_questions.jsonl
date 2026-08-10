@@ -1,0 +1,5 @@
+{"id":"q1","question":"What is the overall purpose of the MinerU Multimodal Parsing Test document?","explain":"text"}
+{"id":"q2","question":"What does the document say a parser should preserve when processing the synthetic graph figures?","explain":"text"}
+{"id":"q3","question":"According to the benchmark table, which model has the highest F1 score, and what are its accuracy and latency values?","explain":"table"}
+{"id":"q4","question":"Which mathematical expression defines Attention(Q,K,V), and what does the surrounding text say these equations are testing?","explain":"formula"}
+{"id":"q5","question":"In the raster illustration example, which region has the highest confidence score, and what kind of image example is Figure 5 described as?","explain":"image"}

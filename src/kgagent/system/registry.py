@@ -40,6 +40,16 @@ class ExtractionRegistry:
                 keywords=["event", "events", "happening", "occurrence", "autoschema", "event graph"],
                 description="Event knowledge graph using AutoSchemaKG (3-stage: entity-relation, event-entity, event-relation)",
             ),
+            "qa": ExtractionTypeInfo(
+                name="qa",
+                keywords=["qa", "question answering", "ask", "question", "document qa", "graphrag", "rag"],
+                description="Question answering over documents, corpora, or KGs",
+            ),
+            "completion": ExtractionTypeInfo(
+                name="completion",
+                keywords=["completion", "link prediction", "missing head", "missing tail", "predict link"],
+                description="Knowledge graph completion and link prediction",
+            ),
         }
 
     def detect_type(self, query: str) -> str:

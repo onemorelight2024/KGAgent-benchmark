@@ -42,7 +42,7 @@ def main():
     extract_parser.add_argument(
         "--type",
         "-t",
-        choices=["auto", "triples", "temporal", "hyper"],
+        choices=["auto", "triples", "temporal", "hyper", "event"],
         default="auto",
         help="Extraction type (default: auto)",
     )
@@ -143,6 +143,52 @@ def main():
         "-o",
         default=None,
         help="Output markdown file path",
+    )
+
+    reason_parser = subparsers.add_parser("reason", help="Run reasoning tasks")
+    reason_parser.add_argument(
+        "data",
+        help="Input data (JSON file path, local path, or inline JSON)",
+    )
+    reason_parser.add_argument(
+        "--task",
+        "-t",
+        choices=["qa", "completion"],
+        required=True,
+        help="Reasoning task type",
+    )
+    reason_parser.add_argument(
+        "--question",
+        default=None,
+        help="Question for QA reasoning",
+    )
+    reason_parser.add_argument(
+        "--method",
+        default=None,
+        help="Optional reasoning method override",
+    )
+    reason_parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help="Output file path",
+    )
+    reason_parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Validate result",
+    )
+    reason_parser.add_argument(
+        "--workspace",
+        "-w",
+        default=None,
+        help="Working directory",
+    )
+    reason_parser.add_argument(
+        "--model",
+        "-m",
+        default=None,
+        help="Model name",
     )
 
     args = parser.parse_args()
@@ -281,6 +327,28 @@ def main():
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
+
+    elif args.command == "reason":
+        system = KGAgentSystem(
+            model_name=args.model,
+            work_dir=args.workspace or "./tmp_sdk",
+        )
+
+        reasoning_data: str | dict[str, object] = args.data
+        if args.task == "qa" and (args.question or args.method):
+            reasoning_data = {
+                "input_path": args.data,
+                "question": args.question or "",
+                "method": args.method or "auto",
+            }
+
+        result = system.reason(
+            data=reasoning_data,
+            task_type=args.task,
+            validate=args.validate,
+            save_to=args.output,
+        )
+        print(json.dumps(result, indent=2, ensure_ascii=False))
 
     else:
         parser.print_help()

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KG Completion Result",
+  "type": "object",
+  "required": ["task_type", "method", "mode", "query", "predictions"],
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "enum": ["kg_completion"]
+    },
+    "method": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "query": {
+      "type": "object"
+    },
+    "predictions": {
+      "type": "array"
+    },
+    "summary": {
+      "type": "object"
+    }
+  }
+}

@@ -10,6 +10,8 @@ from kgagent.core.json_io import (
 )
 from kgagent.core.validators import (
     validate_hyper_relations,
+    validate_kg_completion_result,
+    validate_qa_reasoning_result,
     validate_temporal_quadruples,
     validate_triple_graph,
 )
@@ -24,6 +26,8 @@ __all__ = [
     "load_json",
     "save_json",
     "validate_hyper_relations",
+    "validate_kg_completion_result",
+    "validate_qa_reasoning_result",
     "validate_temporal_quadruples",
     "validate_triple_graph",
 ]

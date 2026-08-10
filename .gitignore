@@ -17,6 +17,14 @@ kg_outputs/
 kg_runs/
 outputs/
 uploads/
+tmp_sdk/
+.kgagent_completion/
+
+# Local reasoning runtime artifacts
+.kgagent_reasoning/
+**/.kgagent_reasoning/
+**/.kgagent_reasoning/graphrag_kg/
+**/.kgagent_reasoning/graphrag_kg_corpus/
 
 # IDE
 .vscode/

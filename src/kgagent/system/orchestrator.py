@@ -11,6 +11,10 @@ from kgagent.extraction.kg_entry import ExtractionEntry
 from kgagent.extraction.tools.loaders import load_json_file, save_json_file
 from kgagent.extraction.tools.validation import validate_result
 from kgagent.extraction.document_processor import preprocess_document
+from kgagent.core.validators import (
+    validate_kg_completion_result,
+    validate_qa_reasoning_result,
+)
 from kgagent.system.registry import ExtractionRegistry
 from kgagent.core.language import detect_language
 from kgagent.conversion import ConversionEntry
@@ -232,4 +236,46 @@ async def run_conversion(
     )
 
     logger.info(f"Conversion complete: {result.get('output_dir', result.get('output_file'))}")
+
+
+async def run_reasoning(
+    data: str | dict | list,
+    task_type: str,
+    model_name: str,
+    work_dir: str | Path,
+    permission_mode: str,
+    max_turns: int,
+    validate: bool = False,
+    save_to: str | None = None,
+) -> dict[str, Any]:
+    """Run a reasoning task."""
+    from kgagent.reasoning.reasoning_entry import ReasoningEntry
+
+    logger.info("Orchestrator routing reasoning task: task_type=%s", task_type)
+    config = ExtractionConfig(
+        model_name=model_name,
+        work_dir=str(work_dir),
+        permission_mode=permission_mode,
+        max_turns=max_turns,
+    )
+    entry = ReasoningEntry(config)
+    result = await entry.reason_async(data, task_type)
+    logger.info("Orchestrator finished reasoning task: task_type=%s", task_type)
+
+    if validate:
+        validators = {
+            "qa": validate_qa_reasoning_result,
+            "completion": validate_kg_completion_result,
+        }
+        validator = validators.get(task_type)
+        if validator is not None:
+            validation = validator(result)
+            result["_validated"] = validation["valid"]
+            if validation["errors"]:
+                result["_validation_errors"] = validation["errors"]
+
+    if save_to:
+        logger.info(f"Saving reasoning result to {save_to}")
+        save_json_file(result, save_to)
+        result["_saved_to"] = str(save_to)
     return result
