@@ -261,3 +261,71 @@ def validate_event_graph(result: Any) -> dict[str, Any]:
         "event_entity_count": len(event_entities) if isinstance(event_entities, list) else 0,
         "event_relation_count": len(event_relations) if isinstance(event_relations, list) else 0,
     }
+
+
+def validate_qa_reasoning_result(result: Any) -> dict[str, Any]:
+    """Validate QA reasoning result."""
+    errors = []
+
+    if not isinstance(result, dict):
+        return {"valid": False, "errors": ["Result must be a dictionary"]}
+
+    if result.get("task_type") == "qa_batch":
+        items = result.get("items")
+        if not isinstance(items, list):
+            errors.append("'items' field must be a list for qa_batch results")
+        summary = result.get("summary")
+        if not isinstance(summary, dict):
+            errors.append("'summary' field must be a dictionary for qa_batch results")
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "method": result.get("method", ""),
+        }
+
+    if JSONSCHEMA_AVAILABLE:
+        try:
+            schema = _load_schema("qa_reasoning")
+            validate(instance=result, schema=schema)
+        except ValidationError as e:
+            errors.append(f"Schema validation failed: {e.message}")
+        except FileNotFoundError:
+            pass
+
+    if not isinstance(result.get("answer"), str):
+        errors.append("'answer' field must be a string")
+
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors,
+        "method": result.get("method", ""),
+    }
+
+
+def validate_kg_completion_result(result: Any) -> dict[str, Any]:
+    """Validate KG completion result."""
+    errors = []
+
+    if not isinstance(result, dict):
+        return {"valid": False, "errors": ["Result must be a dictionary"]}
+
+    if JSONSCHEMA_AVAILABLE:
+        try:
+            schema = _load_schema("kg_completion")
+            validate(instance=result, schema=schema)
+        except ValidationError as e:
+            errors.append(f"Schema validation failed: {e.message}")
+        except FileNotFoundError:
+            pass
+
+    predictions = result.get("predictions")
+    if not isinstance(predictions, list):
+        errors.append("'predictions' field must be a list")
+
+    return {
+        "valid": len(errors) == 0,
+        "errors": errors,
+        "prediction_count": len(predictions) if isinstance(predictions, list) else 0,
+    }
+
+

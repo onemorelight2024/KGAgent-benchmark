@@ -1,0 +1,5 @@
+{"id":"q1","question":"What is the main purpose of the MinerU Multimodal Parsing Test document?","explain":""}
+{"id":"q2","question":"According to the benchmark table, which model has the best overall performance, and what are its accuracy, F1, and latency?","explain":""}
+{"id":"q3","question":"What does the document say a parser should preserve when processing the synthetic graph figures?","explain":""}
+{"id":"q4","question":"Which mathematical expression in the document defines Attention, and what does the surrounding text say these equations are testing?","explain":""}
+{"id":"q5","question":"In the raster illustration example, which region has the highest confidence score, and what IoU formula is given on that page?","explain":""}

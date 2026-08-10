@@ -1,4 +1,4 @@
-"""KGAgent - Knowledge Graph Extraction System."""
+"""KGAgent - Knowledge Graph extraction and reasoning system."""
 
 from kgagent.system.system import KGAgentSystem
 

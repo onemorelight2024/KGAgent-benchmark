@@ -1,0 +1,1 @@
+use graphrag to answer questions from KGAgent\KGAgent\examples\test_graphrag\mineru_mixed_content_10pages_questions.jsonl based on KGAgent\KGAgent\examples\test_graphrag\mineru_mixed_content_10pages.pdf
